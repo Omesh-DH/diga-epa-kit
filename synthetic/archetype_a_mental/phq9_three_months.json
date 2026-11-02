@@ -1,0 +1,32 @@
+{
+  "diga": {
+    "name": "Synthetic Mood Companion",
+    "ve_id": "99990002",
+    "pzn": "19999998",
+    "manufacturer": {"name": "Synthetic DiGA GmbH", "website": "https://example.org"}
+  },
+  "patient": {
+    "id": "5a2d9c4f-1e3b-4b7a-8c6d-0f9e8d7c6b02",
+    "birth_date": "1994-11-03",
+    "gender": "male"
+  },
+  "period_start": "2026-08-01",
+  "period_end": "2026-10-31",
+  "proms": [
+    {
+      "instrument": "phq9",
+      "completed_at": "2026-08-03T19:41:00+02:00",
+      "answers": {"q1": 2, "q2": 3, "q3": 2, "q4": 3, "q5": 1, "q6": 2, "q7": 2, "q8": 1, "q9": 0}
+    },
+    {
+      "instrument": "phq9",
+      "completed_at": "2026-09-14T20:05:00+02:00",
+      "answers": {"q1": 2, "q2": 2, "q3": 1, "q4": 2, "q5": 1, "q6": 1, "q7": 2, "q8": 0, "q9": 0}
+    },
+    {
+      "instrument": "phq9",
+      "completed_at": "2026-10-26T18:30:00+01:00",
+      "answers": {"q1": 1, "q2": 1, "q3": 1, "q4": 1, "q5": 0, "q6": 1, "q7": 1, "q8": 0, "q9": 0}
+    }
+  ]
+}

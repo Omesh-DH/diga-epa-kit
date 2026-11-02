@@ -1,0 +1,7 @@
+date,hours,activity,profile_or_area,validator_errors_before,validator_errors_after,note
+2026-11-02,,setup,package research + scaffold,,,"kbv.mio.diga 1.1.0 vs 1.0.0-festlegung gap found; gematik diga plugin targets 1.0.0"
+2026-11-02,,validation,Observation_Body_Weight,0,0,"-tx n/a: 0 errors first run; added performer to clear best-practice warning"
+2026-11-02,,validation,Composition,1,1,"tx.fhir.org: LOINC 53576-5 display fixed by profile rejected by LOINC; spec conflict, not fixable in code"
+2026-11-02,,mapping,Questionnaire/QuestionnaireResponse/Score (PHQ-9),3,0,"referenceRange.text is max=0 in Score profile; caught by 6.3.14 only, missed by own summary filter"
+2026-11-02,,tooling,validator selection,25,0,"6.3.14 fails offline bindings; 6.7.11-6.10.4 crash on Functional_Assessment snapshot; 6.5.28 clean + negative control"
+2026-11-02,,setup,workflow scaffold,,,"CLAUDE.md, commands, agents, spec lock, golden tests, restructure to diga_epa_kit"

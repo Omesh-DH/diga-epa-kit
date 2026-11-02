@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.cache/
+out/
+# Third-party packages are fetched by scripts/fetch_spec.py, pinned by spec/packages.lock.json
+spec/packages/*
+!spec/packages/.gitkeep

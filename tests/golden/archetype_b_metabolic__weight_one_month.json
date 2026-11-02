@@ -1,0 +1,681 @@
+{
+  "resourceType": "Bundle",
+  "id": "8fafe7b8-6c9d-53ac-a90e-6a612064d766",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2026-11-01T09:00:00+00:00",
+    "profile": [
+      "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Bundle|1.1.0"
+    ]
+  },
+  "identifier": {
+    "type": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+          "version": "2.9",
+          "code": "RI",
+          "display": "Resource identifier"
+        }
+      ]
+    },
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:8fafe7b8-6c9d-53ac-a90e-6a612064d766"
+  },
+  "type": "document",
+  "timestamp": "2026-11-01T09:00:00+00:00",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:d4f2507a-2b75-581b-9653-4b48e3d98761",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "d4f2507a-2b75-581b-9653-4b48e3d98761",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Composition|1.1.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_DIGA_Betrachtungszeitraum",
+            "valuePeriod": {
+              "start": "2026-09-01",
+              "end": "2026-09-30"
+            }
+          }
+        ],
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "53576-5",
+              "display": "Personal health monitoring report Document"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+        },
+        "date": "2026-11-01T09:00:00+00:00",
+        "author": [
+          {
+            "reference": "urn:uuid:a052a699-0739-5561-a9e4-f8d34490bf16"
+          }
+        ],
+        "title": "DiGA-Export",
+        "section": [
+          {
+            "title": "Befunde und Ergebnisse",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+                  "code": "423100009",
+                  "display": "Results section (record artifact)"
+                }
+              ]
+            },
+            "section": [
+              {
+                "title": "Vitalzeichen und Körpermaße",
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+                      "code": "1184593002",
+                      "display": "Vital sign document section (record artifact)"
+                    }
+                  ]
+                },
+                "entry": [
+                  {
+                    "reference": "urn:uuid:17cf3006-69f5-5e3a-9afe-abb9662acd4f"
+                  },
+                  {
+                    "reference": "urn:uuid:c490cadf-005b-56e6-a38d-0dfb91ef13ca"
+                  },
+                  {
+                    "reference": "urn:uuid:049a5b84-082a-57f5-98d2-f81df8e90c87"
+                  },
+                  {
+                    "reference": "urn:uuid:f419de15-8b44-5cff-bba4-86471ac5245a"
+                  },
+                  {
+                    "reference": "urn:uuid:c06bea07-28cb-5fb6-a2da-63d4b62305e3"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:26bb894b-250c-541f-9965-f34623029082",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "26bb894b-250c-541f-9965-f34623029082",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Patient|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1981-04-12"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a052a699-0739-5561-a9e4-f8d34490bf16",
+      "resource": {
+        "resourceType": "Device",
+        "id": "a052a699-0739-5561-a9e4-f8d34490bf16",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Device_DIGA|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "text": "DiGA-VE-ID"
+            },
+            "value": "99990001"
+          }
+        ],
+        "definition": {
+          "reference": "urn:uuid:01210f2f-e90f-5611-9d49-fa04da2017e9"
+        },
+        "deviceName": [
+          {
+            "name": "Synthetic Weight Coach",
+            "type": "user-friendly-name"
+          }
+        ],
+        "type": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/ifa/pzn",
+              "code": "19999999"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:01210f2f-e90f-5611-9d49-fa04da2017e9",
+      "resource": {
+        "resourceType": "DeviceDefinition",
+        "id": "01210f2f-e90f-5611-9d49-fa04da2017e9",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_DeviceDefinition_DIGA|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:01210f2f-e90f-5611-9d49-fa04da2017e9"
+          }
+        ],
+        "manufacturerReference": {
+          "reference": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07"
+        },
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "706689003",
+              "display": "Application program software (physical object)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "44d4418c-cb5e-5a35-ab1e-fe12361a3e07",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Organization_Manufacturer|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07"
+          }
+        ],
+        "name": "Synthetic DiGA GmbH",
+        "telecom": [
+          {
+            "system": "url",
+            "value": "https://example.org"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:17cf3006-69f5-5e3a-9afe-abb9662acd4f",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "17cf3006-69f5-5e3a-9afe-abb9662acd4f",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Body_Weight|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:17cf3006-69f5-5e3a-9afe-abb9662acd4f"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "29463-7",
+              "display": "Body weight"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "27113001",
+              "display": "Body weight (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+        },
+        "effectiveDateTime": "2026-09-01T07:12:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+          }
+        ],
+        "valueQuantity": {
+          "value": 94.6,
+          "unit": "kg",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "363808001",
+              "display": "Measured body weight (observable entity)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c490cadf-005b-56e6-a38d-0dfb91ef13ca",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c490cadf-005b-56e6-a38d-0dfb91ef13ca",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Body_Weight|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:c490cadf-005b-56e6-a38d-0dfb91ef13ca"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "29463-7",
+              "display": "Body weight"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "27113001",
+              "display": "Body weight (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+        },
+        "effectiveDateTime": "2026-09-08T07:05:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+          }
+        ],
+        "valueQuantity": {
+          "value": 93.9,
+          "unit": "kg",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "363808001",
+              "display": "Measured body weight (observable entity)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:049a5b84-082a-57f5-98d2-f81df8e90c87",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "049a5b84-082a-57f5-98d2-f81df8e90c87",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Body_Weight|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:049a5b84-082a-57f5-98d2-f81df8e90c87"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "29463-7",
+              "display": "Body weight"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "27113001",
+              "display": "Body weight (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+        },
+        "effectiveDateTime": "2026-09-15T07:20:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+          }
+        ],
+        "valueQuantity": {
+          "value": 93.1,
+          "unit": "kg",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "786458005",
+              "display": "Self reported usual body weight (observable entity)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f419de15-8b44-5cff-bba4-86471ac5245a",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "f419de15-8b44-5cff-bba4-86471ac5245a",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Body_Weight|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:f419de15-8b44-5cff-bba4-86471ac5245a"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "29463-7",
+              "display": "Body weight"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "27113001",
+              "display": "Body weight (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+        },
+        "effectiveDateTime": "2026-09-22T06:58:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+          }
+        ],
+        "valueQuantity": {
+          "value": 92.8,
+          "unit": "kg",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "363808001",
+              "display": "Measured body weight (observable entity)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c06bea07-28cb-5fb6-a2da-63d4b62305e3",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c06bea07-28cb-5fb6-a2da-63d4b62305e3",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Body_Weight|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:c06bea07-28cb-5fb6-a2da-63d4b62305e3"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "29463-7",
+              "display": "Body weight"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "27113001",
+              "display": "Body weight (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+        },
+        "effectiveDateTime": "2026-09-29T07:10:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:26bb894b-250c-541f-9965-f34623029082"
+          }
+        ],
+        "valueQuantity": {
+          "value": 92.0,
+          "unit": "kg",
+          "system": "http://unitsofmeasure.org",
+          "code": "kg"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "363808001",
+              "display": "Measured body weight (observable entity)"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "diga-epa-kit"
+version = "0.1.0"
+description = "Open-source kit turning DiGA data into KBV MIO DiGA FHIR bundles for the ePA"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dependencies = ["pydantic>=2.6,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+diga-epa-kit = "diga_epa_kit.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/diga_epa_kit"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m \"not validator\""
+markers = ["validator: runs the external Java FHIR validator (slow, needs Java)"]
