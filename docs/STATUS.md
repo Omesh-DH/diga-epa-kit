@@ -46,7 +46,7 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 
 ## Open
 
-- Terminology for the gate (gaps G7): both tested sources failed. The gematik terminology package has no ICF, BCP-47 or SNOMED content; the online server on 6.5.28 gave timeouts and cache errors from this machine (62 errors on our own clean bundles). Decision needed before mappers that use ICF, BCP-47 or SNOMED value sets: (a) keep the offline gate strict and build only profiles without those bindings for now, (b) allow a named list of unresolvable value sets in `scripts/validate.py` and check those codes in-process against the pinned ValueSet files, or (c) rerun the online test from a network without the proxy.
+- Gate stays strict (decision 0008). Blocked until revisited: Procedure_Activity, Observation_Functional_Assessment, Observation_Environmental_Factor, Condition_Problem and `Patient.communication` (gaps G7). Next mappers: Blood_Pressure, then Diary_Entry.
 - Decide deviation 2.
 - `Device.version` (must-support): add the DiGA version to the input (also a Phase 2 item).
 - Score referenceRange is the scale bounds, not a normal range; consider `referenceRange.type`.
