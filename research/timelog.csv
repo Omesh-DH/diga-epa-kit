@@ -9,3 +9,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-11,,setup,plan coverage + Phase 0 inventory + licensing,,,"full generated inventory (63 bindings, 33 invariants); docs/licensing.md; corrected mio42 repo finding"
 2026-11-11,,validation,official mio42 example bundles,145,145,"3 official 1.1.0 bundles: 55/69/21 errors offline, 14 root errors all required bindings to BCP-47/ICF/SNOMED; rest cascades (gaps G7)"
 2026-11-11,,mapping,PROM scores only,0,0,"plan rule: no item wording; removed Questionnaire/QuestionnaireResponse mappers and Frageboegen section, added wording guard test (decision 0007); earlier Questionnaire work is a dead end"
+2026-11-11,,validation,terminology source for the gate,145,309,"dead end: gematik terminology package has only 13 KBV key tables; tx.fhir.org on 6.5.28 gave 115/161/33 errors on the official bundles and 62 on our own, all timeouts and cache-id errors (gaps G7)"

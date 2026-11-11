@@ -46,13 +46,13 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 
 ## Open
 
-- Terminology for the gate (gaps G7): try the online server on 6.5.28 and the gematik terminology package as an extra `-ig`, before building mappers that use ICF, BCP-47 or SNOMED value sets.
+- Terminology for the gate (gaps G7): both tested sources failed. The gematik terminology package has no ICF, BCP-47 or SNOMED content; the online server on 6.5.28 gave timeouts and cache errors from this machine (62 errors on our own clean bundles). Decision needed before mappers that use ICF, BCP-47 or SNOMED value sets: (a) keep the offline gate strict and build only profiles without those bindings for now, (b) allow a named list of unresolvable value sets in `scripts/validate.py` and check those codes in-process against the pinned ValueSet files, or (c) rerun the online test from a network without the proxy.
 - Decide deviation 2.
 - `Device.version` (must-support): add the DiGA version to the input (also a Phase 2 item).
 - Score referenceRange is the scale bounds, not a normal range; consider `referenceRange.type`.
 - Provenance: `agent.type` has a required binding still to map.
 - Patient name (KBV name datatype needs the `humanname-own-name` extension).
-- Validator 6.5.28 with the online terminology server is untested; the online figures in gaps G1 and G2 come from 6.10.4.
+- Validator 6.5.28 with the online terminology server ran once (2026-11-11) and produced only transport errors, so the online figures in gaps G1 and G2 still come from 6.10.4.
 - Optional: a 1.0.0-festlegung pack plus a non-blocking Referenzvalidator run (ADR 0001).
 - User actions: SNOMED CT affiliate licence, email to support.mio@kbv.de about redistribution, hours in `research/timelog.csv`.
 

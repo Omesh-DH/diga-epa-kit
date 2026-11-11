@@ -83,7 +83,22 @@ Evidence for sub-question 2.
   Functional_Assessment, Environmental_Factor, Condition_Problem or
   `Patient.communication` will hit the same errors. Offline, "0 errors" is
   not reachable for the official examples themselves.
-- **Handling (open)**: test two ways to supply the terminology before those
-  mappers are built: `-tx https://tx.fhir.org/r4` on 6.5.28, and loading
-  gematik's terminology package `gematik.kbv.sfhir.cs.vs` (the one the
-  Referenzvalidator `diga` plugin depends on) as an extra `-ig`.
+- **Tested, 2026-11-11, both ways of supplying the terminology fail**:
+  - *gematik terminology package* `gematik.kbv.sfhir.cs.vs` 1.2.0 (from
+    `gematik/app-referencevalidator-plugins`, the one the `diga` plugin
+    depends on): ruled out by inspection, no run. It holds 13 small KBV key
+    tables and no ICF, BCP-47 or SNOMED content.
+  - *Online server* (`-tx https://tx.fhir.org/r4`, validator 6.5.28, one run
+    from this machine, behind an HTTPS-intercepting proxy): 115, 161 and 33
+    errors on the official bundles, more than offline. The kit's own golden
+    bundles, clean offline, report 62. The root errors are transport
+    failures, not content: `java.net.SocketTimeoutException: timeout`,
+    value-set validation that "took too long to process (>60sec)", and the
+    server rejecting the validator's cache id ("was never issued by this
+    server"). A required binding that cannot be checked is reported as a
+    failed binding, so the result is noise. Not repeated from another
+    network, so whether the proxy or the server is at fault is open.
+- **Handling (open, needs a decision)**: the offline gate stays as it is.
+  Before mappers that use these value sets are built, the gate needs a rule
+  for required bindings it cannot resolve; the options are in
+  `docs/STATUS.md`.
