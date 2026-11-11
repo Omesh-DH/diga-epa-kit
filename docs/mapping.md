@@ -6,7 +6,8 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | DiGA data | Composition section (slice) | Profile(s) | Library |
 | --- | --- | --- | --- |
 | Body weight | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Body_Weight | done |
-| Blood pressure, heart rate, glucose, SpO₂, temperature, height, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Blood_Pressure, _Heart_Rate, _Glucose_Concentration, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Body_Height, _Respiratory_Rate | – |
+| Blood pressure | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Blood_Pressure | done |
+| Heart rate, glucose, SpO₂, temperature, height, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Glucose_Concentration, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Body_Height, _Respiratory_Rate | – |
 | Other results | befundeUndErgebnisse | Observation_Free | – |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
 | PROM scores (PHQ-9, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale (PHQ-9 total), Observation_Functional_Assessment | PHQ-9 done |
@@ -38,3 +39,14 @@ elements are deliberately left empty: `derivedFrom` (there is no response to
 point at) and `interpretation` (severity bands are the instrument author's,
 not the kit's, to assert). New instruments are
 added to `terminology/instruments.py` with their total-score code and range.
+
+## Blood pressure pattern
+
+One `Observation` per reading: panel code LOINC 85354-9 plus SNOMED 75367002,
+no `Observation.value` (the base profile prohibits it), and two components,
+systolic (8480-6, 271649006) and diastolic (8462-4, 271650006), each a
+quantity with unit text `mm Hg` and UCUM code `mm[Hg]`. Codes come from
+`VitalSignDE_Blutdruck` (de.basisprofil.r4), displays and SNOMED codings
+from `KBV_PR_Base_Observation_Blood_Pressure` (kbv.basis). The optional mean
+component, `method`, `bodySite`, `device` and `note` are must-support but not
+filled: the input does not carry them.

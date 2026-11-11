@@ -44,6 +44,22 @@ class BodyWeight(_Strict):
         return self
 
 
+class BloodPressure(_Strict):
+    """One reading in mmHg. The bounds are plausibility limits, not clinical ones."""
+
+    measured_at: datetime
+    systolic: StrictInt = Field(ge=40, le=300)
+    diastolic: StrictInt = Field(ge=20, le=200)
+
+    @model_validator(mode="after")
+    def _check(self) -> "BloodPressure":
+        if self.measured_at.tzinfo is None:
+            raise ValueError("measured_at needs a timezone offset")
+        if self.diastolic >= self.systolic:
+            raise ValueError("diastolic must be below systolic")
+        return self
+
+
 class PromScore(_Strict):
     """Total score of one completed instrument. Item answers and wording stay in the DiGA."""
 
@@ -69,6 +85,7 @@ class DigaExport(_Strict):
     period_start: date
     period_end: date
     body_weights: list[BodyWeight] = []
+    blood_pressures: list[BloodPressure] = []
     prom_scores: list[PromScore] = []
 
     @model_validator(mode="after")
@@ -79,6 +96,7 @@ class DigaExport(_Strict):
         # Everything exported must fall inside the Betrachtungszeitraum, judged by
         # the local date of the recording.
         stamps = [("body_weights", w.measured_at) for w in self.body_weights]
+        stamps += [("blood_pressures", b.measured_at) for b in self.blood_pressures]
         stamps += [("prom_scores", p.completed_at) for p in self.prom_scores]
         outside = [f"{k} {t.isoformat()}" for k, t in stamps if not self.period_start <= t.date() <= self.period_end]
         if outside:
@@ -88,6 +106,9 @@ class DigaExport(_Strict):
         keys = [w.measured_at for w in self.body_weights]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate body_weights.measured_at")
+        keys = [b.measured_at for b in self.blood_pressures]
+        if len(set(keys)) != len(keys):
+            raise ValueError("duplicate blood_pressures.measured_at")
         keys = [(p.instrument, p.completed_at) for p in self.prom_scores]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate prom_scores (instrument, completed_at)")

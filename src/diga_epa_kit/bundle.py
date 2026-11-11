@@ -31,6 +31,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
     devdef_id = _id("device-definition", data.diga.ve_id)
     device_id = _id("device", data.diga.ve_id)
     weight_ids = [_id("body-weight", data.patient.id, w.measured_at.isoformat()) for w in data.body_weights]
+    bp_ids = [_id("blood-pressure", data.patient.id, b.measured_at.isoformat()) for b in data.blood_pressures]
 
     body = [
         core.patient(pack, patient_id, data.patient, now),
@@ -38,6 +39,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         core.device_definition(pack, devdef_id, org_id, now),
         core.manufacturer(pack, org_id, data.diga, now),
         *(vitals.body_weight(pack, wid, patient_id, w, now) for wid, w in zip(weight_ids, data.body_weights)),
+        *(vitals.blood_pressure(pack, bid, patient_id, b, now) for bid, b in zip(bp_ids, data.blood_pressures)),
     ]
 
     score_ids: list[str] = []
@@ -54,7 +56,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         device_id,
         (data.period_start, data.period_end),
         now,
-        vital_signs=weight_ids,
+        vital_signs=[*weight_ids, *bp_ids],
         assessments=score_ids,
     )
     bundle_id = _id("bundle", *key, now.isoformat())

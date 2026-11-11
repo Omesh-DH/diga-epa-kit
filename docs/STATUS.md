@@ -6,21 +6,21 @@ Last updated: 2026-11-11.
 
 HL7 FHIR validator 6.5.28, `-tx n/a`, packages from `spec/packages/`
 (kbv.mio.diga 1.1.0, kbv.basis 1.3.0, de.basisprofil.r4 1.3.2):
-**0 errors, 118 warnings** on 2 golden bundles (research/metrics.csv). The
-negative control is rejected as expected (`pytest -m validator`). 31 unit
+**0 errors, 233 warnings** on 3 golden bundles (research/metrics.csv). The
+negative control is rejected as expected (`pytest -m validator`). 44 unit
 and golden tests pass.
 
 ## Coverage against the agreed plan
 
 Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
-(2026-10-25). 8 of 44 profiles are mapped (docs/spec-inventory.md).
+(2026-10-25). 9 of 44 profiles are mapped (docs/spec-inventory.md).
 
 | Phase | State | Done | Missing |
 | --- | --- | --- | --- |
 | 0 Spec ingestion | Done | `spec/VERSION`, pinned packages (gitignored), validator and plugin mismatch reported and decided (ADR 0001), generated inventory with must-support, bindings and invariants, ground-truth check (ADR 0005) | – |
 | 1 Scaffold and harness | Mostly done | Repo layout, CLAUDE.md, commands, agents, Makefile, Dockerfile, CI workflow, validator script, negative control, LICENSE/NOTICE/THIRD_PARTY, docs/licensing.md | Known-good check: the three official mio42 bundles fail the offline gate on required bindings to BCP-47, ICF and SNOMED (gaps G7), so a terminology source is needed; Makefile, Docker and CI never executed (no make, Docker or remote here); `validate(bundle) -> Report` inside the library; pre-commit, ruff, mypy; licence gate (pip-licenses, blocked-phrases test, official notice texts) |
-| 2 Input model and archetypes | Partial | A: PHQ-9 total scores. B: body weight | A: GAD-7, mood diary. B: BMI, blood pressure, steps, goals. C: pain (0–10 scale, functional score, diary). D: exercise CarePlan, adherence diary. DiGA version field. JSON Schema export. Field-to-profile table per archetype |
-| 3 Mappers | Partial | Device_DIGA, DeviceDefinition_DIGA, Organization_Manufacturer, Patient, Score_or_Assessment_by_Scale, Body_Weight | Diary_Entry, Observation_Free, Functional_Assessment, CarePlan, Provenance, DocumentReference, other vitals; hand-written golden files; property tests |
+| 2 Input model and archetypes | Partial | A: PHQ-9 total scores. B: body weight, blood pressure | A: GAD-7, mood diary. B: BMI, steps, goals. C: pain (0–10 scale, functional score, diary). D: exercise CarePlan, adherence diary. DiGA version field. JSON Schema export. Field-to-profile table per archetype |
+| 3 Mappers | Partial | Device_DIGA, DeviceDefinition_DIGA, Organization_Manufacturer, Patient, Score_or_Assessment_by_Scale, Body_Weight, Blood_Pressure | Diary_Entry, Observation_Free, Functional_Assessment, CarePlan, Provenance, DocumentReference, other vitals; hand-written golden files; property tests |
 | 4 Composition and Bundle | Partial | Composition with 2 sections, Bundle, invariant checks, 2 archetypes validate | Remaining sections; 4/4 archetypes; one-year size and speed test |
 | 5 CLI and docs | Started | `build` and `check` commands, README | `convert`/`validate`/`explain-error`, tutorials, API reference, quickstart timing |
 | 6 ePA → DiGA import stub | Not started | Carrier identified: `de.gematik.epa.medication` 1.3.5 (ADR 0005) | Read-side models, tests, ADR |
@@ -46,7 +46,7 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 
 ## Open
 
-- Gate stays strict (decision 0008). Blocked until revisited: Procedure_Activity, Observation_Functional_Assessment, Observation_Environmental_Factor, Condition_Problem and `Patient.communication` (gaps G7). Next mappers: Blood_Pressure, then Diary_Entry.
+- Gate stays strict (decision 0008). Blocked until revisited: Procedure_Activity, Observation_Functional_Assessment, Observation_Environmental_Factor, Condition_Problem and `Patient.communication` (gaps G7). Next mapper: Diary_Entry.
 - Decide deviation 2.
 - `Device.version` (must-support): add the DiGA version to the input (also a Phase 2 item).
 - Score referenceRange is the scale bounds, not a normal range; consider `referenceRange.type`.
