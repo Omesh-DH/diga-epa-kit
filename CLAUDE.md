@@ -75,3 +75,25 @@ scripts download through curl (`scripts/_net.py`). Never disable TLS checks.
   `research/` and `thesis/`.
 - Out of scope: real TI/VAU/HealthID connection, a production ePA client, BfArM
   listing, legal opinions. GeDIG is a draft law, so treat it as such.
+
+## Rules from the agreed plan
+
+The plan is the user's "DiGA → ePA FHIR Export Kit: Claude Code Prompt
+Architecture" (2026-10-25). Coverage per phase and the places where this repo
+deviates from it are in `docs/STATUS.md`.
+
+- Synthetic data only. Never commit real patient data or secrets.
+- No questionnaire item wording (PROM text) in code, tests or data: scores
+  and codes only. PHQ-9 currently carries LOINC item displays; that is an
+  open decision (docs/licensing.md), so do not extend it to other instruments.
+- Never commit third-party spec files, jars or text. Licences: `docs/licensing.md`.
+- Codes: LOINC for observations, UCUM for units, SNOMED CT only where a
+  profile requires it. Add every new SNOMED code to the table in `docs/licensing.md`.
+- Every mapper has an input model, a mapping function, a golden-file test
+  and a validator test. No mapper is committed without all four.
+- When the validator reports an error you do not understand, quote the exact
+  message, look up the constraint in `spec/packages/`, and explain it before
+  changing code.
+- Plan first for anything touching more than two files, and show the plan.
+- Small commits with conventional messages (`feat(mapper): ...`).
+- After each task, update `docs/STATUS.md`: done, open, blocked.
