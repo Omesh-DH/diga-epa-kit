@@ -1,6 +1,6 @@
 # Status
 
-Last updated: 2026-11-02.
+Last updated: 2026-11-11.
 
 ## Phase
 
@@ -36,7 +36,7 @@ negative control is rejected as expected (`pytest -m validator`).
 - Patient name (KBV name datatype needs the `humanname-own-name` extension).
 - Optional: a 1.0.0-festlegung pack plus a non-blocking Referenzvalidator run, for the
   thesis comparison (decision 0001).
-- Questionnaire canonical: `http://loinc.org/q/44249-1` claims LOINC's published form, whose linkIds differ from ours (q1..q9). Decide on a kit-owned canonical plus `Questionnaire.version`, or match LOINC's linkIds (fhir-reviewer #2).
+- Replace the placeholder `KIT_CANONICAL_BASE` (`https://diga-epa-kit.example/fhir`) with a URL the project controls before any real export (decision 0006).
 - `Device.version` (must-support): add an optional DiGA version to the input (fhir-reviewer #7).
 - Score referenceRange is the scale bounds, not a normal range; consider `referenceRange.type` (fhir-reviewer #8).
 - Cost model and interview guide (research/).

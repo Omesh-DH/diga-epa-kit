@@ -47,7 +47,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
     for p in data.proms:
         inst = INSTRUMENTS[p.instrument]
         if inst.key not in questionnaire_ids:
-            questionnaire_ids[inst.key] = _id("questionnaire", inst.url)
+            questionnaire_ids[inst.key] = _id("questionnaire", inst.canonical)
             body.append(prom.questionnaire(pack, questionnaire_ids[inst.key], inst, now))
         stamp = p.completed_at.isoformat()
         qr_id = _id("questionnaire-response", data.patient.id, inst.key, stamp)

@@ -39,7 +39,9 @@ def test_one_questionnaire_shared_by_all_responses(bundle):
     (q,) = _by_type(bundle, "Questionnaire")
     responses = _by_type(bundle, "QuestionnaireResponse")
     assert len(responses) == 3
-    assert {r["questionnaire"] for r in responses} == {q["url"]}
+    # Responses pin the exact rendition: kit-owned canonical plus version, never LOINC's form.
+    assert {r["questionnaire"] for r in responses} == {f"{q['url']}|{q['version']}"}
+    assert q["url"].endswith("/Questionnaire/phq9") and "loinc.org" not in q["url"]
     # ques-1: exactly one of title / code
     assert "title" not in q and q["code"][0]["code"] == "44249-1"
 
@@ -102,3 +104,25 @@ def test_patient_identifier_is_not_the_internal_pseudonym(raw, bundle):
 def test_phq9_catalogue_shape():
     assert len(PHQ9.items) == 9 and PHQ9.max_score == 27
     assert len({i.code.code for i in PHQ9.items}) == 9
+
+
+def test_questionnaire_version_comes_from_the_catalogue(bundle):
+    (q,) = _by_type(bundle, "Questionnaire")
+    assert q["version"] == PHQ9.version == "1.0.0"
+
+
+def test_new_rendition_version_gets_a_new_questionnaire_id(raw, bundle, monkeypatch):
+    from dataclasses import replace
+
+    from diga_epa_kit.terminology import instruments
+
+    monkeypatch.setitem(instruments.INSTRUMENTS, "phq9", replace(PHQ9, version="2.0.0"))
+    (old,) = _by_type(bundle, "Questionnaire")
+    (new,) = _by_type(build_bundle(DigaExport.model_validate(raw), now=NOW), "Questionnaire")
+    assert new["version"] == "2.0.0" and new["id"] != old["id"]
+
+
+def test_check_flags_response_without_matching_questionnaire(bundle):
+    response = _by_type(bundle, "QuestionnaireResponse")[0]
+    response["questionnaire"] = response["questionnaire"].replace("|1.0.0", "|9.9.9")
+    assert any("matches no Questionnaire" in p for p in check_bundle(bundle))

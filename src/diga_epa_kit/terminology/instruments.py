@@ -9,6 +9,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+# Base for the canonicals of the kit's own Questionnaire renditions. `.example`
+# is a reserved TLD (RFC 2606), so it can never resolve to someone else's form.
+# Replace with a URL the project controls before any real export
+# (docs/decisions/0006-kit-owned-questionnaire-canonical.md).
+KIT_CANONICAL_BASE = "https://diga-epa-kit.example/fhir"
+
 
 @dataclass(frozen=True)
 class Code:
@@ -36,11 +42,17 @@ class Instrument:
     total_score: Code
     items: tuple[Item, ...]
     answers: tuple[AnswerOption, ...]
+    # Version of this rendition (linkIds, item order, texts). Bump on any change to them.
+    version: str
 
     @property
     def url(self) -> str:
-        # LOINC's canonical form for questionnaires derived from a panel code
-        return f"http://loinc.org/q/{self.panel.code}"
+        # Kit-owned, not LOINC's http://loinc.org/q/<panel>: our linkIds differ from LOINC's form.
+        return f"{KIT_CANONICAL_BASE}/Questionnaire/{self.key}"
+
+    @property
+    def canonical(self) -> str:
+        return f"{self.url}|{self.version}"
 
     def answer(self, score: int) -> AnswerOption:
         for a in self.answers:
@@ -99,6 +111,7 @@ PHQ9 = Instrument(
         )
     ),
     answers=_FREQUENCY_2W,
+    version="1.0.0",
 )
 
 INSTRUMENTS: dict[str, Instrument] = {i.key: i for i in (PHQ9,)}

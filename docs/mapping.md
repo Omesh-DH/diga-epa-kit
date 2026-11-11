@@ -31,8 +31,9 @@ section.
 
 One `Questionnaire` per instrument (identified by `code` = LOINC panel
 44249-1, no `title`, because invariant ques-1 allows only one of the two;
-`url` = `http://loinc.org/q/44249-1`). Each completion yields a
-`QuestionnaireResponse` (answers as LOINC LA codes) plus a score
+`url` = kit-owned `<KIT_CANONICAL_BASE>/Questionnaire/phq9` with `version`,
+see decision 0006). Each completion yields a `QuestionnaireResponse`
+(`questionnaire` = `url|version`, answers as LOINC LA codes) plus a score
 `Observation` (LOINC 44261-6, category `survey`, `{score}` quantity,
 `derivedFrom` the response, `referenceRange` 0–27 without `text`, which the
 profile prohibits). Questionnaire and responses go in *Fragebögen*, scores in

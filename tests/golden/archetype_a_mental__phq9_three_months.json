@@ -82,7 +82,7 @@
             },
             "entry": [
               {
-                "reference": "urn:uuid:9310b3b1-d83a-5ecb-adaf-51e112b9a69d"
+                "reference": "urn:uuid:6e7efd7d-5df5-5c0a-af49-c19ce4b8cddb"
               },
               {
                 "reference": "urn:uuid:107d40ab-2c66-5589-bc21-f71acd069378"
@@ -274,10 +274,10 @@
       }
     },
     {
-      "fullUrl": "urn:uuid:9310b3b1-d83a-5ecb-adaf-51e112b9a69d",
+      "fullUrl": "urn:uuid:6e7efd7d-5df5-5c0a-af49-c19ce4b8cddb",
       "resource": {
         "resourceType": "Questionnaire",
-        "id": "9310b3b1-d83a-5ecb-adaf-51e112b9a69d",
+        "id": "6e7efd7d-5df5-5c0a-af49-c19ce4b8cddb",
         "meta": {
           "versionId": "1",
           "lastUpdated": "2026-11-01T09:00:00+00:00",
@@ -286,7 +286,8 @@
           ]
         },
         "language": "en",
-        "url": "http://loinc.org/q/44249-1",
+        "url": "https://diga-epa-kit.example/fhir/Questionnaire/phq9",
+        "version": "1.0.0",
         "identifier": [
           {
             "type": {
@@ -300,7 +301,7 @@
               ]
             },
             "system": "urn:ietf:rfc:3986",
-            "value": "urn:uuid:9310b3b1-d83a-5ecb-adaf-51e112b9a69d"
+            "value": "urn:uuid:6e7efd7d-5df5-5c0a-af49-c19ce4b8cddb"
           }
         ],
         "status": "active",
@@ -774,7 +775,7 @@
           "system": "urn:ietf:rfc:3986",
           "value": "urn:uuid:107d40ab-2c66-5589-bc21-f71acd069378"
         },
-        "questionnaire": "http://loinc.org/q/44249-1",
+        "questionnaire": "https://diga-epa-kit.example/fhir/Questionnaire/phq9|1.0.0",
         "status": "completed",
         "subject": {
           "reference": "urn:uuid:78fcb51d-d13f-5639-aad6-d0d65dafbc16"
@@ -1031,7 +1032,7 @@
           "system": "urn:ietf:rfc:3986",
           "value": "urn:uuid:317b1054-ccd4-5669-a1f2-e17b595bd64b"
         },
-        "questionnaire": "http://loinc.org/q/44249-1",
+        "questionnaire": "https://diga-epa-kit.example/fhir/Questionnaire/phq9|1.0.0",
         "status": "completed",
         "subject": {
           "reference": "urn:uuid:78fcb51d-d13f-5639-aad6-d0d65dafbc16"
@@ -1288,7 +1289,7 @@
           "system": "urn:ietf:rfc:3986",
           "value": "urn:uuid:ac4ad714-deef-5c1f-bc33-f58eb012e18c"
         },
-        "questionnaire": "http://loinc.org/q/44249-1",
+        "questionnaire": "https://diga-epa-kit.example/fhir/Questionnaire/phq9|1.0.0",
         "status": "completed",
         "subject": {
           "reference": "urn:uuid:78fcb51d-d13f-5639-aad6-d0d65dafbc16"

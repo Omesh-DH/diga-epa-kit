@@ -5,3 +5,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-02,,mapping,Questionnaire/QuestionnaireResponse/Score (PHQ-9),3,0,"referenceRange.text is max=0 in Score profile; caught by 6.3.14 only, missed by own summary filter"
 2026-11-02,,tooling,validator selection,25,0,"6.3.14 fails offline bindings; 6.7.11-6.10.4 crash on Functional_Assessment snapshot; 6.5.28 clean + negative control"
 2026-11-02,,setup,workflow scaffold,,,"CLAUDE.md, commands, agents, spec lock, golden tests, restructure to diga_epa_kit"
+2026-11-11,,mapping,Questionnaire canonical,0,0,"fhir-reviewer #2: kit-owned url + version instead of LOINC form canonical; placeholder base (decision 0006)"
