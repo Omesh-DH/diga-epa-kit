@@ -7,3 +7,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-02,,setup,workflow scaffold,,,"CLAUDE.md, commands, agents, spec lock, golden tests, restructure to diga_epa_kit"
 2026-11-11,,mapping,Questionnaire canonical,0,0,"fhir-reviewer #2: kit-owned url + version instead of LOINC form canonical; placeholder base (decision 0006)"
 2026-11-11,,setup,plan coverage + Phase 0 inventory + licensing,,,"full generated inventory (63 bindings, 33 invariants); docs/licensing.md; corrected mio42 repo finding"
+2026-11-11,,validation,official mio42 example bundles,145,145,"3 official 1.1.0 bundles: 55/69/21 errors offline, 14 root errors all required bindings to BCP-47/ICF/SNOMED; rest cascades (gaps G7)"

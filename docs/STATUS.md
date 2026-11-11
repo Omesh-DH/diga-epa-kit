@@ -18,7 +18,7 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 | Phase | State | Done | Missing |
 | --- | --- | --- | --- |
 | 0 Spec ingestion | Done | `spec/VERSION`, pinned packages (gitignored), validator and plugin mismatch reported and decided (ADR 0001), generated inventory with must-support, bindings and invariants, ground-truth check (ADR 0005) | – |
-| 1 Scaffold and harness | Mostly done | Repo layout, CLAUDE.md, commands, agents, Makefile, Dockerfile, CI workflow, validator script, negative control, LICENSE/NOTICE/THIRD_PARTY, docs/licensing.md | Official mio42 example bundles as known-good check (run in progress); Makefile, Docker and CI never executed (no make, Docker or remote here); `validate(bundle) -> Report` inside the library; pre-commit, ruff, mypy; licence gate (pip-licenses, blocked-phrases test, official notice texts) |
+| 1 Scaffold and harness | Mostly done | Repo layout, CLAUDE.md, commands, agents, Makefile, Dockerfile, CI workflow, validator script, negative control, LICENSE/NOTICE/THIRD_PARTY, docs/licensing.md | Known-good check: the three official mio42 bundles fail the offline gate on required bindings to BCP-47, ICF and SNOMED (gaps G7), so a terminology source is needed; Makefile, Docker and CI never executed (no make, Docker or remote here); `validate(bundle) -> Report` inside the library; pre-commit, ruff, mypy; licence gate (pip-licenses, blocked-phrases test, official notice texts) |
 | 2 Input model and archetypes | Partial | A: PHQ-9. B: body weight | A: GAD-7, mood diary. B: BMI, blood pressure, steps, goals. C: pain (0–10 scale, functional score, diary). D: exercise CarePlan, adherence diary. DiGA version field. JSON Schema export. Field-to-profile table per archetype |
 | 3 Mappers | Partial | Device_DIGA, DeviceDefinition_DIGA, Organization_Manufacturer, Patient, Score_or_Assessment_by_Scale, Body_Weight, Questionnaire, QuestionnaireResponse | Diary_Entry, Observation_Free, Functional_Assessment, CarePlan, Provenance, DocumentReference, other vitals; hand-written golden files; property tests |
 | 4 Composition and Bundle | Partial | Composition with 3 sections, Bundle, invariant checks, 2 archetypes validate | Remaining sections; 4/4 archetypes; one-year size and speed test |
@@ -47,6 +47,7 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 
 ## Open
 
+- Terminology for the gate (gaps G7): try the online server on 6.5.28 and the gematik terminology package as an extra `-ig`, before building mappers that use ICF, BCP-47 or SNOMED value sets.
 - Decide deviations 2 and 3.
 - Replace the placeholder `KIT_CANONICAL_BASE` (`https://diga-epa-kit.example/fhir`) with a URL the project controls before any real export (decision 0006).
 - `Device.version` (must-support): add the DiGA version to the input (also a Phase 2 item).
