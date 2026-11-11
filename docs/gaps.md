@@ -102,3 +102,16 @@ Evidence for sub-question 2.
   Before mappers that use these value sets are built, the gate needs a rule
   for required bindings it cannot resolve; the options are in
   `docs/STATUS.md`.
+
+## G8 A goal or plan made by the DiGA has no valid author
+
+- **Where**: `KBV_PR_MIO_DIGA_Goal` `Goal.expressedBy` and
+  `KBV_PR_MIO_DIGA_CarePlan` `CarePlan.author`, both must-support.
+- **Evidence**: the allowed targets are Patient, Practitioner, RelatedPerson
+  and PractitionerRole. Device_DIGA is not among them.
+- **Consequence**: when the DiGA itself proposes a goal or generates an
+  exercise plan, which is the usual case, the document cannot say so. The
+  only link to the DiGA is the Composition author.
+- **Handling**: the kit fills both elements with the patient only when the
+  input states it (`set_by_patient`, `written_by_patient`) and leaves them
+  out otherwise. It never defaults to the patient.

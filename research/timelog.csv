@@ -12,3 +12,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-11,,validation,terminology source for the gate,145,309,"dead end: gematik terminology package has only 13 KBV key tables; tx.fhir.org on 6.5.28 gave 115/161/33 errors on the official bundles and 62 on our own, all timeouts and cache-id errors (gaps G7)"
 2026-11-11,,mapping,Observation_Blood_Pressure,0,0,"new mapper, input, synthetic series, golden bundle, 15 unit tests; 0 errors on the first validator run"
 2026-11-11,,mapping,Observation_Diary_Entry + section Patientenberichte,0,0,"new mapper, input, synthetic mood diary, golden bundle, unit tests; 0 errors on the first validator run"
+2026-11-11,,mapping,Goal + CarePlan + section Ziele (archetype D),0,0,"two mappers, three input types, synthetic exercise plan, golden bundle, unit tests; 0 errors on the first validator run"

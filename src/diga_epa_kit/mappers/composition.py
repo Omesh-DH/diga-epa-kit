@@ -15,6 +15,7 @@ _SECTION_VITALS = ("Vitalzeichen und Körpermaße", "1184593002", "Vital sign do
 _SECTION_ASSESSMENTS = ("Beurteilungen", "424836000", "Assessment section (record artifact)")
 # KBV's own section codes (KBV_CS_MIO_DIGA_Section_Codes in kbv.mio.diga), versioned with the package.
 _KBV_SECTION_CODES = "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_DIGA_Section_Codes"
+_SECTION_GOALS = ("Ziele", "SectionZiele", "Bereich Ziele")
 _SECTION_PATIENT_REPORTS = ("Patientenberichte", "SectionPatientenberichte", "Bereich Patientenberichte")
 
 
@@ -50,6 +51,7 @@ def composition(
     *,
     vital_signs: Sequence[str] = (),
     assessments: Sequence[str] = (),
+    goals: Sequence[str] = (),
     patient_reports: Sequence[str] = (),
 ) -> Json:
     # Emitted in the order the profile declares its section slices.
@@ -59,6 +61,8 @@ def composition(
         sections.append(_snomed_section(pack, _SECTION_RESULTS, section=[vitals]))
     if assessments:
         sections.append(_snomed_section(pack, _SECTION_ASSESSMENTS, entry=_entries(assessments)))
+    if goals:
+        sections.append(_kbv_section(pack, _SECTION_GOALS, entry=_entries(goals)))
     if patient_reports:
         sections.append(_kbv_section(pack, _SECTION_PATIENT_REPORTS, entry=_entries(patient_reports)))
 

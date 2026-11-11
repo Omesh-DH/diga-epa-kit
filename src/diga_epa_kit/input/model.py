@@ -84,6 +84,74 @@ class DiaryEntry(_Strict):
         return self
 
 
+def _plain_text(value: str, what: str) -> None:
+    """Same rules as a FHIR string: visible content, no padding, no control characters."""
+    if value != value.strip():
+        raise ValueError(f"{what} must not be blank or padded with whitespace")
+    if any(ord(c) < 32 and c not in "\t\n\r" for c in value):
+        raise ValueError(f"{what} contains control characters")
+    if not any(unicodedata.category(c)[0] in "LNPS" for c in value):
+        raise ValueError(f"{what} has no visible character")
+
+
+class Goal(_Strict):
+    """A goal the patient pursues in the DiGA, in free text."""
+
+    # The DiGA's own key for the goal; care plans refer to it. It is not exported.
+    id: str = Field(pattern=r"^[A-Za-z0-9._-]{1,64}$")
+    description: str = Field(min_length=1, max_length=500)
+    # No default: a missing status must not turn into a statement about the patient.
+    status: Literal["active", "on_hold", "completed", "cancelled"]
+    start: date
+    end: date | None = None
+    # True only if the DiGA knows the patient set the goal themselves.
+    set_by_patient: bool = False
+
+    @model_validator(mode="after")
+    def _check(self) -> "Goal":
+        _plain_text(self.description, "description")
+        if self.end is not None and self.end < self.start:
+            raise ValueError("end is before start")
+        return self
+
+
+class PlannedActivity(_Strict):
+    description: str = Field(min_length=1, max_length=500)
+    status: Literal["not_started", "scheduled", "in_progress", "on_hold", "completed", "cancelled"]
+    start: date | None = None
+    end: date | None = None
+
+    @model_validator(mode="after")
+    def _check(self) -> "PlannedActivity":
+        _plain_text(self.description, "description")
+        if self.start is not None and self.end is not None and self.end < self.start:
+            raise ValueError("end is before start")
+        return self
+
+
+class CarePlan(_Strict):
+    """A plan of activities for the patient, for example an exercise programme."""
+
+    id: str = Field(pattern=r"^[A-Za-z0-9._-]{1,64}$")
+    title: str = Field(min_length=1, max_length=200)
+    status: Literal["active", "on_hold", "completed", "revoked"]
+    goal_ids: list[str] = []
+    # True only if the DiGA knows the patient put the plan together themselves.
+    written_by_patient: bool = False
+    activities: list[PlannedActivity] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _check(self) -> "CarePlan":
+        _plain_text(self.title, "title")
+        if len(set(self.goal_ids)) != len(self.goal_ids):
+            raise ValueError("duplicate goal_ids")
+        if self.status in ("completed", "revoked"):
+            still_open = [a.description for a in self.activities if a.status in ("not_started", "scheduled", "in_progress")]
+            if still_open:
+                raise ValueError(f"plan is {self.status} but has open activities: {still_open}")
+        return self
+
+
 class PromScore(_Strict):
     """Total score of one completed instrument. Item answers and wording stay in the DiGA."""
 
@@ -112,6 +180,8 @@ class DigaExport(_Strict):
     blood_pressures: list[BloodPressure] = []
     prom_scores: list[PromScore] = []
     diary_entries: list[DiaryEntry] = []
+    goals: list[Goal] = []
+    care_plans: list[CarePlan] = []
 
     @model_validator(mode="after")
     def _period_and_uniqueness(self) -> "DigaExport":
@@ -141,4 +211,19 @@ class DigaExport(_Strict):
         keys = [d.written_at for d in self.diary_entries]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate diary_entries.written_at")
+
+        # Goals and plans may start before the period: they describe what was current in it.
+        goal_ids = [g.id for g in self.goals]
+        if len(set(goal_ids)) != len(goal_ids):
+            raise ValueError("duplicate goals.id")
+        plan_ids = [p.id for p in self.care_plans]
+        if len(set(plan_ids)) != len(plan_ids):
+            raise ValueError("duplicate care_plans.id")
+        unknown = sorted({g for p in self.care_plans for g in p.goal_ids} - set(goal_ids))
+        if unknown:
+            raise ValueError(f"care_plans refer to unknown goals: {unknown}")
+        late = [f"goal {g.id}" for g in self.goals if g.start > self.period_end]
+        late += [f"plan {p.id}" for p in self.care_plans for a in p.activities if a.start and a.start > self.period_end]
+        if late:
+            raise ValueError(f"starts after period_end {self.period_end}: {sorted(set(late))}")
         return self
