@@ -115,3 +115,18 @@ Evidence for sub-question 2.
 - **Handling**: the kit fills both elements with the patient only when the
   input states it (`set_by_patient`, `written_by_patient`) and leaves them
   out otherwise. It never defaults to the patient.
+
+## G9 Instrument codes cannot be checked against the pinned LOINC version
+
+- **Where**: `terminology/instruments.py`, every `total_score` code. The
+  profiles require `code.coding.version` and `display` and pin LOINC 2.72.
+- **Evidence**: the pinned packages contain no LOINC content, the offline
+  validator only warns that 2.72 "could not be found", and loinc.org refuses
+  automated requests (HTTP 403, 2026-11-12). The name of 72514-3 was taken
+  from the title of loinc.org/72514-3 as shown in search results, which is
+  the current release, not 2.72.
+- **Consequence**: a display that changed between 2.72 and today would pass
+  the gate unnoticed. The same holds for any code a manufacturer adds.
+- **Handling (open)**: check each catalogue entry by hand against the LOINC
+  2.72 table (needs a free LOINC account) and note the check here.
+  72514-3: not yet checked. 44261-6: taken from loinc.org earlier, same caveat.

@@ -1,5 +1,9 @@
 # 0007 PROMs: scores and codes only
 
+Addendum 2026-11-12: a single-item rating such as the 0–10 pain rating
+(LOINC 72514-3) counts as a score. Its code names the rating, and the
+anchor texts of the scale are still not carried.
+
 Date: 2026-11-11. Status: accepted (user decision). Supersedes 0006.
 
 ## Context

@@ -6,8 +6,8 @@ Last updated: 2026-11-11.
 
 HL7 FHIR validator 6.5.28, `-tx n/a`, packages from `spec/packages/`
 (kbv.mio.diga 1.1.0, kbv.basis 1.3.0, de.basisprofil.r4 1.3.2):
-**0 errors, 307 warnings** on 5 golden bundles (research/metrics.csv). The
-negative control is rejected as expected (`pytest -m validator`). 102 unit
+**0 errors, 376 warnings** on 6 golden bundles (research/metrics.csv). The
+negative control is rejected as expected (`pytest -m validator`). 116 unit
 and golden tests pass.
 
 ## Coverage against the agreed plan
@@ -19,9 +19,9 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 | --- | --- | --- | --- |
 | 0 Spec ingestion | Done | `spec/VERSION`, pinned packages (gitignored), validator and plugin mismatch reported and decided (ADR 0001), generated inventory with must-support, bindings and invariants, ground-truth check (ADR 0005) | – |
 | 1 Scaffold and harness | Mostly done | Repo layout, CLAUDE.md, commands, agents, Makefile, Dockerfile, CI workflow, validator script, negative control, LICENSE/NOTICE/THIRD_PARTY, docs/licensing.md | Known-good check: the three official mio42 bundles fail the offline gate on required bindings to BCP-47, ICF and SNOMED (gaps G7), so a terminology source is needed; Makefile, Docker and CI never executed (no make, Docker or remote here); `validate(bundle) -> Report` inside the library; pre-commit, ruff, mypy; licence gate (pip-licenses, blocked-phrases test, official notice texts) |
-| 2 Input model and archetypes | Partial | A: PHQ-9 total scores, mood diary. B: body weight, blood pressure. D: goals, exercise CarePlan, adherence diary | A: GAD-7. B: BMI, steps, goals. C: pain (0–10 scale, functional score, diary). D: exercise sessions (Procedure_Activity, blocked by decision 0008). DiGA version field. JSON Schema export. Field-to-profile table per archetype |
+| 2 Input model and archetypes | Partial | A: PHQ-9 total scores, mood diary. B: body weight, blood pressure. C: 0–10 pain rating, diary. D: goals, exercise CarePlan, adherence diary | A: GAD-7. B: BMI, steps, goals. C: functional score (instrument not chosen). D: exercise sessions (Procedure_Activity, blocked by decision 0008). DiGA version field. JSON Schema export. Field-to-profile table per archetype |
 | 3 Mappers | Partial | Device_DIGA, DeviceDefinition_DIGA, Organization_Manufacturer, Patient, Score_or_Assessment_by_Scale, Body_Weight, Blood_Pressure, Diary_Entry, Goal, CarePlan | Observation_Free, Functional_Assessment, Provenance, DocumentReference, other vitals; hand-written golden files; property tests |
-| 4 Composition and Bundle | Partial | Composition with 4 sections, Bundle, invariant checks, 2 archetypes validate | Remaining sections; 4/4 archetypes; one-year size and speed test |
+| 4 Composition and Bundle | Partial | Composition with 4 sections, Bundle, invariant checks, all 4 archetypes validate | Remaining sections;  one-year size and speed test |
 | 5 CLI and docs | Started | `build` and `check` commands, README | `convert`/`validate`/`explain-error`, tutorials, API reference, quickstart timing |
 | 6 ePA → DiGA import stub | Not started | Carrier identified: `de.gematik.epa.medication` 1.3.5 (ADR 0005) | Read-side models, tests, ADR |
 | 7 Evaluation | Started | `research/metrics.csv` (validator runs), `research/timelog.csv` (hours blank) | Counts, hand-built baseline for archetype A, methods note |
@@ -48,6 +48,8 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 
 - Gate stays strict (decision 0008). Blocked until revisited: Procedure_Activity, Observation_Functional_Assessment, Observation_Environmental_Factor, Condition_Problem and `Patient.communication` (gaps G7). Next: GAD-7 score (archetype A), archetype C (pain scale, functional score as a scale score, diary), BMI and steps via Observation_Free.
 - Decide deviation 2.
+- Archetype C functional score: choose the instrument (user decision).
+- Check instrument codes against the LOINC 2.72 table by hand (gaps G9).
 - `Device.version` (must-support): add the DiGA version to the input (also a Phase 2 item).
 - Score referenceRange is the scale bounds, not a normal range; consider `referenceRange.type`.
 - Provenance: `agent.type` has a required binding still to map.

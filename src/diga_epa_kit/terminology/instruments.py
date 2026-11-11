@@ -32,4 +32,13 @@ PHQ9 = Instrument(
     max_score=27,
 )
 
-INSTRUMENTS: dict[str, Instrument] = {i.key: i for i in (PHQ9,)}
+PAIN_NRS = Instrument(
+    key="pain_nrs",
+    # LOINC long common name of 72514-3 (loinc.org/72514-3). It names the score, not the question.
+    # Not yet checked against the 2.72 table itself (docs/gaps.md G9).
+    total_score=Code("72514-3", "Pain severity - 0-10 verbal numeric rating [Score] - Reported"),
+    min_score=0,
+    max_score=10,
+)
+
+INSTRUMENTS: dict[str, Instrument] = {i.key: i for i in (PHQ9, PAIN_NRS)}

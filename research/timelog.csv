@@ -13,3 +13,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-11,,mapping,Observation_Blood_Pressure,0,0,"new mapper, input, synthetic series, golden bundle, 15 unit tests; 0 errors on the first validator run"
 2026-11-11,,mapping,Observation_Diary_Entry + section Patientenberichte,0,0,"new mapper, input, synthetic mood diary, golden bundle, unit tests; 0 errors on the first validator run"
 2026-11-11,,mapping,Goal + CarePlan + section Ziele (archetype D),0,0,"two mappers, three input types, synthetic exercise plan, golden bundle, unit tests; 0 errors on the first validator run"
+2026-11-12,,mapping,archetype C: 0-10 pain rating as a scale score + diary,0,0,"new instrument in the catalogue (LOINC 72514-3), synthetic input, golden bundle, unit tests; loinc.org refused automated fetch (403), code and name confirmed through search results"

@@ -155,7 +155,7 @@ class CarePlan(_Strict):
 class PromScore(_Strict):
     """Total score of one completed instrument. Item answers and wording stay in the DiGA."""
 
-    instrument: Literal["phq9"]
+    instrument: Literal["phq9", "pain_nrs"]
     completed_at: datetime
     score: StrictInt
 

@@ -31,3 +31,8 @@ schwierigkeiten ein- oder durchzuschlafen
 müdigkeit oder gefühl, keine energie
 verminderter appetit
 schlechte meinung von sich selbst
+# Pain numeric rating scale, upper anchor texts (the lower anchor is too generic to block)
+worst pain imaginable
+worst possible pain
+stärkste vorstellbare schmerzen
+stärkster vorstellbarer schmerz
