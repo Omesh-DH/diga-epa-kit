@@ -1,0 +1,33 @@
+# Fragments of questionnaire item and answer wording that must not appear in
+# src/, tests/ or synthetic/ (tests/unit/test_no_prom_wording.py). One per
+# line, matched case-insensitively. Add fragments for every new instrument.
+# PHQ-9
+little interest or pleasure
+feeling down, depressed
+trouble falling or staying asleep
+feeling tired or having little energy
+poor appetite or overeating
+feeling bad about yourself
+trouble concentrating on things
+moving or speaking so slowly
+better off dead
+more than half the days
+nearly every day
+# GAD-7
+feeling nervous, anxious
+not being able to stop or control worrying
+worrying too much about different things
+trouble relaxing
+being so restless
+becoming easily annoyed
+feeling afraid as if something awful
+# PHQ-9 / GAD-7 answer texts
+not at all
+several days
+# PHQ-9, German
+wenig interesse oder freude
+niedergeschlagenheit, schwermut
+schwierigkeiten ein- oder durchzuschlafen
+müdigkeit oder gefühl, keine energie
+verminderter appetit
+schlechte meinung von sich selbst

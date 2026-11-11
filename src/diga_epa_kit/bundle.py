@@ -40,21 +40,11 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         *(vitals.body_weight(pack, wid, patient_id, w, now) for wid, w in zip(weight_ids, data.body_weights)),
     ]
 
-    # One Questionnaire per instrument used, then a response + score per completion.
-    questionnaire_ids: dict[str, str] = {}
-    response_ids: list[str] = []
     score_ids: list[str] = []
-    for p in data.proms:
+    for p in data.prom_scores:
         inst = INSTRUMENTS[p.instrument]
-        if inst.key not in questionnaire_ids:
-            questionnaire_ids[inst.key] = _id("questionnaire", inst.canonical)
-            body.append(prom.questionnaire(pack, questionnaire_ids[inst.key], inst, now))
-        stamp = p.completed_at.isoformat()
-        qr_id = _id("questionnaire-response", data.patient.id, inst.key, stamp)
-        score_id = _id("score", data.patient.id, inst.key, stamp)
-        body.append(prom.questionnaire_response(pack, qr_id, patient_id, inst, p, now))
-        body.append(prom.score(pack, score_id, patient_id, device_id, qr_id, inst, p, now))
-        response_ids.append(qr_id)
+        score_id = _id("score", data.patient.id, inst.key, p.completed_at.isoformat())
+        body.append(prom.score(pack, score_id, patient_id, device_id, inst, p, now))
         score_ids.append(score_id)
 
     comp = comp_m.composition(
@@ -65,7 +55,6 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         (data.period_start, data.period_end),
         now,
         vital_signs=weight_ids,
-        questionnaires=[*questionnaire_ids.values(), *response_ids],
         assessments=score_ids,
     )
     bundle_id = _id("bundle", *key, now.isoformat())

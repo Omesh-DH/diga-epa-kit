@@ -1,6 +1,6 @@
 # 0006 Kit-owned Questionnaire canonical
 
-Date: 2026-11-11. Status: accepted. Base URL: placeholder, to be replaced.
+Date: 2026-11-11. Status: superseded by 0007 the same day (PROMs are exported as scores only, so the kit emits no Questionnaire).
 
 ## Context
 

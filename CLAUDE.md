@@ -84,8 +84,8 @@ deviates from it are in `docs/STATUS.md`.
 
 - Synthetic data only. Never commit real patient data or secrets.
 - No questionnaire item wording (PROM text) in code, tests or data: scores
-  and codes only. PHQ-9 currently carries LOINC item displays; that is an
-  open decision (docs/licensing.md), so do not extend it to other instruments.
+  and codes only (decision 0007). Add wording fragments for each new instrument
+  to `docs/licensing/blocked-phrases.txt`; a unit test enforces the list.
 - Never commit third-party spec files, jars or text. Licences: `docs/licensing.md`.
 - Codes: LOINC for observations, UCUM for units, SNOMED CT only where a
   profile requires it. Add every new SNOMED code to the table in `docs/licensing.md`.

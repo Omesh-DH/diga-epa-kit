@@ -26,72 +26,67 @@ def _by_type(bundle, rtype):
     return [e["resource"] for e in bundle["entry"] if e["resource"]["resourceType"] == rtype]
 
 
-def _section(bundle, title):
-    (sec,) = [s for s in bundle["entry"][0]["resource"]["section"] if s["title"] == title]
-    return [e["reference"] for e in sec["entry"]]
-
-
 def test_example_passes_local_checks(bundle):
     assert check_bundle(bundle) == []
 
 
-def test_one_questionnaire_shared_by_all_responses(bundle):
-    (q,) = _by_type(bundle, "Questionnaire")
-    responses = _by_type(bundle, "QuestionnaireResponse")
-    assert len(responses) == 3
-    # Responses pin the exact rendition: kit-owned canonical plus version, never LOINC's form.
-    assert {r["questionnaire"] for r in responses} == {f"{q['url']}|{q['version']}"}
-    assert q["url"].endswith("/Questionnaire/phq9") and "loinc.org" not in q["url"]
-    # ques-1: exactly one of title / code
-    assert "title" not in q and q["code"][0]["code"] == "44249-1"
-
-
-def test_scores_are_summed_and_linked(bundle):
-    scores = [o for o in _by_type(bundle, "Observation") if o["code"]["coding"][0]["code"] == "44261-6"]
+def test_scores_only_no_questionnaire_resources(bundle):
+    # Decision 0007: item answers and wording never leave the DiGA.
+    assert not _by_type(bundle, "Questionnaire")
+    assert not _by_type(bundle, "QuestionnaireResponse")
+    scores = _by_type(bundle, "Observation")
     assert [s["valueQuantity"]["value"] for s in scores] == [16, 11, 6]
-    response_urls = {f"urn:uuid:{r['id']}" for r in _by_type(bundle, "QuestionnaireResponse")}
-    assert {s["derivedFrom"][0]["reference"] for s in scores} == response_urls
-    (rr,) = scores[0]["referenceRange"]
+    assert all("derivedFrom" not in s for s in scores)
+
+
+def test_score_observation_shape(bundle):
+    score = _by_type(bundle, "Observation")[0]
+    (coding,) = score["code"]["coding"]
+    assert (coding["code"], coding["version"]) == ("44261-6", "2.72")
+    assert score["category"][0]["coding"][0]["code"] == "survey"
+    (rr,) = score["referenceRange"]
     assert "text" not in rr  # max=0 in the profile
-    assert (rr["low"]["value"], rr["high"]["value"]) == (0, 27)
-    assert rr["low"]["code"] == rr["high"]["code"] == scores[0]["valueQuantity"]["code"] == "{score}"
+    assert (rr["low"]["value"], rr["high"]["value"]) == (PHQ9.min_score, PHQ9.max_score) == (0, 27)
+    assert rr["low"]["code"] == rr["high"]["code"] == score["valueQuantity"]["code"] == "{score}"
+    (device,) = _by_type(bundle, "Device")
+    assert score["device"]["reference"] == f"urn:uuid:{device['id']}"
 
 
-def test_answers_carry_loinc_answer_codes(bundle):
-    first = _by_type(bundle, "QuestionnaireResponse")[0]
-    q2 = next(i for i in first["item"] if i["linkId"] == "q2")
-    assert q2["answer"][0]["valueCoding"]["code"] == "LA6571-9"  # score 3 = nearly every day
+def test_scores_sit_in_the_assessment_section_only(bundle):
+    sections = bundle["entry"][0]["resource"]["section"]
+    assert [s["title"] for s in sections] == ["Beurteilungen"]
+    refs = [e["reference"] for e in sections[0]["entry"]]
+    assert refs == [f"urn:uuid:{s['id']}" for s in _by_type(bundle, "Observation")]
 
 
-def test_sections_hold_the_right_entries(bundle):
-    q_and_r = _section(bundle, "Fragebögen")
-    scores = _section(bundle, "Beurteilungen")
-    assert len(q_and_r) == 4 and len(scores) == 3
-    titles = [s["title"] for s in bundle["entry"][0]["resource"]["section"]]
-    assert titles == ["Fragebögen", "Beurteilungen"]  # profile slice order
-
-
-def test_missing_answer_is_rejected(raw):
-    del raw["proms"][0]["answers"]["q9"]
-    with pytest.raises(ValidationError, match="missing"):
+@pytest.mark.parametrize("score", [-1, 28])
+def test_out_of_range_score_is_rejected(raw, score):
+    raw["prom_scores"][0]["score"] = score
+    with pytest.raises(ValidationError, match="outside 0..27"):
         DigaExport.model_validate(raw)
 
 
-def test_out_of_range_answer_is_rejected(raw):
-    raw["proms"][0]["answers"]["q1"] = 4
-    with pytest.raises(ValidationError, match="out of range"):
+def test_item_answers_are_not_accepted(raw):
+    raw["prom_scores"][0]["answers"] = {"q1": 2}
+    with pytest.raises(ValidationError):
         DigaExport.model_validate(raw)
 
 
 def test_duplicate_completion_is_rejected(raw):
-    raw["proms"].append(raw["proms"][0])
-    with pytest.raises(ValidationError, match="duplicate proms"):
+    raw["prom_scores"].append(raw["prom_scores"][0])
+    with pytest.raises(ValidationError, match="duplicate prom_scores"):
         DigaExport.model_validate(raw)
 
 
 def test_completion_outside_period_is_rejected(raw):
-    raw["proms"][0]["completed_at"] = "2026-07-31T23:00:00+02:00"
+    raw["prom_scores"][0]["completed_at"] = "2026-07-31T23:00:00+02:00"
     with pytest.raises(ValidationError, match="outside period"):
+        DigaExport.model_validate(raw)
+
+
+def test_naive_completion_time_is_rejected(raw):
+    raw["prom_scores"][0]["completed_at"] = "2026-08-03T19:41:00"
+    with pytest.raises(ValidationError, match="timezone"):
         DigaExport.model_validate(raw)
 
 
@@ -101,28 +96,15 @@ def test_patient_identifier_is_not_the_internal_pseudonym(raw, bundle):
     assert raw["patient"]["id"] not in json.dumps(bundle)
 
 
-def test_phq9_catalogue_shape():
-    assert len(PHQ9.items) == 9 and PHQ9.max_score == 27
-    assert len({i.code.code for i in PHQ9.items}) == 9
+@pytest.mark.parametrize("score", [True, "16", 16.0])
+def test_score_must_be_a_real_integer(raw, score):
+    raw["prom_scores"][0]["score"] = score
+    with pytest.raises(ValidationError):
+        DigaExport.model_validate(raw)
 
 
-def test_questionnaire_version_comes_from_the_catalogue(bundle):
-    (q,) = _by_type(bundle, "Questionnaire")
-    assert q["version"] == PHQ9.version == "1.0.0"
-
-
-def test_new_rendition_version_gets_a_new_questionnaire_id(raw, bundle, monkeypatch):
-    from dataclasses import replace
-
-    from diga_epa_kit.terminology import instruments
-
-    monkeypatch.setitem(instruments.INSTRUMENTS, "phq9", replace(PHQ9, version="2.0.0"))
-    (old,) = _by_type(bundle, "Questionnaire")
-    (new,) = _by_type(build_bundle(DigaExport.model_validate(raw), now=NOW), "Questionnaire")
-    assert new["version"] == "2.0.0" and new["id"] != old["id"]
-
-
-def test_check_flags_response_without_matching_questionnaire(bundle):
-    response = _by_type(bundle, "QuestionnaireResponse")[0]
-    response["questionnaire"] = response["questionnaire"].replace("|1.0.0", "|9.9.9")
-    assert any("matches no Questionnaire" in p for p in check_bundle(bundle))
+def test_score_keeps_local_offset_and_patient_as_performer(bundle):
+    score = _by_type(bundle, "Observation")[0]
+    (patient,) = _by_type(bundle, "Patient")
+    assert score["effectiveDateTime"] == "2026-08-03T19:41:00+02:00"
+    assert score["performer"] == [{"reference": f"urn:uuid:{patient['id']}"}]

@@ -24,15 +24,6 @@ def _snomed_section(pack: VersionPack, spec: tuple[str, str, str], **content: An
     }
 
 
-def _kbv_section(pack: VersionPack, title: str, code: str, display: str, **content: Any) -> Json:
-    system = "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_DIGA_Section_Codes"
-    return {
-        "title": title,
-        "code": {"coding": [{"system": system, "version": pack.version, "code": code, "display": display}]},
-        **content,
-    }
-
-
 def _entries(uuids: Sequence[str]) -> list[Json]:
     return [{"reference": urn(u)} for u in uuids]
 
@@ -46,15 +37,10 @@ def composition(
     now: datetime,
     *,
     vital_signs: Sequence[str] = (),
-    questionnaires: Sequence[str] = (),
     assessments: Sequence[str] = (),
 ) -> Json:
     # Emitted in the order the profile declares its section slices.
     sections: list[Json] = []
-    if questionnaires:
-        sections.append(
-            _kbv_section(pack, "Fragebögen", "SectionFrageboegen", "Bereich Fragebögen", entry=_entries(questionnaires))
-        )
     if vital_signs:
         vitals = _snomed_section(pack, _SECTION_VITALS, entry=_entries(vital_signs))
         sections.append(_snomed_section(pack, _SECTION_RESULTS, section=[vitals]))

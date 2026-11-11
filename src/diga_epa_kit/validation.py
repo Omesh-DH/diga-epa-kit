@@ -25,13 +25,6 @@ def check_bundle(bundle: dict[str, Any]) -> list[str]:
     if len(full_urls) != len(entries):
         problems.append("duplicate entry.fullUrl")
 
-    # A canonical is not a Reference, so the reference walk below never sees it.
-    questionnaires = {
-        f"{q.get('url')}|{q.get('version')}"
-        for q in (e.get("resource") or {} for e in entries)
-        if q.get("resourceType") == "Questionnaire"
-    }
-
     bundle_version = _profile_version(bundle)
     compositions = 0
     for i, e in enumerate(entries):
@@ -50,8 +43,6 @@ def check_bundle(bundle: dict[str, Any]) -> list[str]:
         for ref in _references(res):
             if ref.startswith("urn:uuid:") and ref not in full_urls:
                 problems.append(f"{where}: unresolved reference {ref}")
-        if res.get("resourceType") == "QuestionnaireResponse" and res.get("questionnaire") not in questionnaires:
-            problems.append(f"{where}: questionnaire {res.get('questionnaire')} matches no Questionnaire in the Bundle")
 
     # bundle-2: exactly one Composition, and FHIR wants it first
     if compositions != 1:

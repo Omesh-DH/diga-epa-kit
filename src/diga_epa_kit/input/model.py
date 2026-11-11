@@ -6,7 +6,7 @@ from datetime import date, datetime
 from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, StrictInt, model_validator
 
 
 class _Strict(BaseModel):
@@ -44,33 +44,23 @@ class BodyWeight(_Strict):
         return self
 
 
-class PromResponse(_Strict):
-    """One completed questionnaire; answers map item linkId to the item score."""
+class PromScore(_Strict):
+    """Total score of one completed instrument. Item answers and wording stay in the DiGA."""
 
     instrument: Literal["phq9"]
     completed_at: datetime
-    answers: dict[str, int]
+    score: StrictInt
 
     @model_validator(mode="after")
-    def _check(self) -> "PromResponse":
+    def _check(self) -> "PromScore":
         from ..terminology.instruments import INSTRUMENTS
 
         if self.completed_at.tzinfo is None:
             raise ValueError("completed_at needs a timezone offset")
         inst = INSTRUMENTS[self.instrument]
-        expected = {i.link_id for i in inst.items}
-        if set(self.answers) != expected:
-            missing, extra = expected - set(self.answers), set(self.answers) - expected
-            raise ValueError(f"{self.instrument} answers: missing {sorted(missing)}, unknown {sorted(extra)}")
-        valid = {a.score for a in inst.answers}
-        bad = {k: v for k, v in self.answers.items() if v not in valid}
-        if bad:
-            raise ValueError(f"{self.instrument} answers out of range: {bad}")
+        if not inst.min_score <= self.score <= inst.max_score:
+            raise ValueError(f"{self.instrument} score {self.score} outside {inst.min_score}..{inst.max_score}")
         return self
-
-    @property
-    def total(self) -> int:
-        return sum(self.answers.values())
 
 
 class DigaExport(_Strict):
@@ -79,7 +69,7 @@ class DigaExport(_Strict):
     period_start: date
     period_end: date
     body_weights: list[BodyWeight] = []
-    proms: list[PromResponse] = []
+    prom_scores: list[PromScore] = []
 
     @model_validator(mode="after")
     def _period_and_uniqueness(self) -> "DigaExport":
@@ -89,7 +79,7 @@ class DigaExport(_Strict):
         # Everything exported must fall inside the Betrachtungszeitraum, judged by
         # the local date of the recording.
         stamps = [("body_weights", w.measured_at) for w in self.body_weights]
-        stamps += [("proms", p.completed_at) for p in self.proms]
+        stamps += [("prom_scores", p.completed_at) for p in self.prom_scores]
         outside = [f"{k} {t.isoformat()}" for k, t in stamps if not self.period_start <= t.date() <= self.period_end]
         if outside:
             raise ValueError(f"outside period {self.period_start}..{self.period_end}: {outside}")
@@ -98,7 +88,7 @@ class DigaExport(_Strict):
         keys = [w.measured_at for w in self.body_weights]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate body_weights.measured_at")
-        keys = [(p.instrument, p.completed_at) for p in self.proms]
+        keys = [(p.instrument, p.completed_at) for p in self.prom_scores]
         if len(set(keys)) != len(keys):
-            raise ValueError("duplicate proms (instrument, completed_at)")
+            raise ValueError("duplicate prom_scores (instrument, completed_at)")
         return self

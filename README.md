@@ -8,7 +8,7 @@ Status: early. Two archetypes are mapped end to end:
 
 | Archetype | Data | Profiles |
 | --- | --- | --- |
-| A, mental health | PHQ-9 completions | Questionnaire, QuestionnaireResponse, Observation_Score_or_Assessment_by_Scale |
+| A, mental health | PHQ-9 total scores | Observation_Score_or_Assessment_by_Scale |
 | B, metabolic | Body-weight series | Observation_Body_Weight |
 
 Every bundle also carries Patient, Device_DIGA (VE-ID and PZN),

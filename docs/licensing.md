@@ -13,7 +13,7 @@ before the open-source release.
 | SNOMED CT | Licence required; free in Germany via BfArM affiliate licence | Action needed | No SNOMED tables; only codes the profiles fix or bind, with the notice. README states users outside Germany need their own licence | Codes listed below. Affiliate licence: TODO (user). Notice text: TODO |
 | LOINC | Free with notice; some scale content has third-party copyright | OK with notice | LOINC notice in NOTICE; check `EXTERNAL_COPYRIGHT_NOTICE` per panel | Notice in THIRD_PARTY.md; official text in NOTICE: TODO. PHQ-9 panel check: TODO |
 | UCUM | Free with conditions | OK with notice | Plain UCUM codes; notice | Codes `kg`, `{score}`. Notice: TODO |
-| PHQ-9, GAD-7 | Released by Pfizer without restriction or fee | OK | Cite the authors | PHQ-9 in use; see "PROM wording" below |
+| PHQ-9, GAD-7 | Released by Pfizer without restriction or fee | OK | Cite the authors | PHQ-9 total score only |
 | Tinnitus Handicap Inventory | Copyrighted | Avoid item text | Total score only, or a free 0–10 numeric rating scale | Not used |
 | Other PROMs | Varies | Check each | Scores and codes only, no item wording | None used |
 | gematik Referenzvalidator | Apache-2.0 | OK | Separate process; keep LICENSE/NOTICE if redistributed | Not used as the gate (decision 0001) |
@@ -39,10 +39,8 @@ in the pinned packages.
 
 ## PROM wording
 
-The plan's rule: no questionnaire item wording in code, tests or data;
-scores and codes only. Current state: `terminology/instruments.py` and the
-archetype A golden bundle carry the LOINC display names of the nine PHQ-9
-items, which paraphrase the item wording. PHQ-9 itself is free to use, and
-the profile requires a `display` wherever an item `code` is given. Whether to
-keep the Questionnaire and QuestionnaireResponse mapping for PHQ-9 or export
-scores only is an open decision (docs/STATUS.md).
+Rule: no questionnaire item wording in code, tests or data; scores and codes
+only (decision 0007). The kit exports total scores, and
+`tests/unit/test_no_prom_wording.py` fails if a fragment from
+`docs/licensing/blocked-phrases.txt` appears in `src/`, `tests/` or
+`synthetic/`. Add fragments to that file for every new instrument.
