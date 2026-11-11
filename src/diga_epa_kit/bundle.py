@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 from .input.model import DigaExport
 from .mappers import composition as comp_m
-from .mappers import core, prom, vitals
+from .mappers import core, prom, reports, vitals
 from .mappers.common import Json, ri_identifier, urn
 from .terminology.instruments import INSTRUMENTS
 from .terminology.versions import DEFAULT_VERSION, get_pack
@@ -49,6 +49,12 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         body.append(prom.score(pack, score_id, patient_id, device_id, inst, p, now))
         score_ids.append(score_id)
 
+    diary_ids: list[str] = []
+    for d in data.diary_entries:
+        diary_id = _id("diary-entry", data.patient.id, d.written_at.isoformat())
+        body.append(reports.diary_entry(pack, diary_id, patient_id, d, now))
+        diary_ids.append(diary_id)
+
     comp = comp_m.composition(
         pack,
         _id("composition", *key),
@@ -58,6 +64,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         now,
         vital_signs=[*weight_ids, *bp_ids],
         assessments=score_ids,
+        patient_reports=diary_ids,
     )
     bundle_id = _id("bundle", *key, now.isoformat())
 

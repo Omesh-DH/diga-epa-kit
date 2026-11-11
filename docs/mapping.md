@@ -11,7 +11,7 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | Other results | befundeUndErgebnisse | Observation_Free | – |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
 | PROM scores (PHQ-9, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale (PHQ-9 total), Observation_Functional_Assessment | PHQ-9 done |
-| Diary entries | patientenberichte | Observation_Diary_Entry | – |
+| Diary entries | patientenberichte | Observation_Diary_Entry | done |
 | Exercises, sessions | aktivitaeten | Procedure_Activity | – |
 | Food intake | nahrung | Observation_Nutrition_Intake | – |
 | Lifestyle (smoking, alcohol, sleep) | lebensstilfaktoren | Observation_Life_Style_Factor | – |
@@ -50,3 +50,20 @@ quantity with unit text `mm Hg` and UCUM code `mm[Hg]`. Codes come from
 from `KBV_PR_Base_Observation_Blood_Pressure` (kbv.basis). The optional mean
 component, `method`, `bodySite`, `device` and `note` are must-support but not
 filled: the input does not carry them.
+
+## Diary entry pattern
+
+One `Observation` per entry in *Patientenberichte*: code LOINC 51855-5
+"Patient Note" (the profile's pattern), `effectiveDateTime` = when the
+patient wrote it, `valueString` = the text, verbatim. The profile prohibits
+`category`, `method`, `device`, `bodySite` and `component`. Not filled:
+`effectivePeriod`, `note` and `hasMember` (links from an entry to other
+observations); the input does not carry them. The section code comes from
+KBV's own `KBV_CS_MIO_DIGA_Section_Codes`, not SNOMED CT.
+
+Diary text is free text written by the patient. It is the one place where
+the export carries unstructured personal content, so a manufacturer has to
+decide per DiGA whether it belongs in the ePA document. The kit caps an
+entry at 5000 characters and rejects control characters; those limits are
+the kit's, not the profile's. Two entries with the same timestamp are also
+rejected, because the resource id is derived from it.

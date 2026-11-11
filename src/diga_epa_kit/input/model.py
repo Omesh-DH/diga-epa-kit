@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import unicodedata
 from datetime import date, datetime
 from typing import Literal
 from uuid import UUID
@@ -60,6 +61,29 @@ class BloodPressure(_Strict):
         return self
 
 
+class DiaryEntry(_Strict):
+    """Free text the patient wrote in the DiGA. It leaves the DiGA verbatim."""
+
+    written_at: datetime
+    # The length cap is the kit's own limit to keep documents small, not a profile rule.
+    text: str = Field(min_length=1, max_length=5000)
+
+    @model_validator(mode="after")
+    def _check(self) -> "DiaryEntry":
+        if self.written_at.tzinfo is None:
+            raise ValueError("written_at needs a timezone offset")
+        # A FHIR string must hold non-whitespace content and no surrounding whitespace.
+        if self.text != self.text.strip():
+            raise ValueError("text must not be blank or padded with whitespace")
+        # FHIR strings allow no control characters except tab, CR and LF.
+        if any(ord(c) < 32 and c not in "\t\n\r" for c in self.text):
+            raise ValueError("text contains control characters")
+        # Letters, digits, punctuation or symbols: something a reader can see.
+        if not any(unicodedata.category(c)[0] in "LNPS" for c in self.text):
+            raise ValueError("text has no visible character")
+        return self
+
+
 class PromScore(_Strict):
     """Total score of one completed instrument. Item answers and wording stay in the DiGA."""
 
@@ -87,6 +111,7 @@ class DigaExport(_Strict):
     body_weights: list[BodyWeight] = []
     blood_pressures: list[BloodPressure] = []
     prom_scores: list[PromScore] = []
+    diary_entries: list[DiaryEntry] = []
 
     @model_validator(mode="after")
     def _period_and_uniqueness(self) -> "DigaExport":
@@ -98,6 +123,7 @@ class DigaExport(_Strict):
         stamps = [("body_weights", w.measured_at) for w in self.body_weights]
         stamps += [("blood_pressures", b.measured_at) for b in self.blood_pressures]
         stamps += [("prom_scores", p.completed_at) for p in self.prom_scores]
+        stamps += [("diary_entries", d.written_at) for d in self.diary_entries]
         outside = [f"{k} {t.isoformat()}" for k, t in stamps if not self.period_start <= t.date() <= self.period_end]
         if outside:
             raise ValueError(f"outside period {self.period_start}..{self.period_end}: {outside}")
@@ -112,4 +138,7 @@ class DigaExport(_Strict):
         keys = [(p.instrument, p.completed_at) for p in self.prom_scores]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate prom_scores (instrument, completed_at)")
+        keys = [d.written_at for d in self.diary_entries]
+        if len(set(keys)) != len(keys):
+            raise ValueError("duplicate diary_entries.written_at")
         return self

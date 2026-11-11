@@ -1,0 +1,652 @@
+{
+  "resourceType": "Bundle",
+  "id": "401e0ca0-d709-5096-b957-b10050c80948",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2026-11-01T09:00:00+00:00",
+    "profile": [
+      "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Bundle|1.1.0"
+    ]
+  },
+  "identifier": {
+    "type": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+          "version": "2.9",
+          "code": "RI",
+          "display": "Resource identifier"
+        }
+      ]
+    },
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:401e0ca0-d709-5096-b957-b10050c80948"
+  },
+  "type": "document",
+  "timestamp": "2026-11-01T09:00:00+00:00",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:ccf11706-fdc5-5cf0-a63b-877864ddda2a",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "ccf11706-fdc5-5cf0-a63b-877864ddda2a",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Composition|1.1.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_DIGA_Betrachtungszeitraum",
+            "valuePeriod": {
+              "start": "2026-08-01",
+              "end": "2026-08-31"
+            }
+          }
+        ],
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "53576-5",
+              "display": "Personal health monitoring report Document"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+        },
+        "date": "2026-11-01T09:00:00+00:00",
+        "author": [
+          {
+            "reference": "urn:uuid:b246e900-7aaa-51bb-820d-00477013501d"
+          }
+        ],
+        "title": "DiGA-Export",
+        "section": [
+          {
+            "title": "Beurteilungen",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+                  "code": "424836000",
+                  "display": "Assessment section (record artifact)"
+                }
+              ]
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:f3209bf1-29b6-53ae-bda1-fe60c1f75dbf"
+              },
+              {
+                "reference": "urn:uuid:7ec36528-ce8f-53eb-9468-3262c2e95cc7"
+              }
+            ]
+          },
+          {
+            "title": "Patientenberichte",
+            "code": {
+              "coding": [
+                {
+                  "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_DIGA_Section_Codes",
+                  "version": "1.1.0",
+                  "code": "SectionPatientenberichte",
+                  "display": "Bereich Patientenberichte"
+                }
+              ]
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:16970768-4a47-5b79-b9d0-5f94bafbb597"
+              },
+              {
+                "reference": "urn:uuid:1025f57b-b7a6-5c9c-b0f8-c888a6672cec"
+              },
+              {
+                "reference": "urn:uuid:98d97df6-f7c2-5d2e-8ac8-506f7ec6ed4d"
+              },
+              {
+                "reference": "urn:uuid:74707865-1752-5a09-8207-2dd87804d85c"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "e66a25b6-eae0-5973-a57b-8bb05623f631",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Patient|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1989-02-17"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:b246e900-7aaa-51bb-820d-00477013501d",
+      "resource": {
+        "resourceType": "Device",
+        "id": "b246e900-7aaa-51bb-820d-00477013501d",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Device_DIGA|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "text": "DiGA-VE-ID"
+            },
+            "value": "99990002"
+          }
+        ],
+        "definition": {
+          "reference": "urn:uuid:37b3272d-8811-50bf-9d27-0f2bb0d8fbbb"
+        },
+        "deviceName": [
+          {
+            "name": "Synthetic Mood Companion",
+            "type": "user-friendly-name"
+          }
+        ],
+        "type": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/ifa/pzn",
+              "code": "19999998"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:37b3272d-8811-50bf-9d27-0f2bb0d8fbbb",
+      "resource": {
+        "resourceType": "DeviceDefinition",
+        "id": "37b3272d-8811-50bf-9d27-0f2bb0d8fbbb",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_DeviceDefinition_DIGA|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:37b3272d-8811-50bf-9d27-0f2bb0d8fbbb"
+          }
+        ],
+        "manufacturerReference": {
+          "reference": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07"
+        },
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "706689003",
+              "display": "Application program software (physical object)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "44d4418c-cb5e-5a35-ab1e-fe12361a3e07",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Organization_Manufacturer|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07"
+          }
+        ],
+        "name": "Synthetic DiGA GmbH",
+        "telecom": [
+          {
+            "system": "url",
+            "value": "https://example.org"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f3209bf1-29b6-53ae-bda1-fe60c1f75dbf",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "f3209bf1-29b6-53ae-bda1-fe60c1f75dbf",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Score_or_Assessment_by_Scale|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:f3209bf1-29b6-53ae-bda1-fe60c1f75dbf"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "4.0.1",
+                "code": "survey",
+                "display": "Survey"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "44261-6",
+              "display": "Patient Health Questionnaire 9 item (PHQ-9) total score [Reported]"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+        },
+        "effectiveDateTime": "2026-08-02T20:15:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+          }
+        ],
+        "valueQuantity": {
+          "value": 14,
+          "unit": "{score}",
+          "system": "http://unitsofmeasure.org",
+          "code": "{score}"
+        },
+        "referenceRange": [
+          {
+            "low": {
+              "value": 0,
+              "unit": "{score}",
+              "system": "http://unitsofmeasure.org",
+              "code": "{score}"
+            },
+            "high": {
+              "value": 27,
+              "unit": "{score}",
+              "system": "http://unitsofmeasure.org",
+              "code": "{score}"
+            }
+          }
+        ],
+        "device": {
+          "reference": "urn:uuid:b246e900-7aaa-51bb-820d-00477013501d"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7ec36528-ce8f-53eb-9468-3262c2e95cc7",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "7ec36528-ce8f-53eb-9468-3262c2e95cc7",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Score_or_Assessment_by_Scale|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:7ec36528-ce8f-53eb-9468-3262c2e95cc7"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "4.0.1",
+                "code": "survey",
+                "display": "Survey"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "44261-6",
+              "display": "Patient Health Questionnaire 9 item (PHQ-9) total score [Reported]"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+        },
+        "effectiveDateTime": "2026-08-30T19:50:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+          }
+        ],
+        "valueQuantity": {
+          "value": 9,
+          "unit": "{score}",
+          "system": "http://unitsofmeasure.org",
+          "code": "{score}"
+        },
+        "referenceRange": [
+          {
+            "low": {
+              "value": 0,
+              "unit": "{score}",
+              "system": "http://unitsofmeasure.org",
+              "code": "{score}"
+            },
+            "high": {
+              "value": 27,
+              "unit": "{score}",
+              "system": "http://unitsofmeasure.org",
+              "code": "{score}"
+            }
+          }
+        ],
+        "device": {
+          "reference": "urn:uuid:b246e900-7aaa-51bb-820d-00477013501d"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:16970768-4a47-5b79-b9d0-5f94bafbb597",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "16970768-4a47-5b79-b9d0-5f94bafbb597",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Diary_Entry|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:16970768-4a47-5b79-b9d0-5f94bafbb597"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "51855-5",
+              "display": "Patient Note"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+        },
+        "effectiveDateTime": "2026-08-04T21:30:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+          }
+        ],
+        "valueString": "Langer Arbeitstag, viel Grübeln. Spaziergang am Abend hat etwas geholfen."
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:1025f57b-b7a6-5c9c-b0f8-c888a6672cec",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "1025f57b-b7a6-5c9c-b0f8-c888a6672cec",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Diary_Entry|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:1025f57b-b7a6-5c9c-b0f8-c888a6672cec"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "51855-5",
+              "display": "Patient Note"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+        },
+        "effectiveDateTime": "2026-08-11T21:05:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+          }
+        ],
+        "valueString": "Übung zur Tagesstruktur gemacht. Stimmung 4 von 10."
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:98d97df6-f7c2-5d2e-8ac8-506f7ec6ed4d",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "98d97df6-f7c2-5d2e-8ac8-506f7ec6ed4d",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Diary_Entry|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:98d97df6-f7c2-5d2e-8ac8-506f7ec6ed4d"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "51855-5",
+              "display": "Patient Note"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+        },
+        "effectiveDateTime": "2026-08-19T22:10:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+          }
+        ],
+        "valueString": "Mit einer Freundin telefoniert.\nDanach deutlich leichter gefühlt."
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:74707865-1752-5a09-8207-2dd87804d85c",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "74707865-1752-5a09-8207-2dd87804d85c",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Diary_Entry|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:74707865-1752-5a09-8207-2dd87804d85c"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "51855-5",
+              "display": "Patient Note"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+        },
+        "effectiveDateTime": "2026-08-27T20:40:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:e66a25b6-eae0-5973-a57b-8bb05623f631"
+          }
+        ],
+        "valueString": "Drei Tage in Folge früh aufgestanden. Stimmung 6 von 10."
+      }
+    }
+  ]
+}

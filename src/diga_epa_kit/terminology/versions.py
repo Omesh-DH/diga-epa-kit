@@ -27,6 +27,8 @@ class VersionPack:
     loinc_version: str
     snomed_version: str
     v2_0203_version: str
+    # Version of KBV_CS_MIO_DIGA_Section_Codes in the package; not tied to the package version.
+    section_codes_version: str
     profiles: dict[str, str] = field(default_factory=dict)
 
     def profile(self, key: str) -> str:
@@ -44,6 +46,7 @@ MIO_DIGA_1_1_0 = VersionPack(
     loinc_version="2.72",
     snomed_version="http://snomed.info/sct/900000000000207008/version/20220331",
     v2_0203_version="2.9",
+    section_codes_version="1.1.0",
     profiles={
         "bundle": "KBV_PR_MIO_DIGA_Bundle",
         "composition": "KBV_PR_MIO_DIGA_Composition",
@@ -53,6 +56,7 @@ MIO_DIGA_1_1_0 = VersionPack(
         "organization_manufacturer": "KBV_PR_MIO_DIGA_Organization_Manufacturer",
         "body_weight": "KBV_PR_MIO_DIGA_Observation_Body_Weight",
         "blood_pressure": "KBV_PR_MIO_DIGA_Observation_Blood_Pressure",
+        "diary_entry": "KBV_PR_MIO_DIGA_Observation_Diary_Entry",
         "score": "KBV_PR_MIO_DIGA_Observation_Score_or_Assessment_by_Scale",
     },
 )

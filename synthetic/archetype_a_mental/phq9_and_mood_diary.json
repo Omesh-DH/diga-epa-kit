@@ -1,0 +1,25 @@
+{
+  "diga": {
+    "name": "Synthetic Mood Companion",
+    "ve_id": "99990002",
+    "pzn": "19999998",
+    "manufacturer": {"name": "Synthetic DiGA GmbH", "website": "https://example.org"}
+  },
+  "patient": {
+    "id": "c81e2b7d-4f5a-4c1b-9d3e-7a6b5c4d3e21",
+    "birth_date": "1989-02-17",
+    "gender": "female"
+  },
+  "period_start": "2026-08-01",
+  "period_end": "2026-08-31",
+  "prom_scores": [
+    {"instrument": "phq9", "completed_at": "2026-08-02T20:15:00+02:00", "score": 14},
+    {"instrument": "phq9", "completed_at": "2026-08-30T19:50:00+02:00", "score": 9}
+  ],
+  "diary_entries": [
+    {"written_at": "2026-08-04T21:30:00+02:00", "text": "Langer Arbeitstag, viel Grübeln. Spaziergang am Abend hat etwas geholfen."},
+    {"written_at": "2026-08-11T21:05:00+02:00", "text": "Übung zur Tagesstruktur gemacht. Stimmung 4 von 10."},
+    {"written_at": "2026-08-19T22:10:00+02:00", "text": "Mit einer Freundin telefoniert.\nDanach deutlich leichter gefühlt."},
+    {"written_at": "2026-08-27T20:40:00+02:00", "text": "Drei Tage in Folge früh aufgestanden. Stimmung 6 von 10."}
+  ]
+}

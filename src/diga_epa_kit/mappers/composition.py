@@ -13,6 +13,9 @@ from .common import Json, meta, urn
 _SECTION_RESULTS = ("Befunde und Ergebnisse", "423100009", "Results section (record artifact)")
 _SECTION_VITALS = ("Vitalzeichen und Körpermaße", "1184593002", "Vital sign document section (record artifact)")
 _SECTION_ASSESSMENTS = ("Beurteilungen", "424836000", "Assessment section (record artifact)")
+# KBV's own section codes (KBV_CS_MIO_DIGA_Section_Codes in kbv.mio.diga), versioned with the package.
+_KBV_SECTION_CODES = "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_DIGA_Section_Codes"
+_SECTION_PATIENT_REPORTS = ("Patientenberichte", "SectionPatientenberichte", "Bereich Patientenberichte")
 
 
 def _snomed_section(pack: VersionPack, spec: tuple[str, str, str], **content: Any) -> Json:
@@ -20,6 +23,15 @@ def _snomed_section(pack: VersionPack, spec: tuple[str, str, str], **content: An
     return {
         "title": title,
         "code": {"coding": [{"system": SNOMED, "version": pack.snomed_version, "code": code, "display": display}]},
+        **content,
+    }
+
+
+def _kbv_section(pack: VersionPack, spec: tuple[str, str, str], **content: Any) -> Json:
+    title, code, display = spec
+    return {
+        "title": title,
+        "code": {"coding": [{"system": _KBV_SECTION_CODES, "version": pack.section_codes_version, "code": code, "display": display}]},
         **content,
     }
 
@@ -38,6 +50,7 @@ def composition(
     *,
     vital_signs: Sequence[str] = (),
     assessments: Sequence[str] = (),
+    patient_reports: Sequence[str] = (),
 ) -> Json:
     # Emitted in the order the profile declares its section slices.
     sections: list[Json] = []
@@ -46,6 +59,8 @@ def composition(
         sections.append(_snomed_section(pack, _SECTION_RESULTS, section=[vitals]))
     if assessments:
         sections.append(_snomed_section(pack, _SECTION_ASSESSMENTS, entry=_entries(assessments)))
+    if patient_reports:
+        sections.append(_kbv_section(pack, _SECTION_PATIENT_REPORTS, entry=_entries(patient_reports)))
 
     res: Json = {
         "resourceType": "Composition",
