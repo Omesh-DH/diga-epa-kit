@@ -14,3 +14,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-11,,mapping,Observation_Diary_Entry + section Patientenberichte,0,0,"new mapper, input, synthetic mood diary, golden bundle, unit tests; 0 errors on the first validator run"
 2026-11-11,,mapping,Goal + CarePlan + section Ziele (archetype D),0,0,"two mappers, three input types, synthetic exercise plan, golden bundle, unit tests; 0 errors on the first validator run"
 2026-11-12,,mapping,archetype C: 0-10 pain rating as a scale score + diary,0,0,"new instrument in the catalogue (LOINC 72514-3), synthetic input, golden bundle, unit tests; loinc.org refused automated fetch (403), code and name confirmed through search results"
+2026-11-12,,mapping,archetype C: ODI functional score as a scale score,0,0,"third instrument (LOINC 97909-6, name confirmed for 2.72 on loinc.org via browser); licence note; gap G9 updated with per-code check"

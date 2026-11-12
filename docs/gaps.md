@@ -127,6 +127,30 @@ Evidence for sub-question 2.
   the current release, not 2.72.
 - **Consequence**: a display that changed between 2.72 and today would pass
   the gate unnoticed. The same holds for any code a manufacturer adds.
-- **Handling (open)**: check each catalogue entry by hand against the LOINC
-  2.72 table (needs a free LOINC account) and note the check here.
-  72514-3: not yet checked. 44261-6: taken from loinc.org earlier, same caveat.
+- **Checked in a browser on loinc.org, 2026-11-12** (the page shows when a
+  term was last changed):
+
+  | Code | Long common name today | Last changed | 2.72 name confirmed |
+  | --- | --- | --- | --- |
+  | 97909-6 | Oswestry disability index score ODI | 2.70 | yes, inferred: unchanged since 2.70 |
+  | 44261-6 | Patient Health Questionnaire 9 item (PHQ-9) total score [Reported] | 2.73 (minor) | no |
+  | 72514-3 | Pain severity - 0-10 verbal numeric rating [Score] - Reported | 2.82 (minor) | no |
+
+- **Handling (open)**: for the two unconfirmed names, compare with the LOINC
+  2.72 table (needs a free LOINC account). Until then the kit emits today's
+  name with the pinned version.
+
+## G10 The gate can fail on a timeout when the machine is busy
+
+- **Where**: validator 6.5.28, offline, any bundle.
+- **Evidence** (2026-11-12): one run reported a single error on an unchanged
+  bundle, at `Composition.type`: "The value set
+  'http://hl7.org/fhir/ValueSet/doc-typecodes|4.0.1' validation (local) took
+  too long to process (>60sec)" (issue code `too-costly`). Other work was
+  running on the machine at the time. The rerun, alone, reported 0 errors;
+  the same check normally ends as a warning.
+- **Consequence**: an error with code `too-costly` says nothing about the
+  bundle. In CI on a small runner it would look like a failed gate.
+- **Handling**: run the gate with nothing else running and rerun once on a
+  `too-costly` error. Open: have `scripts/validate.py` report such errors
+  separately instead of counting them as bundle errors.

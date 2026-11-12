@@ -36,3 +36,7 @@ worst pain imaginable
 worst possible pain
 stärkste vorstellbare schmerzen
 stärkster vorstellbarer schmerz
+# Oswestry Disability Index (English fragments only; German wording not yet listed)
+lift heavy weights without extra pain
+pain prevents me from sitting
+pain prevents me from walking

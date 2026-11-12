@@ -6,7 +6,7 @@ import pytest
 from pydantic import ValidationError
 
 from diga_epa_kit import DigaExport, build_bundle, check_bundle
-from diga_epa_kit.terminology.instruments import INSTRUMENTS, PAIN_NRS
+from diga_epa_kit.terminology.instruments import INSTRUMENTS, ODI, PAIN_NRS
 
 EXAMPLE = Path(__file__).parents[2] / "synthetic" / "archetype_c_pain" / "pain_scale_and_diary.json"
 NOW = datetime(2026, 11, 1, 9, 0, tzinfo=timezone.utc)
@@ -32,7 +32,7 @@ def test_example_passes_local_checks(bundle):
 
 
 def test_pain_score_shape(bundle):
-    scores = _scores(bundle)
+    scores = [s for s in _scores(bundle) if s["code"]["coding"][0]["code"] == "72514-3"]
     assert [s["valueQuantity"]["value"] for s in scores] == [7, 6, 6, 4, 3]
     first = scores[0]
     assert first["code"] == {
@@ -75,13 +75,14 @@ def test_duplicate_rating_is_rejected(raw):
 
 
 def test_local_offset_survives_the_clock_change(bundle):
-    assert _scores(bundle)[-1]["effectiveDateTime"] == "2026-10-30T08:15:00+01:00"
+    pain = [s for s in _scores(bundle) if s["code"]["coding"][0]["code"] == "72514-3"]
+    assert pain[-1]["effectiveDateTime"] == "2026-10-30T08:15:00+01:00"
 
 
 def test_sections_are_assessments_then_reports(bundle):
     assessments, reports = bundle["entry"][0]["resource"]["section"]
     assert (assessments["title"], reports["title"]) == ("Beurteilungen", "Patientenberichte")
-    assert len(assessments["entry"]) == 5 and len(reports["entry"]) == 3
+    assert len(assessments["entry"]) == 7 and len(reports["entry"]) == 3
 
 
 @pytest.mark.parametrize("score", [-1, 11])
@@ -96,11 +97,54 @@ def test_two_instruments_at_the_same_time_are_allowed(raw):
     bundle = build_bundle(DigaExport.model_validate(raw), now=NOW)
     codes = [s["code"]["coding"][0]["code"] for s in _scores(bundle)]
     assert codes.count("72514-3") == 5 and codes.count("44261-6") == 1
-    assert len({s["id"] for s in _scores(bundle)}) == 6
+    assert len({s["id"] for s in _scores(bundle)}) == 8
+
+
+def test_functional_score_shape(bundle):
+    first, last = [s for s in _scores(bundle) if s["code"]["coding"][0]["code"] == "97909-6"]
+    assert first["code"]["coding"] == [
+        {
+            "system": "http://loinc.org",
+            "version": "2.72",
+            "code": "97909-6",
+            "display": "Oswestry disability index score ODI",
+        }
+    ]
+    assert (first["valueQuantity"]["value"], last["valueQuantity"]["value"]) == (42, 28)
+    assert first["valueQuantity"]["code"] == "{score}"
+    (rr,) = first["referenceRange"]
+    assert (rr["low"]["value"], rr["high"]["value"]) == (ODI.min_score, ODI.max_score) == (0, 100)
+    # A scale score, not the blocked Functional_Assessment profile (decision 0008).
+    assert first["meta"]["profile"] == [SCORE_PROFILE]
+    assert first["effectiveDateTime"] == "2026-10-02T08:25:00+02:00"
+    patient = next(e["resource"] for e in bundle["entry"] if e["resource"]["resourceType"] == "Patient")
+    device = next(e["resource"] for e in bundle["entry"] if e["resource"]["resourceType"] == "Device")
+    assert first["performer"] == [{"reference": f"urn:uuid:{patient['id']}"}]
+    assert first["device"] == {"reference": f"urn:uuid:{device['id']}"}
+
+
+@pytest.mark.parametrize("score", [0, 100])
+def test_functional_score_ends_are_accepted(raw, score):
+    raw["prom_scores"][-1]["score"] = score
+    assert DigaExport.model_validate(raw).prom_scores[-1].score == score
+
+
+def test_functional_score_must_be_a_whole_percentage(raw):
+    # The DiGA rounds; the kit does not guess a rounding rule (docs/mapping.md).
+    raw["prom_scores"][-1]["score"] = 35.6
+    with pytest.raises(ValidationError):
+        DigaExport.model_validate(raw)
+
+
+@pytest.mark.parametrize("score", [-1, 101])
+def test_out_of_range_functional_score_is_rejected(raw, score):
+    raw["prom_scores"][-1]["score"] = score
+    with pytest.raises(ValidationError, match="outside 0..100"):
+        DigaExport.model_validate(raw)
 
 
 def test_unknown_instrument_is_rejected(raw):
-    raw["prom_scores"][0]["instrument"] = "odi"
+    raw["prom_scores"][0]["instrument"] = "roland_morris"
     with pytest.raises(ValidationError, match="instrument"):
         DigaExport.model_validate(raw)
 

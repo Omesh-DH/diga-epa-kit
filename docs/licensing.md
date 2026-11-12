@@ -15,6 +15,7 @@ before the open-source release.
 | UCUM | Free with conditions | OK with notice | Plain UCUM codes; notice | Codes `kg`, `mm[Hg]`, `{score}`. Notice: TODO |
 | PHQ-9, GAD-7 | Released by Pfizer without restriction or fee | OK | Cite the authors | PHQ-9 total score only |
 | 0–10 numeric pain rating | Generic scale, no instrument licence | OK | Score and LOINC code only, no anchor texts | In use (LOINC 72514-3) |
+| Oswestry Disability Index | © Jeremy Fairbank, 1980, all rights reserved (LOINC 97909-6 notice); the notice links to Mapi Research Trust (eprovide.mapi-trust.org) for the instrument; licence terms not checked | Avoid item text | Score and LOINC code only. A manufacturer needs its own licence to administer the questionnaire | Score only (decision 0007) |
 | Tinnitus Handicap Inventory | Copyrighted | Avoid item text | Total score only, or a free 0–10 numeric rating scale | Not used |
 | Other PROMs | Varies | Check each | Scores and codes only, no item wording | None used |
 | gematik Referenzvalidator | Apache-2.0 | OK | Separate process; keep LICENSE/NOTICE if redistributed | Not used as the gate (decision 0001) |

@@ -17,7 +17,9 @@
     {"instrument": "pain_nrs", "completed_at": "2026-10-09T08:05:00+02:00", "score": 6},
     {"instrument": "pain_nrs", "completed_at": "2026-10-16T08:20:00+02:00", "score": 6},
     {"instrument": "pain_nrs", "completed_at": "2026-10-23T08:00:00+02:00", "score": 4},
-    {"instrument": "pain_nrs", "completed_at": "2026-10-30T08:15:00+01:00", "score": 3}
+    {"instrument": "pain_nrs", "completed_at": "2026-10-30T08:15:00+01:00", "score": 3},
+    {"instrument": "odi", "completed_at": "2026-10-02T08:25:00+02:00", "score": 42},
+    {"instrument": "odi", "completed_at": "2026-10-30T08:30:00+01:00", "score": 28}
   ],
   "diary_entries": [
     {"written_at": "2026-10-05T20:10:00+02:00", "text": "Nach der Gartenarbeit stärkere Beschwerden im unteren Rücken."},

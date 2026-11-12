@@ -35,10 +35,20 @@ PHQ9 = Instrument(
 PAIN_NRS = Instrument(
     key="pain_nrs",
     # LOINC long common name of 72514-3 (loinc.org/72514-3). It names the score, not the question.
-    # Not yet checked against the 2.72 table itself (docs/gaps.md G9).
+    # Last changed in LOINC 2.82, so the 2.72 name is not confirmed (docs/gaps.md G9).
     total_score=Code("72514-3", "Pain severity - 0-10 verbal numeric rating [Score] - Reported"),
     min_score=0,
     max_score=10,
 )
 
-INSTRUMENTS: dict[str, Instrument] = {i.key: i for i in (PHQ9, PAIN_NRS)}
+ODI = Instrument(
+    key="odi",
+    # LOINC long common name of 97909-6 (loinc.org/97909-6); added and last changed in 2.70,
+    # so this is the 2.72 name. The score is the percentage 0-100. The questionnaire is
+    # copyrighted (docs/licensing.md); only the score is carried.
+    total_score=Code("97909-6", "Oswestry disability index score ODI"),
+    min_score=0,
+    max_score=100,
+)
+
+INSTRUMENTS: dict[str, Instrument] = {i.key: i for i in (PHQ9, PAIN_NRS, ODI)}

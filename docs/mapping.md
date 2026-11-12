@@ -10,7 +10,7 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | Heart rate, glucose, SpO₂, temperature, height, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Glucose_Concentration, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Body_Height, _Respiratory_Rate | – |
 | Other results | befundeUndErgebnisse | Observation_Free | – |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
-| PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total and 0–10 pain rating done; Functional_Assessment blocked (decision 0008) |
+| PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total, 0–10 pain rating and ODI score done; Functional_Assessment blocked (decision 0008) |
 | Diary entries | patientenberichte | Observation_Diary_Entry | done |
 | Exercises, sessions | aktivitaeten | Procedure_Activity | – |
 | Food intake | nahrung | Observation_Nutrition_Intake | – |
@@ -97,6 +97,11 @@ inside the input. They are not exported.
 
 A 0–10 pain rating is one more instrument in `terminology/instruments.py`:
 LOINC 72514-3, range 0–10, exported exactly like a PHQ-9 total. The anchor
-texts of the scale are not carried. The archetype's functional score is
-open: the instrument has not been chosen. Where the pain is (`bodySite`,
+texts of the scale are not carried. The functional score is the Oswestry
+Disability Index (LOINC 97909-6), exported as its percentage 0–100, also as
+a scale score: the Functional_Assessment profile is blocked (decision
+0008). The input takes a whole percentage: with unanswered sections the
+index can be fractional, and the DiGA rounds it before export, because the
+kit does not pick a rounding rule. No severity band is exported; the bands are the instrument's to
+assert. Where the pain is (`bodySite`,
 must-support) is not exported: the input has no field for it.
