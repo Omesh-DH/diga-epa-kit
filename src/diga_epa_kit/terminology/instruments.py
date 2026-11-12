@@ -26,10 +26,20 @@ class Instrument:
 
 PHQ9 = Instrument(
     key="phq9",
-    # LOINC 2.72 long common name of 44261-6 (loinc.org/44261-6). It names the score, not an item.
+    # LOINC long common name of 44261-6 (loinc.org/44261-6). It names the score, not an item.
+    # Last changed in LOINC 2.73, so the 2.72 name is not confirmed (docs/gaps.md G9).
     total_score=Code("44261-6", "Patient Health Questionnaire 9 item (PHQ-9) total score [Reported]"),
     min_score=0,
     max_score=27,
+)
+
+GAD7 = Instrument(
+    key="gad7",
+    # LOINC long common name of 70274-6 (loinc.org/70274-6, read 2026-11-12). Last changed in
+    # LOINC 2.73, so the 2.72 name is not confirmed (docs/gaps.md G9). Seven items, 0-3 each.
+    total_score=Code("70274-6", "Generalized anxiety disorder 7 item (GAD-7) total score [Reported.PHQ]"),
+    min_score=0,
+    max_score=21,
 )
 
 PAIN_NRS = Instrument(
@@ -51,4 +61,4 @@ ODI = Instrument(
     max_score=100,
 )
 
-INSTRUMENTS: dict[str, Instrument] = {i.key: i for i in (PHQ9, PAIN_NRS, ODI)}
+INSTRUMENTS: dict[str, Instrument] = {i.key: i for i in (PHQ9, GAD7, PAIN_NRS, ODI)}

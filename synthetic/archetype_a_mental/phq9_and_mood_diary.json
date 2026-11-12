@@ -14,7 +14,9 @@
   "period_end": "2026-08-31",
   "prom_scores": [
     {"instrument": "phq9", "completed_at": "2026-08-02T20:15:00+02:00", "score": 14},
-    {"instrument": "phq9", "completed_at": "2026-08-30T19:50:00+02:00", "score": 9}
+    {"instrument": "phq9", "completed_at": "2026-08-30T19:50:00+02:00", "score": 9},
+    {"instrument": "gad7", "completed_at": "2026-08-02T20:20:00+02:00", "score": 11},
+    {"instrument": "gad7", "completed_at": "2026-08-30T19:55:00+02:00", "score": 7}
   ],
   "diary_entries": [
     {"written_at": "2026-08-04T21:30:00+02:00", "text": "Langer Arbeitstag, viel Grübeln. Spaziergang am Abend hat etwas geholfen."},

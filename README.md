@@ -4,11 +4,11 @@ Open-source kit that turns typical DiGA data into KBV **MIO DiGA 1.1.0**
 FHIR R4 document bundles for the ePA, with a validation gate in CI. Part of
 a thesis on the interoperability cost of DiGA for small manufacturers.
 
-Status: early. Two archetypes are mapped end to end:
+Status: early. Four archetypes produce a bundle that passes the validator; none is complete:
 
 | Archetype | Data | Profiles |
 | --- | --- | --- |
-| A, mental health | PHQ-9 total scores, mood diary | Observation_Score_or_Assessment_by_Scale, Observation_Diary_Entry |
+| A, mental health | PHQ-9 and GAD-7 total scores, mood diary | Observation_Score_or_Assessment_by_Scale, Observation_Diary_Entry |
 | C, pain | 0–10 pain ratings, diary | Observation_Score_or_Assessment_by_Scale, Observation_Diary_Entry |
 | D, exercise | Goals, exercise plan, adherence diary | Goal, CarePlan, Observation_Diary_Entry |
 | B, metabolic | Body-weight and blood-pressure series | Observation_Body_Weight, Observation_Blood_Pressure |

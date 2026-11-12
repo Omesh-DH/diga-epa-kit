@@ -21,6 +21,11 @@ trouble relaxing
 being so restless
 becoming easily annoyed
 feeling afraid as if something awful
+# GAD-7, German (from memory of the published German version; check against it)
+nervosität, ängstlichkeit oder anspannung
+nicht in der lage sein, sorgen zu stoppen
+übermäßige sorgen bezüglich
+schwierigkeiten zu entspannen
 # PHQ-9 / GAD-7 answer texts
 not at all
 several days

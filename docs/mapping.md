@@ -10,7 +10,7 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | Heart rate, glucose, SpO₂, temperature, height, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Glucose_Concentration, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Body_Height, _Respiratory_Rate | – |
 | Other results | befundeUndErgebnisse | Observation_Free | – |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
-| PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total, 0–10 pain rating and ODI score done; Functional_Assessment blocked (decision 0008) |
+| PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total, GAD-7 total, 0–10 pain rating and ODI score done; Functional_Assessment blocked (decision 0008) |
 | Diary entries | patientenberichte | Observation_Diary_Entry | done |
 | Exercises, sessions | aktivitaeten | Procedure_Activity | – |
 | Food intake | nahrung | Observation_Nutrition_Intake | – |
@@ -115,3 +115,9 @@ prohibits `referenceRange.text`, and the kit sets no `type.coding`: the
 range-meaning codes describe normal, recommended or therapeutic ranges, none
 of them "possible values", and that code system is not in the pinned
 packages.
+
+## GAD-7 (archetype A)
+
+The GAD-7 total is one more instrument in `terminology/instruments.py`:
+LOINC 70274-6, range 0–21, exported exactly like a PHQ-9 total and in the
+same section. No severity band and no item answers are exported.

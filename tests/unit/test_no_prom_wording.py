@@ -10,8 +10,11 @@ PHRASES = [
     if line.strip() and not line.startswith("#")
 ]
 # LOINC codes of the PHQ-9 panel, its nine items and their answer list. The
-# total score (44261-6) is the only PHQ-9 code the kit may carry.
-ITEM_CODES = re.compile(r"\b(44249-1|4425\d-\d|44260-8|LA65(68|69|70|71)-\d)\b")
+# total score (44261-6) is the only PHQ-9 code the kit may carry. For the
+# GAD-7 only the panel code (loinc.org/69737-5) is blocked: the public page
+# does not list the item codes (docs/STATUS.md, open). Its total score
+# (70274-6) is the only GAD-7 code the kit may carry.
+ITEM_CODES = re.compile(r"\b(44249-1|4425\d-\d|44260-8|LA65(68|69|70|71)-\d|69737-5)\b")
 TEXT_SUFFIXES = {".py", ".json", ".md", ".txt", ".csv", ".xml", ".yaml", ".yml", ".toml"}
 
 

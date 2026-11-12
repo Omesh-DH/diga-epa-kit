@@ -134,9 +134,10 @@ Evidence for sub-question 2.
   | --- | --- | --- | --- |
   | 97909-6 | Oswestry disability index score ODI | 2.70 | yes, inferred: unchanged since 2.70 |
   | 44261-6 | Patient Health Questionnaire 9 item (PHQ-9) total score [Reported] | 2.73 (minor) | no |
+  | 70274-6 | Generalized anxiety disorder 7 item (GAD-7) total score [Reported.PHQ] | 2.73 (minor) | no |
   | 72514-3 | Pain severity - 0-10 verbal numeric rating [Score] - Reported | 2.82 (minor) | no |
 
-- **Handling (open)**: for the two unconfirmed names, compare with the LOINC
+- **Handling (open)**: for the three unconfirmed names, compare with the LOINC
   2.72 table (needs a free LOINC account). Until then the kit emits today's
   name with the pinned version.
 

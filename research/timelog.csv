@@ -16,3 +16,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-12,,mapping,archetype C: 0-10 pain rating as a scale score + diary,0,0,"new instrument in the catalogue (LOINC 72514-3), synthetic input, golden bundle, unit tests; loinc.org refused automated fetch (403), code and name confirmed through search results"
 2026-11-12,,mapping,archetype C: ODI functional score as a scale score,0,0,"third instrument (LOINC 97909-6, name confirmed for 2.72 on loinc.org via browser); licence note; gap G9 updated with per-code check"
 2026-11-12,,mapping,score referenceRange.type,0,0,"range labelled as scale bounds via type.text; checked against the official example bundle, which uses an untyped range the same way"
+2026-11-12,,mapping,archetype A: GAD-7 total score,0,0,"fourth instrument (LOINC 70274-6, read on loinc.org via browser; last changed 2.73, so 2.72 name unconfirmed); synthetic input, golden bundle, unit tests"

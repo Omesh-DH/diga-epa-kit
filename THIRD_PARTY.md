@@ -11,6 +11,6 @@ from git.
 | HL7 FHIR validator (validator_cli.jar) | github.com/hapifhir/org.hl7.fhir.core | Apache-2.0 |
 | LOINC codes and displays (in `terminology/instruments.py`, golden bundles) | Regenstrief Institute | LOINC licence: "This material contains content from LOINC (http://loinc.org). LOINC is copyright © Regenstrief Institute, Inc. and the LOINC Committee and is available at no cost under the license at http://loinc.org/license." |
 | SNOMED CT codes (fixed by the KBV profiles) | SNOMED International | Use in Germany via the national release centre (BfArM); affiliate licence terms apply |
-| PHQ-9 | Pfizer Inc. | Free to use; no permission required. The kit carries only LOINC codes and displays, not the instrument wording |
+| PHQ-9, GAD-7 | Pfizer Inc. (developed by R. L. Spitzer, J. B. W. Williams, K. Kroenke and colleagues) | Free to use; no permission required. The kit carries only LOINC codes and displays, not the instrument wording |
 
 Python dependency: pydantic (MIT). Dev: pytest (MIT).
