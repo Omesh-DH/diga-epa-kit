@@ -8,7 +8,7 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | Body weight | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Body_Weight | done |
 | Blood pressure | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Blood_Pressure | done |
 | Heart rate, glucose, SpO₂, temperature, height, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Glucose_Concentration, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Body_Height, _Respiratory_Rate | – |
-| Other results | befundeUndErgebnisse | Observation_Free | – |
+| Other results | befundeUndErgebnisse | Observation_Free | BMI and daily step count done |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
 | PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total, GAD-7 total, 0–10 pain rating and ODI score done; Functional_Assessment blocked (decision 0008) |
 | Diary entries | patientenberichte | Observation_Diary_Entry | done |
@@ -121,3 +121,35 @@ packages.
 The GAD-7 total is one more instrument in `terminology/instruments.py`:
 LOINC 70274-6, range 0–21, exported exactly like a PHQ-9 total and in the
 same section. No severity band and no item answers are exported.
+
+## Free results: BMI and daily steps (archetype B)
+
+`KBV_PR_MIO_DIGA_Observation_Free` constrains almost nothing: it fixes the
+profile, prohibits a few elements (`meta.source/security/tag`,
+`implicitRules`, `language`, `contained`, `specimen`) and narrows reference
+targets. It has no code pattern, no identifier slice and no must-support
+element. The Composition allows it only as a direct entry of "Befunde und
+Ergebnisse", not in the Vitalzeichen subsection. What the kit emits is
+therefore its own choice:
+
+- **BMI**: LOINC 39156-5, `valueQuantity` in `kg/m2` rounded to one decimal,
+  `effectiveDateTime` = the time of the weight reading the BMI is based on
+  (not the time of the calculation), category `vital-signs`.
+  The category is not optional: FHIR R4 makes the validator apply the core
+  bmi profile whenever it sees this code. `device` = the DiGA and no
+  performer, because the value is calculated, not measured. No `derivedFrom`
+  to weight and height: the input does not say which readings were used.
+- **Daily steps**: LOINC 41950-7 (steps in 24 hours), category `activity`,
+  `effectiveDateTime` = the calendar day without a time, `valueQuantity` with
+  UCUM `{#}/(24.h)` as in LOINC's example units, performer = the patient. The
+  phone or wearable that counted is not exported: the input does not name it.
+  "In 24 hour" is read as "per calendar day"; the day of a clock change has
+  23 or 25 hours. Days without data must be left out of the input: a 0 is
+  exported as a real count of zero steps.
+- Neither carries the `identifier` that the specific profiles require; the
+  free profile has no such slice.
+
+The gate does not confirm the unit. Its message (2026-11-12): "Unable to
+validate code '{#}/(24.h)' in system 'http://unitsofmeasure.org' because
+the validator is running without terminology services" (a warning). The
+code is the example unit shown on loinc.org/41950-7 (read 2026-11-12).

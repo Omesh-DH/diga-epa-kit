@@ -135,9 +135,11 @@ Evidence for sub-question 2.
   | 97909-6 | Oswestry disability index score ODI | 2.70 | yes, inferred: unchanged since 2.70 |
   | 44261-6 | Patient Health Questionnaire 9 item (PHQ-9) total score [Reported] | 2.73 (minor) | no |
   | 70274-6 | Generalized anxiety disorder 7 item (GAD-7) total score [Reported.PHQ] | 2.73 (minor) | no |
+  | 39156-5 | Body mass index (BMI) [Ratio] | 2.73 (minor) | no |
+  | 41950-7 | Number of steps in 24 hour Measured | 2.48 (minor) | yes, inferred: unchanged since 2.48 |
   | 72514-3 | Pain severity - 0-10 verbal numeric rating [Score] - Reported | 2.82 (minor) | no |
 
-- **Handling (open)**: for the three unconfirmed names, compare with the LOINC
+- **Handling (open)**: for the four unconfirmed names, compare with the LOINC
   2.72 table (needs a free LOINC account). Until then the kit emits today's
   name with the pinned version.
 
@@ -155,3 +157,24 @@ Evidence for sub-question 2.
 - **Handling**: run the gate with nothing else running and rerun once on a
   `too-costly` error. Open: have `scripts/validate.py` report such errors
   separately instead of counting them as bundle errors.
+
+## G11 A BMI is a vital sign that cannot go into the vital-signs subsection
+
+- **Where**: `Composition.section:befundeUndErgebnisse`, its subsection
+  `vitalzeichenUndKoerpermasse`, and `Observation.category`.
+- **Evidence**: FHIR R4 requires category `vital-signs` for LOINC 39156-5;
+  the validator says "Validate Observation against the Body mass index
+  profile (http://hl7.org/fhir/StructureDefinition/bmi) which is required by
+  the FHIR specification because the LOINC code 39156-5 was found". The entry
+  list of "Vitalzeichen und Körpermaße" is closed and has no profile that
+  can carry a BMI; neither `kbv.mio.diga` 1.1.0 nor `kbv.basis` 1.3.0 has a
+  BMI profile.
+- **Consequence**: the only conformant place is `Observation_Free` as a
+  direct entry of "Befunde und Ergebnisse", so a vital sign sits next to,
+  not inside, the vital-signs subsection.
+- **Also**: `befundeUndErgebnisse.entry` is the only section entry without
+  the sub-constraints the other sections have (`entry.reference` min 1;
+  `entry.type`, `identifier`, `display` max 0). The kit emits only
+  `reference`, so its output is unaffected.
+- **Handling**: as above; documented in `docs/mapping.md`. A question for
+  support.mio@kbv.de.

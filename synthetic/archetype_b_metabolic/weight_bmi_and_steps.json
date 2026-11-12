@@ -1,0 +1,32 @@
+{
+  "diga": {
+    "name": "Synthetic Weight Coach",
+    "ve_id": "99990001",
+    "pzn": "19999999",
+    "manufacturer": {"name": "Synthetic DiGA GmbH", "website": "https://example.org"}
+  },
+  "patient": {
+    "id": "9a4c1e73-2b6d-4f0a-a1c8-3e5d7f9b1c24",
+    "birth_date": "1975-06-21",
+    "gender": "female"
+  },
+  "period_start": "2026-10-19",
+  "period_end": "2026-10-25",
+  "body_weights": [
+    {"measured_at": "2026-10-19T07:10:00+02:00", "kg": 92.6},
+    {"measured_at": "2026-10-25T08:05:00+01:00", "kg": 91.8}
+  ],
+  "body_mass_indices": [
+    {"measured_at": "2026-10-19T07:10:00+02:00", "kg_m2": 32.8},
+    {"measured_at": "2026-10-25T08:05:00+01:00", "kg_m2": 32.5}
+  ],
+  "daily_steps": [
+    {"day": "2026-10-19", "steps": 4210},
+    {"day": "2026-10-20", "steps": 5630},
+    {"day": "2026-10-21", "steps": 2890},
+    {"day": "2026-10-22", "steps": 7340},
+    {"day": "2026-10-23", "steps": 6125},
+    {"day": "2026-10-24", "steps": 9480},
+    {"day": "2026-10-25", "steps": 8015}
+  ]
+}

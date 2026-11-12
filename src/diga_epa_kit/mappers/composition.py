@@ -49,6 +49,7 @@ def composition(
     period: tuple[date, date],
     now: datetime,
     *,
+    results: Sequence[str] = (),
     vital_signs: Sequence[str] = (),
     assessments: Sequence[str] = (),
     goals: Sequence[str] = (),
@@ -56,9 +57,15 @@ def composition(
 ) -> Json:
     # Emitted in the order the profile declares its section slices.
     sections: list[Json] = []
-    if vital_signs:
-        vitals = _snomed_section(pack, _SECTION_VITALS, entry=_entries(vital_signs))
-        sections.append(_snomed_section(pack, _SECTION_RESULTS, section=[vitals]))
+    if results or vital_signs:
+        # Free results are entries of the results section itself; the specific
+        # vital-sign profiles sit in its Vitalzeichen subsection.
+        content: dict[str, Any] = {}
+        if results:
+            content["entry"] = _entries(results)
+        if vital_signs:
+            content["section"] = [_snomed_section(pack, _SECTION_VITALS, entry=_entries(vital_signs))]
+        sections.append(_snomed_section(pack, _SECTION_RESULTS, **content))
     if assessments:
         sections.append(_snomed_section(pack, _SECTION_ASSESSMENTS, entry=_entries(assessments)))
     if goals:

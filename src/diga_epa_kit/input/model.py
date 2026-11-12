@@ -171,6 +171,33 @@ class PromScore(_Strict):
         return self
 
 
+class BodyMassIndex(_Strict):
+    """A BMI the DiGA calculated. The bounds are plausibility limits, not clinical ones.
+
+    ``measured_at`` is the time of the weight reading the BMI is based on, not the
+    time the app did the arithmetic.
+    """
+
+    measured_at: datetime
+    kg_m2: float = Field(ge=5, le=150)
+
+    @model_validator(mode="after")
+    def _tz_aware(self) -> "BodyMassIndex":
+        if self.measured_at.tzinfo is None:
+            raise ValueError("measured_at needs a timezone offset")
+        return self
+
+
+class DailySteps(_Strict):
+    """Step count of one calendar day, as the patient's phone or wearable reported it.
+
+    Leave out days without data: 0 is exported as a real count of zero steps.
+    """
+
+    day: date
+    steps: StrictInt = Field(ge=0, le=200_000)
+
+
 class DigaExport(_Strict):
     diga: DigaInfo
     patient: PatientInfo
@@ -178,6 +205,8 @@ class DigaExport(_Strict):
     period_end: date
     body_weights: list[BodyWeight] = []
     blood_pressures: list[BloodPressure] = []
+    body_mass_indices: list[BodyMassIndex] = []
+    daily_steps: list[DailySteps] = []
     prom_scores: list[PromScore] = []
     diary_entries: list[DiaryEntry] = []
     goals: list[Goal] = []
@@ -192,9 +221,15 @@ class DigaExport(_Strict):
         # the local date of the recording.
         stamps = [("body_weights", w.measured_at) for w in self.body_weights]
         stamps += [("blood_pressures", b.measured_at) for b in self.blood_pressures]
+        stamps += [("body_mass_indices", b.measured_at) for b in self.body_mass_indices]
         stamps += [("prom_scores", p.completed_at) for p in self.prom_scores]
         stamps += [("diary_entries", d.written_at) for d in self.diary_entries]
         outside = [f"{k} {t.isoformat()}" for k, t in stamps if not self.period_start <= t.date() <= self.period_end]
+        outside += [
+            f"daily_steps {s.day.isoformat()}"
+            for s in self.daily_steps
+            if not self.period_start <= s.day <= self.period_end
+        ]
         if outside:
             raise ValueError(f"outside period {self.period_start}..{self.period_end}: {outside}")
 
@@ -205,6 +240,12 @@ class DigaExport(_Strict):
         keys = [b.measured_at for b in self.blood_pressures]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate blood_pressures.measured_at")
+        keys = [b.measured_at for b in self.body_mass_indices]
+        if len(set(keys)) != len(keys):
+            raise ValueError("duplicate body_mass_indices.measured_at")
+        keys = [s.day for s in self.daily_steps]
+        if len(set(keys)) != len(keys):
+            raise ValueError("duplicate daily_steps.day")
         keys = [(p.instrument, p.completed_at) for p in self.prom_scores]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate prom_scores (instrument, completed_at)")
