@@ -32,8 +32,7 @@ section.
 
 Scores and codes only (decision 0007). Each completion yields one score
 `Observation` (LOINC 44261-6, category `survey`, `{score}` quantity,
-`referenceRange` 0–27 as the scale bounds and without `text`, which the
-profile prohibits, `device` = the DiGA) in *Beurteilungen*. No Questionnaire,
+`referenceRange` = the scale's bounds, `device` = the DiGA) in *Beurteilungen*. No Questionnaire,
 no QuestionnaireResponse, no item codes or wording. Two must-support
 elements are deliberately left empty: `derivedFrom` (there is no response to
 point at) and `interpretation` (severity bands are the instrument author's,
@@ -105,3 +104,14 @@ index can be fractional, and the DiGA rounds it before export, because the
 kit does not pick a rounding rule. No severity band is exported; the bands are the instrument's to
 assert. Where the pain is (`bodySite`,
 must-support) is not exported: the input has no field for it.
+
+## Reference range of a score
+
+`referenceRange` holds the bounds of the scale (0–27, 0–10, 0–100), not a
+normal range. KBV's own example bundle does the same: a pain score of 6 with
+an untyped range 1–10. Because a bare range can be read as "normal", the kit
+adds `referenceRange.type.text` = "Wertebereich der Skala". The profile
+prohibits `referenceRange.text`, and the kit sets no `type.coding`: the
+range-meaning codes describe normal, recommended or therapeutic ranges, none
+of them "possible values", and that code system is not in the pinned
+packages.

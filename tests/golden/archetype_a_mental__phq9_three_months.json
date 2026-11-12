@@ -325,6 +325,9 @@
               "unit": "{score}",
               "system": "http://unitsofmeasure.org",
               "code": "{score}"
+            },
+            "type": {
+              "text": "Wertebereich der Skala"
             }
           }
         ],
@@ -412,6 +415,9 @@
               "unit": "{score}",
               "system": "http://unitsofmeasure.org",
               "code": "{score}"
+            },
+            "type": {
+              "text": "Wertebereich der Skala"
             }
           }
         ],
@@ -499,6 +505,9 @@
               "unit": "{score}",
               "system": "http://unitsofmeasure.org",
               "code": "{score}"
+            },
+            "type": {
+              "text": "Wertebereich der Skala"
             }
           }
         ],

@@ -46,6 +46,8 @@ def test_score_observation_shape(bundle):
     assert score["category"][0]["coding"][0]["code"] == "survey"
     (rr,) = score["referenceRange"]
     assert "text" not in rr  # max=0 in the profile
+    # The range is the scale's bounds; the type says so in words, without a code.
+    assert rr["type"] == {"text": "Wertebereich der Skala"}
     assert (rr["low"]["value"], rr["high"]["value"]) == (PHQ9.min_score, PHQ9.max_score) == (0, 27)
     assert rr["low"]["code"] == rr["high"]["code"] == score["valueQuantity"]["code"] == "{score}"
     (device,) = _by_type(bundle, "Device")

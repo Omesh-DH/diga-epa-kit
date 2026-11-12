@@ -50,7 +50,6 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 - Decide deviation 2.
 - Compare the PHQ-9 and pain-rating names with the LOINC 2.72 table (gaps G9); the ODI name is confirmed.
 - `Device.version` (must-support): add the DiGA version to the input (also a Phase 2 item).
-- Score referenceRange is the scale bounds, not a normal range, and has no `referenceRange.type`. With the ODI (0–100) it reads worse; do this next.
 - The wording guard's item-code pattern covers PHQ-9 only; ODI item codes and German ODI fragments are not listed.
 - `scripts/validate.py`: report `too-costly` timeouts separately (gaps G10).
 - Provenance: `agent.type` has a required binding still to map.

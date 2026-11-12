@@ -114,6 +114,7 @@ def test_functional_score_shape(bundle):
     assert first["valueQuantity"]["code"] == "{score}"
     (rr,) = first["referenceRange"]
     assert (rr["low"]["value"], rr["high"]["value"]) == (ODI.min_score, ODI.max_score) == (0, 100)
+    assert rr["type"] == {"text": "Wertebereich der Skala"}
     # A scale score, not the blocked Functional_Assessment profile (decision 0008).
     assert first["meta"]["profile"] == [SCORE_PROFILE]
     assert first["effectiveDateTime"] == "2026-10-02T08:25:00+02:00"

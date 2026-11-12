@@ -10,6 +10,10 @@ from ..terminology.versions import OBS_CATEGORY, UCUM, VersionPack
 from .common import Json, loinc, meta, ri_identifier, urn
 
 
+# German, like the section titles the profile fixes.
+_SCALE_RANGE = "Wertebereich der Skala"
+
+
 def _score_qty(value: int) -> Json:
     return {"value": value, "unit": "{score}", "system": UCUM, "code": "{score}"}
 
@@ -35,7 +39,15 @@ def score(
         "effectiveDateTime": entry.completed_at.isoformat(),
         "performer": [{"reference": urn(patient_uuid)}],
         "valueQuantity": _score_qty(entry.score),
-        # Scale bounds, not a normal range. The profile prohibits referenceRange.text.
-        "referenceRange": [{"low": _score_qty(inst.min_score), "high": _score_qty(inst.max_score)}],
+        # The scale's bounds, as in KBV's own example bundle, not a normal range. The profile
+        # prohibits referenceRange.text, so type.text says what the range is; no coded
+        # range type means "possible values" (docs/mapping.md).
+        "referenceRange": [
+            {
+                "low": _score_qty(inst.min_score),
+                "high": _score_qty(inst.max_score),
+                "type": {"text": _SCALE_RANGE},
+            }
+        ],
         "device": {"reference": urn(device_uuid)},
     }
