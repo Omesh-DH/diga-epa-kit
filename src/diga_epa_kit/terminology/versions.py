@@ -55,6 +55,7 @@ MIO_DIGA_1_1_0 = VersionPack(
         "device_definition_diga": "KBV_PR_MIO_DIGA_DeviceDefinition_DIGA",
         "organization_manufacturer": "KBV_PR_MIO_DIGA_Organization_Manufacturer",
         "body_weight": "KBV_PR_MIO_DIGA_Observation_Body_Weight",
+        "body_height": "KBV_PR_MIO_DIGA_Observation_Body_Height",
         "blood_pressure": "KBV_PR_MIO_DIGA_Observation_Blood_Pressure",
         "diary_entry": "KBV_PR_MIO_DIGA_Observation_Diary_Entry",
         "observation_free": "KBV_PR_MIO_DIGA_Observation_Free",

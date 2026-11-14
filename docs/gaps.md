@@ -199,3 +199,21 @@ Evidence for sub-question 2.
   "Softwareversion") and sets no coding (docs/mapping.md). A question for
   support.mio@kbv.de. Also: the Device id does not depend on the version,
   so the same Device id can carry different versions in different exports.
+
+## G13 The packages do not say whether entries must lie inside the period
+
+- **Where**: `Composition.extension:betrachtungszeitraum`
+  (`KBV_EX_MIO_DIGA_Betrachtungszeitraum`) and `effective[x]` of every
+  section entry.
+- **Evidence**: the extension only requires `valuePeriod.start` and `.end`.
+  The Composition has one invariant (`date-1`, date precision), the Bundle
+  two (`bundle-1`, `bundle-2`: profile prefix, exactly one Composition).
+  None ties the date of an entry to the period, and no description says so
+  in words.
+- **Consequence**: a manufacturer cannot tell from the specification
+  whether a value recorded before the period, such as a body height entered
+  at the start of use, may be exported.
+- **Handling**: the kit's own rule. Dated measurements must lie inside the
+  period; a body height, a goal and a plan may be older but not later than
+  the period end. A reader can therefore see a vital sign dated before
+  `valuePeriod.start`. A question for support.mio@kbv.de.

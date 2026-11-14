@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from ..input.model import BloodPressure, BodyWeight
+from ..input.model import BloodPressure, BodyHeight, BodyWeight
 from ..terminology.versions import LOINC, OBS_CATEGORY, SNOMED, UCUM, VersionPack
 from .common import Json, meta, ri_identifier, urn
 
@@ -44,6 +44,37 @@ def body_weight(pack: VersionPack, uuid: str, patient_uuid: str, obs: BodyWeight
                 {"system": SNOMED, "version": pack.snomed_version, "code": method_code, "display": method_display}
             ]
         },
+    }
+
+
+def body_height(pack: VersionPack, uuid: str, patient_uuid: str, obs: BodyHeight, now: datetime) -> Json:
+    return {
+        "resourceType": "Observation",
+        "id": uuid,
+        "meta": meta(pack, "body_height", now),
+        "identifier": [ri_identifier(pack, uuid)],
+        "status": "final",
+        "category": [{"coding": [{"system": OBS_CATEGORY, "code": "vital-signs"}]}],
+        "code": {
+            "coding": [
+                # de.basisprofil.r4 ValueSet VitalSignDE_Body_Height_Loinc.
+                {"system": LOINC, "version": pack.loinc_version, "code": "8302-2", "display": "Body height"},
+                # kbv.basis KBV_VS_Base_Body_Height_SNOMED_CT: the general concept, because the
+                # input does not say whether the patient stood or lay down.
+                {
+                    "system": SNOMED,
+                    "version": pack.snomed_version,
+                    "code": "1153637007",
+                    "display": "Body height (observable entity)",
+                },
+            ]
+        },
+        "subject": {"reference": urn(patient_uuid)},
+        "effectiveDateTime": obs.measured_at.isoformat(),
+        # Entered or measured at home: the patient is the performer.
+        "performer": [{"reference": urn(patient_uuid)}],
+        # Unit and code "cm" are the kbv.basis pattern.
+        "valueQuantity": {"value": round(obs.cm, 1), "unit": "cm", "system": UCUM, "code": "cm"},
     }
 
 

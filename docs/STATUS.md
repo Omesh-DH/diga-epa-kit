@@ -6,21 +6,21 @@ Last updated: 2026-11-14.
 
 HL7 FHIR validator 6.5.28, `-tx n/a`, packages from `spec/packages/`
 (kbv.mio.diga 1.1.0, kbv.basis 1.3.0, de.basisprofil.r4 1.3.2):
-**0 errors, 496 warnings** on 7 golden bundles (research/metrics.csv). The
-negative control is rejected as expected (`pytest -m validator`). 187 unit
+**0 errors, 506 warnings** on 7 golden bundles (research/metrics.csv). The
+negative control is rejected as expected (`pytest -m validator`). 202 unit
 and golden tests pass.
 
 ## Coverage against the agreed plan
 
 Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
-(2026-10-25). 13 of 44 profiles are mapped (docs/spec-inventory.md).
+(2026-10-25). 14 of 44 profiles are mapped (docs/spec-inventory.md).
 
 | Phase | State | Done | Missing |
 | --- | --- | --- | --- |
 | 0 Spec ingestion | Done | `spec/VERSION`, pinned packages (gitignored), validator and plugin mismatch reported and decided (ADR 0001), generated inventory with must-support, bindings and invariants, ground-truth check (ADR 0005) | – |
 | 1 Scaffold and harness | Mostly done | Repo layout, CLAUDE.md, commands, agents, Makefile, Dockerfile, CI workflow, validator script, `validate(bundle) -> Report` in the library (caller passes the jar and package paths), negative control, ruff and mypy (strict) clean, dependency licence check (`scripts/check_licenses.py`), LICENSE/NOTICE/THIRD_PARTY, docs/licensing.md | Known-good check: the three official mio42 bundles fail the offline gate on required bindings to BCP-47, ICF and SNOMED (gaps G7), so a terminology source is needed; Makefile, Docker and CI never executed (no make, Docker or remote here); pre-commit config written but never run; official notice texts in NOTICE |
-| 2 Input model and archetypes | Partial | A: PHQ-9 and GAD-7 total scores, mood diary. B: body weight, blood pressure, BMI, daily steps, goals. C: 0–10 pain rating, ODI functional score, diary. D: goals, exercise CarePlan, adherence diary. DiGA software version on all archetypes | D: exercise sessions (Procedure_Activity, blocked by decision 0008). JSON Schema export. Field-to-profile table per archetype |
-| 3 Mappers | Partial | Device_DIGA, DeviceDefinition_DIGA, Organization_Manufacturer, Patient, Score_or_Assessment_by_Scale, Body_Weight, Blood_Pressure, Observation_Free (BMI, daily steps), Diary_Entry, Goal, CarePlan | Functional_Assessment, Provenance, DocumentReference, other vitals; hand-written golden files; property tests |
+| 2 Input model and archetypes | Partial | A: PHQ-9 and GAD-7 total scores, mood diary. B: body weight, body height, blood pressure, BMI, daily steps, goals. C: 0–10 pain rating, ODI functional score, diary. D: goals, exercise CarePlan, adherence diary. DiGA software version on all archetypes | D: exercise sessions (Procedure_Activity, blocked by decision 0008). JSON Schema export. Field-to-profile table per archetype |
+| 3 Mappers | Partial | Device_DIGA, DeviceDefinition_DIGA, Organization_Manufacturer, Patient, Score_or_Assessment_by_Scale, Body_Weight, Body_Height, Blood_Pressure, Observation_Free (BMI, daily steps), Diary_Entry, Goal, CarePlan | Functional_Assessment, Provenance, DocumentReference, other vitals; hand-written golden files; property tests |
 | 4 Composition and Bundle | Partial | Composition with 4 sections, Bundle, invariant checks, all 4 archetypes validate | Remaining sections;  one-year size and speed test |
 | 5 CLI and docs | Started | `build` and `check` commands, README | `convert`/`validate`/`explain-error`, tutorials, API reference, quickstart timing |
 | 6 ePA → DiGA import stub | Not started | Carrier identified: `de.gematik.epa.medication` 1.3.5 (ADR 0005) | Read-side models, tests, ADR |
@@ -51,7 +51,7 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 - Compare the PHQ-9, GAD-7, BMI and pain-rating names with the LOINC 2.72 table (gaps G9); the ODI name is confirmed.
 - `Device.version`: the kit states one version per export, as text without a coded type (gaps G12). The profile allows several versions but cannot date them. The field is optional; no golden bundle covers the case without a version.
 - The wording guard's item-code pattern covers PHQ-9 only; GAD-7 item codes (only the panel code is blocked; loinc.org does not show the members without a login), ODI item codes and German ODI fragments are not listed. The German GAD-7 fragments cover four of seven items, were written from memory and need a check against the published German version.
-- BMI has no `derivedFrom` to the weight and height it was calculated from; body height is not mapped yet.
+- BMI has no `derivedFrom` to the weight and height it was calculated from: the input does not name the readings.
 - Daily steps: the counting phone or wearable is not exported, and the UCUM code `{#}/(24.h)` is not checked by the offline gate.
 - Provenance: `agent.type` has a required binding still to map.
 - Patient name (KBV name datatype needs the `humanname-own-name` extension).

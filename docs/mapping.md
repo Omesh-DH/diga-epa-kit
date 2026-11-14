@@ -7,7 +7,8 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | --- | --- | --- | --- |
 | Body weight | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Body_Weight | done |
 | Blood pressure | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Blood_Pressure | done |
-| Heart rate, glucose, SpO₂, temperature, height, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Glucose_Concentration, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Body_Height, _Respiratory_Rate | – |
+| Body height | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Body_Height | done |
+| Heart rate, glucose, SpO₂, temperature, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Glucose_Concentration, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Respiratory_Rate | – |
 | Other results | befundeUndErgebnisse | Observation_Free | BMI and daily step count done |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
 | PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total, GAD-7 total, 0–10 pain rating and ODI score done; Functional_Assessment blocked (decision 0008) |
@@ -179,3 +180,24 @@ versions but cannot say which one produced which data.
 - Two exports of one DiGA with different app versions carry a Device with
   the same id and different content. A reader that de-duplicates resources
   by id across documents must expect that (gap G12).
+
+## Body height
+
+`body_heights` maps to `KBV_PR_MIO_DIGA_Observation_Body_Height`, built like
+body weight: LOINC 8302-2 "Body height" (de.basisprofil.r4 value set
+VitalSignDE_Body_Height_Loinc) plus SNOMED 1153637007 "Body height
+(observable entity)" (kbv.basis KBV_VS_Base_Body_Height_SNOMED_CT),
+`valueQuantity` in `cm` rounded to one decimal, performer = the patient,
+in the Vitalzeichen subsection. The general SNOMED concept is used because
+the input does not say whether the patient stood or lay down. No `method`:
+unlike body weight, no value set for it exists in the packages.
+
+A height may be older than the export period, because apps usually ask for
+it once at the start of use; it only must not lie after the period end.
+This is the one measurement exempt from the "inside the period" rule (goals
+and plans may also start earlier). The packages do not say whether entries
+must lie inside the period (gap G13). For a typed-in height `measured_at`
+is in practice the time of entry; the input does not distinguish measured
+from typed-in, and the packages have no code for that. The
+BMI still has no `derivedFrom` to weight and height: the input does not
+say which readings a BMI was calculated from.

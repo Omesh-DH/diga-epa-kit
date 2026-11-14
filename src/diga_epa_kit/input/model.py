@@ -51,6 +51,19 @@ class BodyWeight(_Strict):
         return self
 
 
+class BodyHeight(_Strict):
+    """Body height in cm. Usually typed in once, often before the export period."""
+
+    measured_at: datetime
+    cm: float = Field(gt=30, lt=280)
+
+    @model_validator(mode="after")
+    def _tz_aware(self) -> BodyHeight:
+        if self.measured_at.tzinfo is None:
+            raise ValueError("measured_at needs a timezone offset")
+        return self
+
+
 class BloodPressure(_Strict):
     """One reading in mmHg. The bounds are plausibility limits, not clinical ones."""
 
@@ -212,6 +225,7 @@ class DigaExport(_Strict):
     period_start: date
     period_end: date
     body_weights: list[BodyWeight] = []
+    body_heights: list[BodyHeight] = []
     blood_pressures: list[BloodPressure] = []
     body_mass_indices: list[BodyMassIndex] = []
     daily_steps: list[DailySteps] = []
@@ -225,8 +239,8 @@ class DigaExport(_Strict):
         if self.period_end < self.period_start:
             raise ValueError("period_end is before period_start")
 
-        # Everything exported must fall inside the Betrachtungszeitraum, judged by
-        # the local date of the recording.
+        # Every dated measurement except body height must fall inside the
+        # Betrachtungszeitraum, judged by the local date of the recording.
         stamps = [("body_weights", w.measured_at) for w in self.body_weights]
         stamps += [("blood_pressures", b.measured_at) for b in self.blood_pressures]
         stamps += [("body_mass_indices", b.measured_at) for b in self.body_mass_indices]
@@ -245,6 +259,9 @@ class DigaExport(_Strict):
         keys: list[object] = [w.measured_at for w in self.body_weights]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate body_weights.measured_at")
+        keys = [h.measured_at for h in self.body_heights]
+        if len(set(keys)) != len(keys):
+            raise ValueError("duplicate body_heights.measured_at")
         keys = [b.measured_at for b in self.blood_pressures]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate blood_pressures.measured_at")
@@ -272,6 +289,13 @@ class DigaExport(_Strict):
         if unknown:
             raise ValueError(f"care_plans refer to unknown goals: {unknown}")
         late = [f"goal {g.id}" for g in self.goals if g.start > self.period_end]
+        # A height is usually entered once at the start of use, so it may predate the
+        # period: it is the height that was current in it.
+        late += [
+            f"body_heights {h.measured_at.isoformat()}"
+            for h in self.body_heights
+            if h.measured_at.date() > self.period_end
+        ]
         late += [f"plan {p.id}" for p in self.care_plans for a in p.activities if a.start and a.start > self.period_end]
         if late:
             raise ValueError(f"starts after period_end {self.period_end}: {sorted(set(late))}")

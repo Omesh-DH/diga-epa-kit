@@ -31,6 +31,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
     devdef_id = _id("device-definition", data.diga.ve_id)
     device_id = _id("device", data.diga.ve_id)
     weight_ids = [_id("body-weight", data.patient.id, w.measured_at.isoformat()) for w in data.body_weights]
+    height_ids = [_id("body-height", data.patient.id, h.measured_at.isoformat()) for h in data.body_heights]
     bp_ids = [_id("blood-pressure", data.patient.id, b.measured_at.isoformat()) for b in data.blood_pressures]
     bmi_ids = [_id("bmi", data.patient.id, b.measured_at.isoformat()) for b in data.body_mass_indices]
     step_ids = [_id("daily-steps", data.patient.id, s.day.isoformat()) for s in data.daily_steps]
@@ -43,6 +44,10 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         *(
             vitals.body_weight(pack, wid, patient_id, w, now)
             for wid, w in zip(weight_ids, data.body_weights, strict=True)
+        ),
+        *(
+            vitals.body_height(pack, hid, patient_id, h, now)
+            for hid, h in zip(height_ids, data.body_heights, strict=True)
         ),
         *(
             vitals.blood_pressure(pack, bid, patient_id, b, now)
@@ -87,7 +92,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         (data.period_start, data.period_end),
         now,
         results=[*bmi_ids, *step_ids],
-        vital_signs=[*weight_ids, *bp_ids],
+        vital_signs=[*weight_ids, *height_ids, *bp_ids],
         assessments=score_ids,
         goals=[*goal_ids.values(), *plan_ids],
         patient_reports=diary_ids,

@@ -114,11 +114,11 @@ def test_free_results_are_entries_of_the_results_section(bundle):
     assert [e["reference"] for e in results["entry"]] == free_ids
     (vitals,) = results["section"]
     assert vitals["title"] == "Vitalzeichen und Körpermaße"
-    assert len(vitals["entry"]) == 2 and not set(free_ids) & {e["reference"] for e in vitals["entry"]}
+    assert len(vitals["entry"]) == 3 and not set(free_ids) & {e["reference"] for e in vitals["entry"]}
 
 
 def test_results_section_without_vital_signs_has_no_subsection(raw):
-    del raw["body_weights"]
+    del raw["body_weights"], raw["body_heights"]
     results = build_bundle(DigaExport.model_validate(raw), now=NOW)["entry"][0]["resource"]["section"][0]
     assert "section" not in results and len(results["entry"]) == 9
 
@@ -204,7 +204,7 @@ def test_bmi_without_steps_and_steps_without_bmi(raw):
 def test_vitals_only_results_section_has_no_direct_entries(raw):
     del raw["body_mass_indices"], raw["daily_steps"]
     results = build_bundle(DigaExport.model_validate(raw), now=NOW)["entry"][0]["resource"]["section"][0]
-    assert "entry" not in results and len(results["section"][0]["entry"]) == 2
+    assert "entry" not in results and len(results["section"][0]["entry"]) == 3
 
 
 def test_entries_keep_input_order(raw):

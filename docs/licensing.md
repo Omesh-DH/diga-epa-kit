@@ -36,6 +36,7 @@ in the pinned packages.
 | --- | --- | --- |
 | 706689003 | `mappers/core.py` | `KBV_PR_MIO_DIGA_DeviceDefinition_DIGA` `type.coding` pattern |
 | 27113001 | `mappers/vitals.py` | kbv.basis `KBV_VS_Base_Body_Weight_SNOMED_CT` (required) |
+| 1153637007 | `mappers/vitals.py` | kbv.basis `KBV_VS_Base_Body_Height_SNOMED_CT` (required) |
 | 363808001, 786458005 | `mappers/vitals.py` | kbv.basis `KBV_VS_Base_Body_Weight_Method_SNOMED_CT` (required) |
 | 75367002, 271649006, 271650006 | `mappers/vitals.py` | kbv.basis `KBV_PR_Base_Observation_Blood_Pressure` `codeSnomed` patterns |
 | 423100009, 1184593002, 424836000 | `mappers/composition.py` | `KBV_PR_MIO_DIGA_Composition` section code patterns |
