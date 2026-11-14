@@ -217,3 +217,20 @@ Evidence for sub-question 2.
   period; a body height, a goal and a plan may be older but not later than
   the period end. A reader can therefore see a vital sign dated before
   `valuePeriod.start`. A question for support.mio@kbv.de.
+
+## G14 Oxygen saturation: a device as the method, and two codings that differ
+
+- **Where**: `KBV_PR_Base_Observation_Peripheral_Oxygen_Saturation` 1.3.0
+  (base of the MIO DiGA profile), `Observation.method` and
+  `Observation.code.coding`.
+- **Evidence**: `method` is required and fixed by pattern to SNOMED
+  448703006 "Pulse oximeter (physical object)", which names a device, not a
+  method. The LOINC slice is fixed to 2708-6 with display "Oxygen
+  saturation in Arterial blood", the SNOMED slice to 431314004 "Peripheral
+  oxygen saturation (observable entity)": the two codings of one value name
+  different things.
+- **Consequence**: a saturation from any other source cannot be expressed
+  in this profile, and every export asserts a measurement method the
+  manufacturer may never have recorded.
+- **Handling**: follow the patterns. The input field accepts pulse-oximeter
+  readings only and says so. A question for support.mio@kbv.de.

@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import unicodedata
+from collections.abc import Sequence
 from datetime import date, datetime
 from typing import Literal
 from uuid import UUID
 
-from pydantic import BaseModel, Field, StrictInt, model_validator
+from pydantic import BaseModel, Field, StrictFloat, StrictInt, model_validator
 
 
 class _Strict(BaseModel):
@@ -62,6 +63,46 @@ class BodyHeight(_Strict):
         if self.measured_at.tzinfo is None:
             raise ValueError("measured_at needs a timezone offset")
         return self
+
+
+class _Measured(_Strict):
+    measured_at: datetime
+
+    @model_validator(mode="after")
+    def _tz_aware(self) -> _Measured:
+        if self.measured_at.tzinfo is None:
+            raise ValueError("measured_at needs a timezone offset")
+        return self
+
+
+# The bounds below are plausibility limits that catch unit and typing mistakes,
+# not clinical limits.
+class HeartRate(_Measured):
+    """Beats per minute."""
+
+    bpm: StrictInt = Field(ge=20, le=300)
+
+
+class BodyTemperature(_Measured):
+    """Degrees Celsius; the input does not say where on the body it was taken."""
+
+    celsius: StrictFloat | StrictInt = Field(ge=25, le=45)
+
+
+class OxygenSaturation(_Measured):
+    """Peripheral oxygen saturation in percent, from a pulse oximeter (the profile fixes that method)."""
+
+    percent: StrictInt = Field(
+        ge=50,
+        le=100,
+        description="Pulse-oximeter readings only: the export states that method for every value",
+    )
+
+
+class RespiratoryRate(_Measured):
+    """Breaths per minute."""
+
+    per_minute: StrictInt = Field(ge=4, le=80)
 
 
 class BloodPressure(_Strict):
@@ -227,6 +268,10 @@ class DigaExport(_Strict):
     body_weights: list[BodyWeight] = []
     body_heights: list[BodyHeight] = []
     blood_pressures: list[BloodPressure] = []
+    heart_rates: list[HeartRate] = []
+    body_temperatures: list[BodyTemperature] = []
+    oxygen_saturations: list[OxygenSaturation] = []
+    respiratory_rates: list[RespiratoryRate] = []
     body_mass_indices: list[BodyMassIndex] = []
     daily_steps: list[DailySteps] = []
     prom_scores: list[PromScore] = []
@@ -243,6 +288,16 @@ class DigaExport(_Strict):
         # Betrachtungszeitraum, judged by the local date of the recording.
         stamps = [("body_weights", w.measured_at) for w in self.body_weights]
         stamps += [("blood_pressures", b.measured_at) for b in self.blood_pressures]
+        simple: dict[str, Sequence[_Measured]] = {
+            "heart_rates": self.heart_rates,
+            "body_temperatures": self.body_temperatures,
+            "oxygen_saturations": self.oxygen_saturations,
+            "respiratory_rates": self.respiratory_rates,
+        }
+        for name, readings in simple.items():
+            stamps += [(name, r.measured_at) for r in readings]
+            if len({r.measured_at for r in readings}) != len(readings):
+                raise ValueError(f"duplicate {name}.measured_at")
         stamps += [("body_mass_indices", b.measured_at) for b in self.body_mass_indices]
         stamps += [("prom_scores", p.completed_at) for p in self.prom_scores]
         stamps += [("diary_entries", d.written_at) for d in self.diary_entries]

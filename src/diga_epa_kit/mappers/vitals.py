@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 
 from ..input.model import BloodPressure, BodyHeight, BodyWeight
@@ -137,3 +138,71 @@ def blood_pressure(pack: VersionPack, uuid: str, patient_uuid: str, obs: BloodPr
             ),
         ],
     }
+
+
+@dataclass(frozen=True)
+class _Vital:
+    loinc: tuple[str, str]
+    snomed: tuple[str, str]
+    unit: str
+    ucum: str
+    method: tuple[str, str] | None = None
+
+
+# One entry per profile key. LOINC code: pattern in the de.basisprofil.r4 VitalSignDE profile;
+# LOINC display and unit text: patterns in the kbv.basis profile; UCUM code: de.basisprofil.r4
+# pattern; SNOMED: the kbv.basis value set or pattern. Where a value set offers several
+# concepts the general one is used, because the input does not say how or where the value
+# was taken.
+_SIMPLE_VITALS = {
+    "heart_rate": _Vital(
+        ("8867-4", "Heart rate"), ("364075005", "Heart rate (observable entity)"), "per minute", "/min"
+    ),
+    "body_temperature": _Vital(
+        ("8310-5", "Body temperature"), ("386725007", "Body temperature (observable entity)"), "Celsius", "Cel"
+    ),
+    "oxygen_saturation": _Vital(
+        ("2708-6", "Oxygen saturation in Arterial blood"),
+        ("431314004", "Peripheral oxygen saturation (observable entity)"),
+        "%",
+        "%",
+        # Required and fixed by kbv.basis: this profile only fits pulse-oximeter readings.
+        method=("448703006", "Pulse oximeter (physical object)"),
+    ),
+    "respiratory_rate": _Vital(
+        ("9279-1", "Respiratory rate"), ("86290005", "Respiratory rate (observable entity)"), "per minute", "/min"
+    ),
+}
+
+
+def simple_vital(
+    pack: VersionPack, kind: str, uuid: str, patient_uuid: str, measured_at: datetime, value: float, now: datetime
+) -> Json:
+    """Heart rate, body temperature, oxygen saturation or respiratory rate: one value, one unit."""
+    spec = _SIMPLE_VITALS[kind]
+    res: Json = {
+        "resourceType": "Observation",
+        "id": uuid,
+        "meta": meta(pack, kind, now),
+        "identifier": [ri_identifier(pack, uuid)],
+        "status": "final",
+        "category": [{"coding": [{"system": OBS_CATEGORY, "code": "vital-signs"}]}],
+        "code": {
+            "coding": [
+                {"system": LOINC, "version": pack.loinc_version, "code": spec.loinc[0], "display": spec.loinc[1]},
+                {"system": SNOMED, "version": pack.snomed_version, "code": spec.snomed[0], "display": spec.snomed[1]},
+            ]
+        },
+        "subject": {"reference": urn(patient_uuid)},
+        "effectiveDateTime": measured_at.isoformat(),
+        # Home measurements: the patient is the performer, whether device-synced or typed in.
+        "performer": [{"reference": urn(patient_uuid)}],
+        "valueQuantity": {"value": value, "unit": spec.unit, "system": UCUM, "code": spec.ucum},
+    }
+    if spec.method:
+        res["method"] = {
+            "coding": [
+                {"system": SNOMED, "version": pack.snomed_version, "code": spec.method[0], "display": spec.method[1]}
+            ]
+        }
+    return res

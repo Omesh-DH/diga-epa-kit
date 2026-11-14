@@ -63,6 +63,20 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         ),
     ]
 
+    # (profile key, [(time, value)]) in the kit's own fixed order; the profile does not order entries.
+    simple_vitals: list[tuple[str, list[tuple[datetime, float]]]] = [
+        ("heart_rate", [(r.measured_at, r.bpm) for r in data.heart_rates]),
+        ("body_temperature", [(r.measured_at, round(r.celsius, 1)) for r in data.body_temperatures]),
+        ("oxygen_saturation", [(r.measured_at, r.percent) for r in data.oxygen_saturations]),
+        ("respiratory_rate", [(r.measured_at, r.per_minute) for r in data.respiratory_rates]),
+    ]
+    simple_ids: list[str] = []
+    for kind, readings in simple_vitals:
+        for measured_at, value in readings:
+            vital_id = _id(kind.replace("_", "-"), data.patient.id, measured_at.isoformat())
+            body.append(vitals.simple_vital(pack, kind, vital_id, patient_id, measured_at, value, now))
+            simple_ids.append(vital_id)
+
     score_ids: list[str] = []
     for p in data.prom_scores:
         inst = INSTRUMENTS[p.instrument]
@@ -92,7 +106,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         (data.period_start, data.period_end),
         now,
         results=[*bmi_ids, *step_ids],
-        vital_signs=[*weight_ids, *height_ids, *bp_ids],
+        vital_signs=[*weight_ids, *height_ids, *bp_ids, *simple_ids],
         assessments=score_ids,
         goals=[*goal_ids.values(), *plan_ids],
         patient_reports=diary_ids,

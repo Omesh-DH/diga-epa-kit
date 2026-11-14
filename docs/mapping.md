@@ -8,7 +8,8 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | Body weight | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Body_Weight | done |
 | Blood pressure | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Blood_Pressure | done |
 | Body height | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Body_Height | done |
-| Heart rate, glucose, SpO₂, temperature, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Glucose_Concentration, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Respiratory_Rate | – |
+| Heart rate, SpO₂, temperature, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Respiratory_Rate | done |
+| Glucose | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Glucose_Concentration | – (needs specimen, unit and method choices) |
 | Other results | befundeUndErgebnisse | Observation_Free | BMI and daily step count done |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
 | PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total, GAD-7 total, 0–10 pain rating and ODI score done; Functional_Assessment blocked (decision 0008) |
@@ -201,3 +202,35 @@ is in practice the time of entry; the input does not distinguish measured
 from typed-in, and the packages have no code for that. The
 BMI still has no `derivedFrom` to weight and height: the input does not
 say which readings a BMI was calculated from.
+
+## Heart rate, body temperature, oxygen saturation, respiratory rate
+
+Four profiles with the same shape: one value, one unit, performer = the
+patient, in the Vitalzeichen subsection. One table in `mappers/vitals.py`
+holds what differs:
+
+| Input | Profile | LOINC | SNOMED | Unit text / UCUM |
+| --- | --- | --- | --- | --- |
+| `heart_rates` (bpm) | Observation_Heart_Rate | 8867-4 Heart rate | 364075005 | per minute / `/min` |
+| `body_temperatures` (celsius) | Observation_Body_Temperature | 8310-5 Body temperature | 386725007 | Celsius / `Cel` |
+| `oxygen_saturations` (percent) | Observation_Peripheral_Oxygen_Saturation | 2708-6 Oxygen saturation in Arterial blood | 431314004 | % / `%` |
+| `respiratory_rates` (per_minute) | Observation_Respiratory_Rate | 9279-1 Respiratory rate | 86290005 | per minute / `/min` |
+
+Sources: the LOINC code is a pattern in the de.basisprofil.r4 VitalSignDE
+profile, the LOINC display and the unit text are patterns in the kbv.basis
+profile, the UCUM code is a de.basisprofil.r4 pattern, and the SNOMED
+coding is the kbv.basis value set (heart rate, temperature, respiratory
+rate) or pattern (oxygen saturation).
+
+- Where a SNOMED value set offers several concepts (heart rate at a
+  systemic artery, temperature by body site), the general concept is used:
+  the input does not say how or where the value was taken. `bodySite` and
+  `method` stay empty for the same reason.
+- Oxygen saturation is the exception: kbv.basis requires `method` and fixes
+  it to "Pulse oximeter" (448703006). The profile therefore fits only
+  pulse-oximeter readings, which the input model states (gap G14).
+- Temperature is rounded to one decimal with Python's `round` (binary
+  floats, so 36.65 becomes 36.6); the three rates are whole numbers.
+- Glucose is not mapped: its profile needs a LOINC code chosen by specimen
+  and unit, a measurement method and optionally an interpretation, which
+  the input cannot express yet.
