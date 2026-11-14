@@ -7,7 +7,7 @@ Last updated: 2026-11-14.
 HL7 FHIR validator 6.5.28, `-tx n/a`, packages from `spec/packages/`
 (kbv.mio.diga 1.1.0, kbv.basis 1.3.0, de.basisprofil.r4 1.3.2):
 **0 errors, 496 warnings** on 7 golden bundles (research/metrics.csv). The
-negative control is rejected as expected (`pytest -m validator`). 163 unit
+negative control is rejected as expected (`pytest -m validator`). 170 unit
 and golden tests pass.
 
 ## Coverage against the agreed plan
@@ -18,7 +18,7 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 | Phase | State | Done | Missing |
 | --- | --- | --- | --- |
 | 0 Spec ingestion | Done | `spec/VERSION`, pinned packages (gitignored), validator and plugin mismatch reported and decided (ADR 0001), generated inventory with must-support, bindings and invariants, ground-truth check (ADR 0005) | – |
-| 1 Scaffold and harness | Mostly done | Repo layout, CLAUDE.md, commands, agents, Makefile, Dockerfile, CI workflow, validator script, negative control, LICENSE/NOTICE/THIRD_PARTY, docs/licensing.md | Known-good check: the three official mio42 bundles fail the offline gate on required bindings to BCP-47, ICF and SNOMED (gaps G7), so a terminology source is needed; Makefile, Docker and CI never executed (no make, Docker or remote here); `validate(bundle) -> Report` inside the library; pre-commit, ruff, mypy; licence gate (pip-licenses, blocked-phrases test, official notice texts) |
+| 1 Scaffold and harness | Mostly done | Repo layout, CLAUDE.md, commands, agents, Makefile, Dockerfile, CI workflow, validator script, `validate(bundle) -> Report` in the library (caller passes the jar and package paths), negative control, LICENSE/NOTICE/THIRD_PARTY, docs/licensing.md | Known-good check: the three official mio42 bundles fail the offline gate on required bindings to BCP-47, ICF and SNOMED (gaps G7), so a terminology source is needed; Makefile, Docker and CI never executed (no make, Docker or remote here); pre-commit, ruff, mypy; licence gate (pip-licenses, blocked-phrases test, official notice texts) |
 | 2 Input model and archetypes | Partial | A: PHQ-9 and GAD-7 total scores, mood diary. B: body weight, blood pressure, BMI, daily steps, goals. C: 0–10 pain rating, ODI functional score, diary. D: goals, exercise CarePlan, adherence diary | D: exercise sessions (Procedure_Activity, blocked by decision 0008). DiGA version field. JSON Schema export. Field-to-profile table per archetype |
 | 3 Mappers | Partial | Device_DIGA, DeviceDefinition_DIGA, Organization_Manufacturer, Patient, Score_or_Assessment_by_Scale, Body_Weight, Blood_Pressure, Observation_Free (BMI, daily steps), Diary_Entry, Goal, CarePlan | Functional_Assessment, Provenance, DocumentReference, other vitals; hand-written golden files; property tests |
 | 4 Composition and Bundle | Partial | Composition with 4 sections, Bundle, invariant checks, all 4 archetypes validate | Remaining sections;  one-year size and speed test |
@@ -51,7 +51,6 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 - Compare the PHQ-9, GAD-7, BMI and pain-rating names with the LOINC 2.72 table (gaps G9); the ODI name is confirmed.
 - `Device.version` (must-support): add the DiGA version to the input (also a Phase 2 item).
 - The wording guard's item-code pattern covers PHQ-9 only; GAD-7 item codes (only the panel code is blocked; loinc.org does not show the members without a login), ODI item codes and German ODI fragments are not listed. The German GAD-7 fragments cover four of seven items, were written from memory and need a check against the published German version.
-- `scripts/validate.py`: report `too-costly` timeouts separately (gaps G10).
 - BMI has no `derivedFrom` to the weight and height it was calculated from; body height is not mapped yet.
 - Daily steps: the counting phone or wearable is not exported, and the UCUM code `{#}/(24.h)` is not checked by the offline gate.
 - Provenance: `agent.type` has a required binding still to map.

@@ -19,3 +19,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-12,,mapping,archetype A: GAD-7 total score,0,0,"fourth instrument (LOINC 70274-6, read on loinc.org via browser; last changed 2.73, so 2.72 name unconfirmed); synthetic input, golden bundle, unit tests"
 2026-11-12,,mapping,Observation_Free: BMI and daily steps (archetype B),0,0,"profile constrains almost nothing, so content is the kit's choice; codes read on loinc.org via browser (39156-5, 41950-7); results section now has direct entries plus the vitals subsection; new synthetic input and golden bundle"
 2026-11-14,,mapping,archetype B: goals without a care plan,0,0,"synthetic input and tests only; the Goal mapper was reused unchanged"
+2026-11-14,,harness,validate() in the library; timeouts reported separately,0,0,"validator run and report parsing moved from scripts/validate.py into diga_epa_kit.validator; too-costly findings no longer count as bundle errors (G10)"

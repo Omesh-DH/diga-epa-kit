@@ -2,6 +2,9 @@
 
 Usage: python scripts/validate.py [BUNDLE.json ...] [--tx URL] [--record]
 
+Exit codes: 0 no errors, 1 errors, 2 setup problem, 3 validator crashed,
+4 inconclusive (a check timed out, docs/gaps.md G10).
+
 Without arguments it validates the golden bundles in tests/golden/. Profiles
 come only from the pinned packages in spec/packages/ (run fetch_spec.py
 first), never from the online registry.
@@ -19,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import csv
-import json
 import shutil
 import subprocess
 import sys
@@ -28,6 +30,8 @@ from pathlib import Path
 
 from _net import download
 from fetch_spec import locked, tgz_path
+
+from diga_epa_kit.validator import ValidatorUnavailable, validate
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache"
@@ -41,13 +45,6 @@ def ensure_jar(version: str) -> Path:
     if not jar.exists():
         download(VALIDATOR_URL.format(version=version), jar)
     return jar
-
-
-def issues(outcome: dict) -> list[dict]:
-    """Flatten the validator's -output: one OperationOutcome, or a Bundle of them."""
-    if outcome.get("resourceType") == "Bundle":
-        return [i for e in outcome.get("entry", []) for i in issues(e["resource"])]
-    return outcome.get("issue", [])
 
 
 def git_rev() -> str:
@@ -86,28 +83,23 @@ def main() -> int:
     mode = "none" if args.tx == "n/a" else "online"
     tx_cache = CACHE / f"tx-{mode}-{args.validator_version}"
     tx_cache.mkdir(parents=True, exist_ok=True)
-    report = Path(args.report)
-    report.parent.mkdir(parents=True, exist_ok=True)
-    report.unlink(missing_ok=True)
-
-    cmd = ["java", "-jar", str(jar), *bundles, "-version", "4.0.1"]
-    for p in packages:
-        cmd += ["-ig", str(p)]
-    cmd += ["-tx", args.tx, "-txCache", str(tx_cache), "-output", str(report)]
-    subprocess.run(cmd, check=False)
-
-    if not report.exists():
-        # The validator aborts without a report on internal failures, for
-        # example when it cannot build a snapshot for a referenced profile.
-        print("validator crashed before writing a report; see its output above", file=sys.stderr)
+    try:
+        result = validate(
+            bundles, jar=jar, packages=packages, tx=args.tx, tx_cache=tx_cache, report_path=Path(args.report)
+        )
+    except ValidatorUnavailable as exc:
+        print(f"{exc}", file=sys.stderr)
         return 3
-    found = issues(json.loads(report.read_text(encoding="utf-8")))
-    errors = [i for i in found if i.get("severity") in ("error", "fatal")]
-    warnings = sum(1 for i in found if i.get("severity") == "warning")
+    errors, warnings = result.errors, len(result.warnings)
     for i in errors:
-        where = ", ".join(i.get("expression", [])) or "?"
-        print(f"ERROR {where}: {i.get('details', {}).get('text') or i.get('diagnostics')}")
-    print(f"{len(errors)} error(s), {warnings} warning(s); report: {report}")
+        print(f"ERROR {i.location}: {i.message}")
+    for i in result.timeouts:
+        print(f"TIMEOUT {i.location}: {i.message}")
+    print(f"{len(errors)} error(s), {warnings} warning(s); report: {args.report}")
+    if not result.conclusive:
+        # A timed-out check says nothing about the bundle (docs/gaps.md G10).
+        print(f"{len(result.timeouts)} check(s) timed out: run is inconclusive, not recorded; rerun with nothing else running")
+        return 1 if errors else 4
 
     if args.record:
         new = not METRICS.exists()

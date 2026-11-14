@@ -155,8 +155,9 @@ Evidence for sub-question 2.
 - **Consequence**: an error with code `too-costly` says nothing about the
   bundle. In CI on a small runner it would look like a failed gate.
 - **Handling**: run the gate with nothing else running and rerun once on a
-  `too-costly` error. Open: have `scripts/validate.py` report such errors
-  separately instead of counting them as bundle errors.
+  `too-costly` error. Since 2026-11-14 the gate reports such findings as
+  TIMEOUT, not as bundle errors: the run ends with exit code 4
+  (inconclusive) and is not recorded in `research/metrics.csv`.
 
 ## G11 A BMI is a vital sign that cannot go into the vital-signs subsection
 
