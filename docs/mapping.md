@@ -234,3 +234,23 @@ rate) or pattern (oxygen saturation).
 - Glucose is not mapped: its profile needs a LOINC code chosen by specimen
   and unit, a measurement method and optionally an interpretation, which
   the input cannot express yet.
+
+## Size and speed
+
+`scripts/bench_one_year.py` builds one synthetic patient with a year of
+daily weight, blood pressure, heart rate and steps plus weekly BMI,
+fortnightly PHQ-9 and GAD-7, three diary entries a week, a height and two
+goals. Measured on 2026-11-14 on the development laptop (one run of the
+validator, three of the build):
+
+| Measure | Result |
+| --- | --- |
+| Resources | 1,731 |
+| Bundle size | 2.6 MB (JSON, not indented) |
+| Input check + build + local checks + serialisation | about 0.15 s |
+| HL7 validator 6.5.28, offline | 232 s, of which 57 s loading the packages and 170 s validating |
+| Validator result | 0 errors, 15,538 warnings, no timeout |
+
+The kit is not the bottleneck; the validator is, at roughly 0.1 s per
+resource. Not tested: whether an ePA accepts a document of this size, and
+memory use on a small CI runner (the validator peaked at 3 GB here).
