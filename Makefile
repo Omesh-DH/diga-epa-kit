@@ -2,7 +2,7 @@
 # Windows without make (see CLAUDE.md), in CI and in docker/validator.
 PY ?= .venv/bin/python
 
-.PHONY: setup spec test golden validate gate inventory
+.PHONY: setup spec test lint licenses golden validate gate inventory
 
 setup:
 	python3 -m venv .venv
@@ -15,6 +15,14 @@ spec:
 test:
 	$(PY) -m pytest -q
 
+lint:
+	$(PY) -m ruff check .
+	$(PY) -m ruff format --check .
+	$(PY) -m mypy
+
+licenses:
+	$(PY) scripts/check_licenses.py
+
 golden:
 	UPDATE_GOLDEN=1 $(PY) -m pytest -q tests/golden
 	git diff --stat tests/golden
@@ -22,7 +30,7 @@ golden:
 validate: spec
 	$(PY) scripts/validate.py --record
 
-gate: test validate
+gate: lint test validate
 
 inventory:
 	$(PY) scripts/spec_inventory.py

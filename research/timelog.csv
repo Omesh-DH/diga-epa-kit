@@ -21,3 +21,4 @@ date,hours,activity,profile_or_area,validator_errors_before,validator_errors_aft
 2026-11-14,,mapping,archetype B: goals without a care plan,0,0,"synthetic input and tests only; the Goal mapper was reused unchanged"
 2026-11-14,,harness,validate() in the library; timeouts reported separately,0,0,"validator run and report parsing moved from scripts/validate.py into diga_epa_kit.validator; too-costly findings no longer count as bundle errors (G10)"
 2026-11-14,,mapping,Device.version from a new diga.version input field,0,0,"must-support element; type given as text because the packages name no code for it; all seven synthetic inputs and golden bundles updated"
+2026-11-14,,harness,ruff + mypy strict + dependency licence check + pre-commit config,0,0,"25 ruff findings (17 auto-fixed) and 9 mypy errors fixed, 6 files reformatted, no behaviour change; pre-commit config written but not run"

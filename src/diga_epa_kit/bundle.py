@@ -40,13 +40,22 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         core.device(pack, device_id, devdef_id, data.diga, now),
         core.device_definition(pack, devdef_id, org_id, now),
         core.manufacturer(pack, org_id, data.diga, now),
-        *(vitals.body_weight(pack, wid, patient_id, w, now) for wid, w in zip(weight_ids, data.body_weights)),
-        *(vitals.blood_pressure(pack, bid, patient_id, b, now) for bid, b in zip(bp_ids, data.blood_pressures)),
+        *(
+            vitals.body_weight(pack, wid, patient_id, w, now)
+            for wid, w in zip(weight_ids, data.body_weights, strict=True)
+        ),
+        *(
+            vitals.blood_pressure(pack, bid, patient_id, b, now)
+            for bid, b in zip(bp_ids, data.blood_pressures, strict=True)
+        ),
         *(
             results.body_mass_index(pack, bid, patient_id, device_id, b, now)
-            for bid, b in zip(bmi_ids, data.body_mass_indices)
+            for bid, b in zip(bmi_ids, data.body_mass_indices, strict=True)
         ),
-        *(results.daily_steps(pack, sid, patient_id, s, now) for sid, s in zip(step_ids, data.daily_steps)),
+        *(
+            results.daily_steps(pack, sid, patient_id, s, now)
+            for sid, s in zip(step_ids, data.daily_steps, strict=True)
+        ),
     ]
 
     score_ids: list[str] = []
@@ -59,9 +68,9 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
     goal_ids = {g.id: _id("goal", data.patient.id, g.id) for g in data.goals}
     body.extend(goals.goal(pack, goal_ids[g.id], patient_id, g, now) for g in data.goals)
     plan_ids: list[str] = []
-    for p in data.care_plans:
-        plan_id = _id("care-plan", data.patient.id, p.id)
-        body.append(goals.care_plan(pack, plan_id, patient_id, [goal_ids[g] for g in p.goal_ids], p, now))
+    for plan in data.care_plans:
+        plan_id = _id("care-plan", data.patient.id, plan.id)
+        body.append(goals.care_plan(pack, plan_id, patient_id, [goal_ids[g] for g in plan.goal_ids], plan, now))
         plan_ids.append(plan_id)
 
     diary_ids: list[str] = []

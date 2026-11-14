@@ -15,7 +15,7 @@ import tempfile
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Union
+from typing import Any
 
 Json = dict[str, Any]
 
@@ -82,7 +82,7 @@ def _issues(outcome: Json) -> list[Issue]:
 
 
 def validate(
-    bundles: Union[Json, Path, str, Sequence[Union[Json, Path, str]]],
+    bundles: Json | Path | str | Sequence[Json | Path | str],
     *,
     jar: Path,
     packages: Sequence[Path],

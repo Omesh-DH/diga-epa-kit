@@ -6,6 +6,7 @@ import subprocess
 import sys
 
 import pytest
+
 from conftest import ROOT
 
 pytestmark = [
@@ -49,10 +50,9 @@ def test_negative_control_is_rejected(tmp_path):
 def test_library_validate_accepts_a_dict():
     """The same gate through ``diga_epa_kit.validate``, with a bundle held in memory."""
     sys.path.insert(0, str(ROOT / "scripts"))
+    from diga_epa_kit import validate
     from fetch_spec import locked, tgz_path
     from validate import VALIDATOR_VERSION, ensure_jar
-
-    from diga_epa_kit import validate
 
     bundle = json.loads((ROOT / "tests" / "golden" / "archetype_a_mental__phq9_three_months.json").read_text("utf-8"))
     report = validate(bundle, jar=ensure_jar(VALIDATOR_VERSION), packages=[tgz_path(p) for p in locked()])

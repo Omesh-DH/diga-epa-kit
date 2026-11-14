@@ -81,7 +81,9 @@ def test_usual_version_labels_are_accepted(data, version):
     assert DigaExport.model_validate(raw).diga.version == version
 
 
-@pytest.mark.parametrize("version", ["", " 2.4.1", "2.4.1 ", "2.4 beta", "2.4.1 (57)", ".1", "1" * 41, "2.4\n1", "2.4.1\n", 2.4])
+@pytest.mark.parametrize(
+    "version", ["", " 2.4.1", "2.4.1 ", "2.4 beta", "2.4.1 (57)", ".1", "1" * 41, "2.4\n1", "2.4.1\n", 2.4]
+)
 def test_malformed_version_is_rejected(data, version):
     raw = data.model_dump(mode="json")
     raw["diga"]["version"] = version

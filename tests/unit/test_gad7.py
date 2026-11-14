@@ -27,8 +27,7 @@ def _gad7(bundle):
     return [
         e["resource"]
         for e in bundle["entry"]
-        if e["resource"]["resourceType"] == "Observation"
-        and e["resource"]["code"]["coding"][0]["code"] == "70274-6"
+        if e["resource"]["resourceType"] == "Observation" and e["resource"]["code"]["coding"][0]["code"] == "70274-6"
     ]
 
 

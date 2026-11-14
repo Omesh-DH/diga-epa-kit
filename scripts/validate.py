@@ -29,9 +29,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from _net import download
-from fetch_spec import locked, tgz_path
-
 from diga_epa_kit.validator import ValidatorUnavailable, validate
+from fetch_spec import locked, tgz_path
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / ".cache"
@@ -98,7 +97,8 @@ def main() -> int:
     print(f"{len(errors)} error(s), {warnings} warning(s); report: {args.report}")
     if not result.conclusive:
         # A timed-out check says nothing about the bundle (docs/gaps.md G10).
-        print(f"{len(result.timeouts)} check(s) timed out: run is inconclusive, not recorded; rerun with nothing else running")
+        print(f"{len(result.timeouts)} check(s) timed out: run is inconclusive and not recorded.")
+        print("Rerun with nothing else running.")
         return 1 if errors else 4
 
     if args.record:
@@ -108,10 +108,17 @@ def main() -> int:
             w = csv.writer(f)
             if new:
                 w.writerow(["timestamp", "git_rev", "validator", "tx", "bundles", "errors", "warnings"])
-            w.writerow([
-                datetime.now(timezone.utc).isoformat(timespec="seconds"), git_rev(),
-                args.validator_version, args.tx, len(bundles), len(errors), warnings,
-            ])
+            w.writerow(
+                [
+                    datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    git_rev(),
+                    args.validator_version,
+                    args.tx,
+                    len(bundles),
+                    len(errors),
+                    warnings,
+                ]
+            )
     return 1 if errors else 0
 
 

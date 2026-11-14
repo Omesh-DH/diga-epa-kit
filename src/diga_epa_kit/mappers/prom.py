@@ -9,7 +9,6 @@ from ..terminology.instruments import Instrument
 from ..terminology.versions import OBS_CATEGORY, UCUM, VersionPack
 from .common import Json, loinc, meta, ri_identifier, urn
 
-
 # German, like the section titles the profile fixes.
 _SCALE_RANGE = "Wertebereich der Skala"
 

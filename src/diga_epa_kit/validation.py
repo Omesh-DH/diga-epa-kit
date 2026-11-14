@@ -7,6 +7,7 @@ feedback without a JVM.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from typing import Any
 
 from .terminology.versions import KBV_SD
@@ -54,10 +55,10 @@ def check_bundle(bundle: dict[str, Any]) -> list[str]:
 
 def _profile_version(res: dict[str, Any]) -> str:
     profiles = (res.get("meta") or {}).get("profile") or [""]
-    return profiles[0].rpartition("|")[2]
+    return str(profiles[0]).rpartition("|")[2]
 
 
-def _references(node: Any):
+def _references(node: Any) -> Iterator[str]:
     if isinstance(node, dict):
         for k, v in node.items():
             if k == "reference" and isinstance(v, str):

@@ -13,7 +13,7 @@ requires-python = ">=3.10"
 dependencies = ["pydantic>=2.6,<3"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.10", "pip-licenses>=5"]
 
 [project.scripts]
 diga-epa-kit = "diga_epa_kit.cli:main"
@@ -25,3 +25,18 @@ packages = ["src/diga_epa_kit"]
 testpaths = ["tests"]
 addopts = "-m \"not validator\""
 markers = ["validator: runs the external Java FHIR validator (slow, needs Java)"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+src = ["src", "scripts", "tests"]
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, import order, bugbear, pyupgrade, simplify
+select = ["E", "F", "W", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src"]
+strict = true
+plugins = ["pydantic.mypy"]

@@ -9,8 +9,8 @@ import json
 import os
 
 import pytest
-from conftest import FIXED_NOW, SYNTHETIC, ROOT, synthetic_id
 
+from conftest import FIXED_NOW, ROOT, SYNTHETIC, synthetic_id
 from diga_epa_kit import DigaExport, build_bundle
 
 GOLDEN = ROOT / "tests" / "golden"

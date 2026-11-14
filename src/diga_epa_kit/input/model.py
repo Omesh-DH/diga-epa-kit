@@ -44,7 +44,7 @@ class BodyWeight(_Strict):
     method: Literal["measured", "self_reported"] = "measured"
 
     @model_validator(mode="after")
-    def _tz_aware(self) -> "BodyWeight":
+    def _tz_aware(self) -> BodyWeight:
         # FHIR dateTime with a time part must carry a timezone offset.
         if self.measured_at.tzinfo is None:
             raise ValueError("measured_at needs a timezone offset")
@@ -59,7 +59,7 @@ class BloodPressure(_Strict):
     diastolic: StrictInt = Field(ge=20, le=200)
 
     @model_validator(mode="after")
-    def _check(self) -> "BloodPressure":
+    def _check(self) -> BloodPressure:
         if self.measured_at.tzinfo is None:
             raise ValueError("measured_at needs a timezone offset")
         if self.diastolic >= self.systolic:
@@ -75,7 +75,7 @@ class DiaryEntry(_Strict):
     text: str = Field(min_length=1, max_length=5000)
 
     @model_validator(mode="after")
-    def _check(self) -> "DiaryEntry":
+    def _check(self) -> DiaryEntry:
         if self.written_at.tzinfo is None:
             raise ValueError("written_at needs a timezone offset")
         # A FHIR string must hold non-whitespace content and no surrounding whitespace.
@@ -114,7 +114,7 @@ class Goal(_Strict):
     set_by_patient: bool = False
 
     @model_validator(mode="after")
-    def _check(self) -> "Goal":
+    def _check(self) -> Goal:
         _plain_text(self.description, "description")
         if self.end is not None and self.end < self.start:
             raise ValueError("end is before start")
@@ -128,7 +128,7 @@ class PlannedActivity(_Strict):
     end: date | None = None
 
     @model_validator(mode="after")
-    def _check(self) -> "PlannedActivity":
+    def _check(self) -> PlannedActivity:
         _plain_text(self.description, "description")
         if self.start is not None and self.end is not None and self.end < self.start:
             raise ValueError("end is before start")
@@ -147,12 +147,14 @@ class CarePlan(_Strict):
     activities: list[PlannedActivity] = Field(min_length=1)
 
     @model_validator(mode="after")
-    def _check(self) -> "CarePlan":
+    def _check(self) -> CarePlan:
         _plain_text(self.title, "title")
         if len(set(self.goal_ids)) != len(self.goal_ids):
             raise ValueError("duplicate goal_ids")
         if self.status in ("completed", "revoked"):
-            still_open = [a.description for a in self.activities if a.status in ("not_started", "scheduled", "in_progress")]
+            still_open = [
+                a.description for a in self.activities if a.status in ("not_started", "scheduled", "in_progress")
+            ]
             if still_open:
                 raise ValueError(f"plan is {self.status} but has open activities: {still_open}")
         return self
@@ -166,7 +168,7 @@ class PromScore(_Strict):
     score: StrictInt
 
     @model_validator(mode="after")
-    def _check(self) -> "PromScore":
+    def _check(self) -> PromScore:
         from ..terminology.instruments import INSTRUMENTS
 
         if self.completed_at.tzinfo is None:
@@ -188,7 +190,7 @@ class BodyMassIndex(_Strict):
     kg_m2: float = Field(ge=5, le=150)
 
     @model_validator(mode="after")
-    def _tz_aware(self) -> "BodyMassIndex":
+    def _tz_aware(self) -> BodyMassIndex:
         if self.measured_at.tzinfo is None:
             raise ValueError("measured_at needs a timezone offset")
         return self
@@ -219,7 +221,7 @@ class DigaExport(_Strict):
     care_plans: list[CarePlan] = []
 
     @model_validator(mode="after")
-    def _period_and_uniqueness(self) -> "DigaExport":
+    def _period_and_uniqueness(self) -> DigaExport:
         if self.period_end < self.period_start:
             raise ValueError("period_end is before period_start")
 
@@ -240,7 +242,7 @@ class DigaExport(_Strict):
             raise ValueError(f"outside period {self.period_start}..{self.period_end}: {outside}")
 
         # Resource ids derive from these keys (UUIDv5), so duplicates would collide.
-        keys = [w.measured_at for w in self.body_weights]
+        keys: list[object] = [w.measured_at for w in self.body_weights]
         if len(set(keys)) != len(keys):
             raise ValueError("duplicate body_weights.measured_at")
         keys = [b.measured_at for b in self.blood_pressures]

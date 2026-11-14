@@ -32,7 +32,11 @@ def _kbv_section(pack: VersionPack, spec: tuple[str, str, str], **content: Any) 
     title, code, display = spec
     return {
         "title": title,
-        "code": {"coding": [{"system": _KBV_SECTION_CODES, "version": pack.section_codes_version, "code": code, "display": display}]},
+        "code": {
+            "coding": [
+                {"system": _KBV_SECTION_CODES, "version": pack.section_codes_version, "code": code, "display": display}
+            ]
+        },
         **content,
     }
 

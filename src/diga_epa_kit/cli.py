@@ -10,9 +10,9 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from .bundle import build_bundle
-from .validation import check_bundle
 from .input.model import DigaExport
 from .terminology.versions import DEFAULT_VERSION, PACKS
+from .validation import check_bundle
 
 
 def _build(args: argparse.Namespace) -> int:
@@ -58,7 +58,7 @@ def main(argv: list[str] | None = None) -> int:
     c.set_defaults(func=_check)
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    return int(args.func(args))
 
 
 if __name__ == "__main__":
