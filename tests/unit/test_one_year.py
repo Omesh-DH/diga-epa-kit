@@ -4,7 +4,6 @@ import sys
 import time
 
 from conftest import ROOT
-
 from diga_epa_kit import DigaExport, build_bundle, check_bundle
 
 sys.path.insert(0, str(ROOT / "scripts"))

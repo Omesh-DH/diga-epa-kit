@@ -22,10 +22,9 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
+from diga_epa_kit import DigaExport, build_bundle, check_bundle, validate
 from fetch_spec import locked, tgz_path
 from validate import VALIDATOR_VERSION, ensure_jar, git_rev
-
-from diga_epa_kit import DigaExport, build_bundle, check_bundle, validate
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "research" / "benchmarks.csv"
