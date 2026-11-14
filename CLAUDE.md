@@ -24,6 +24,7 @@ thesis on how much interoperability effort it saves a small manufacturer.
 Nothing is committed until the validator reports **zero errors**:
 
 - `make test` runs the unit and golden tests (pytest, no Java).
+- `make lint` runs ruff and strict mypy; keep both clean before committing.
 - `make validate` runs the HL7 FHIR validator **6.5.28** on `tests/golden/*.json`,
   with packages from `spec/packages/` and `-tx n/a`.
 
@@ -42,6 +43,8 @@ Windows has no make here. Each target is one script, run with `.venv/Scripts/pyt
 | --- | --- |
 | `make setup` | `python -m venv .venv && pip install -e ".[dev]"` + `scripts/fetch_spec.py` |
 | `make test` | `pytest -q` |
+| `make lint` | `ruff check .`, `ruff format --check .`, `mypy` (each via `python -m`) |
+| `make licenses` | `scripts/check_licenses.py` (Python dependencies only) |
 | `make golden` | `UPDATE_GOLDEN=1 pytest -q tests/golden`, then review the diff |
 | `make validate` | `scripts/validate.py --record` |
 | `make inventory` | `scripts/spec_inventory.py` (rewrites docs/spec-inventory.md) |
