@@ -108,8 +108,8 @@ def test_profile_prohibitions_are_respected(bundle):
 
 
 def test_free_results_are_entries_of_the_results_section(bundle):
-    (results,) = bundle["entry"][0]["resource"]["section"]
-    assert results["title"] == "Befunde und Ergebnisse"
+    results, goals = bundle["entry"][0]["resource"]["section"]
+    assert (results["title"], goals["title"]) == ("Befunde und Ergebnisse", "Ziele")
     free_ids = [f"urn:uuid:{o['id']}" for o in _free(bundle, "39156-5") + _free(bundle, "41950-7")]
     assert [e["reference"] for e in results["entry"]] == free_ids
     (vitals,) = results["section"]
@@ -119,7 +119,7 @@ def test_free_results_are_entries_of_the_results_section(bundle):
 
 def test_results_section_without_vital_signs_has_no_subsection(raw):
     del raw["body_weights"]
-    (results,) = build_bundle(DigaExport.model_validate(raw), now=NOW)["entry"][0]["resource"]["section"]
+    results = build_bundle(DigaExport.model_validate(raw), now=NOW)["entry"][0]["resource"]["section"][0]
     assert "section" not in results and len(results["entry"]) == 9
 
 
@@ -196,14 +196,14 @@ def test_bmi_without_steps_and_steps_without_bmi(raw):
     for dropped, kept, n in (("daily_steps", "39156-5", 2), ("body_mass_indices", "41950-7", 7)):
         data = {k: v for k, v in raw.items() if k != dropped}
         bundle = build_bundle(DigaExport.model_validate(data), now=NOW)
-        (results,) = bundle["entry"][0]["resource"]["section"]
+        results = bundle["entry"][0]["resource"]["section"][0]
         assert [e["reference"] for e in results["entry"]] == [f"urn:uuid:{o['id']}" for o in _free(bundle, kept)]
         assert len(results["entry"]) == n
 
 
 def test_vitals_only_results_section_has_no_direct_entries(raw):
     del raw["body_mass_indices"], raw["daily_steps"]
-    (results,) = build_bundle(DigaExport.model_validate(raw), now=NOW)["entry"][0]["resource"]["section"]
+    results = build_bundle(DigaExport.model_validate(raw), now=NOW)["entry"][0]["resource"]["section"][0]
     assert "entry" not in results and len(results["section"][0]["entry"]) == 2
 
 
@@ -211,3 +211,20 @@ def test_entries_keep_input_order(raw):
     raw["daily_steps"].reverse()
     bundle = build_bundle(DigaExport.model_validate(raw), now=NOW)
     assert [s["effectiveDateTime"] for s in _free(bundle, "41950-7")][0] == "2026-10-25"
+
+
+def test_goals_without_a_care_plan(bundle):
+    # Archetype B sets goals but has no therapy plan: the section lists the goals only.
+    goals = [e["resource"] for e in bundle["entry"] if e["resource"]["resourceType"] == "Goal"]
+    assert [g["lifecycleStatus"] for g in goals] == ["active", "active"]
+    assert not [e for e in bundle["entry"] if e["resource"]["resourceType"] == "CarePlan"]
+    section = bundle["entry"][0]["resource"]["section"][1]
+    assert [e["reference"] for e in section["entry"]] == [f"urn:uuid:{g['id']}" for g in goals]
+    patient = _one(bundle, "Patient")
+    weight, steps = goals
+    # Only the goal the patient set names the patient as its source (docs/gaps.md G8).
+    assert weight["expressedBy"] == {"reference": f"urn:uuid:{patient['id']}"}
+    assert "expressedBy" not in steps
+    assert (weight["startDate"], steps["startDate"]) == ("2026-09-01", "2026-10-05")
+    # No end date, no end extension.
+    assert "extension" not in steps

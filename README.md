@@ -11,7 +11,7 @@ Status: early. Four archetypes produce a bundle that passes the validator; none 
 | A, mental health | PHQ-9 and GAD-7 total scores, mood diary | Observation_Score_or_Assessment_by_Scale, Observation_Diary_Entry |
 | C, pain | 0–10 pain ratings, diary | Observation_Score_or_Assessment_by_Scale, Observation_Diary_Entry |
 | D, exercise | Goals, exercise plan, adherence diary | Goal, CarePlan, Observation_Diary_Entry |
-| B, metabolic | Body-weight and blood-pressure series, BMI, daily steps | Observation_Body_Weight, Observation_Blood_Pressure, Observation_Free |
+| B, metabolic | Body-weight and blood-pressure series, BMI, daily steps, goals | Observation_Body_Weight, Observation_Blood_Pressure, Observation_Free, Goal |
 
 Every bundle also carries Patient, Device_DIGA (VE-ID and PZN),
 DeviceDefinition_DIGA and Organization_Manufacturer. See

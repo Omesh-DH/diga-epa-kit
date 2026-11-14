@@ -28,5 +28,9 @@
     {"day": "2026-10-23", "steps": 6125},
     {"day": "2026-10-24", "steps": 9480},
     {"day": "2026-10-25", "steps": 8015}
+  ],
+  "goals": [
+    {"id": "goal-weight", "description": "Körpergewicht auf 88 kg senken", "status": "active", "start": "2026-09-01", "end": "2027-02-28", "set_by_patient": true},
+    {"id": "goal-steps", "description": "An fünf Tagen pro Woche mindestens 8000 Schritte gehen", "status": "active", "start": "2026-10-05"}
   ]
 }
