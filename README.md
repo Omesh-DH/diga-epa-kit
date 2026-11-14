@@ -29,7 +29,14 @@ python scripts/validate.py out/phq9.json   # HL7 FHIR validator, needs Java 17+
 ```
 
 The input is plain JSON validated by a pydantic model (`src/diga_epa_kit/input/model.py`).
-It needs no FHIR knowledge.
+It needs no FHIR knowledge. Step by step: `docs/quickstart.md`. Functions,
+commands and input fields: `docs/api.md`; the input format as JSON Schema:
+`docs/input-schema.json`.
+
+```bash
+diga-epa-kit schema                    # the input format
+diga-epa-kit explain-error "Device.identifier: minimum required = 1, but only found 0"
+```
 
 ## Develop
 

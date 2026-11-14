@@ -1,0 +1,705 @@
+{
+  "$defs": {
+    "BloodPressure": {
+      "additionalProperties": false,
+      "description": "One reading in mmHg. The bounds are plausibility limits, not clinical ones.",
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "systolic": {
+          "maximum": 300,
+          "minimum": 40,
+          "title": "Systolic",
+          "type": "integer"
+        },
+        "diastolic": {
+          "maximum": 200,
+          "minimum": 20,
+          "title": "Diastolic",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "measured_at",
+        "systolic",
+        "diastolic"
+      ],
+      "title": "BloodPressure",
+      "type": "object"
+    },
+    "BodyHeight": {
+      "additionalProperties": false,
+      "description": "Body height in cm. Usually typed in once, often before the export period.",
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "cm": {
+          "exclusiveMaximum": 280,
+          "exclusiveMinimum": 30,
+          "title": "Cm",
+          "type": "number"
+        }
+      },
+      "required": [
+        "measured_at",
+        "cm"
+      ],
+      "title": "BodyHeight",
+      "type": "object"
+    },
+    "BodyMassIndex": {
+      "additionalProperties": false,
+      "description": "A BMI the DiGA calculated. The bounds are plausibility limits, not clinical ones.\n\n``measured_at`` is the time of the weight reading the BMI is based on, not the\ntime the app did the arithmetic.",
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "kg_m2": {
+          "maximum": 150,
+          "minimum": 5,
+          "title": "Kg M2",
+          "type": "number"
+        }
+      },
+      "required": [
+        "measured_at",
+        "kg_m2"
+      ],
+      "title": "BodyMassIndex",
+      "type": "object"
+    },
+    "BodyTemperature": {
+      "additionalProperties": false,
+      "description": "Degrees Celsius; the input does not say where on the body it was taken.",
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "celsius": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "ge": 25,
+          "le": 45,
+          "title": "Celsius"
+        }
+      },
+      "required": [
+        "measured_at",
+        "celsius"
+      ],
+      "title": "BodyTemperature",
+      "type": "object"
+    },
+    "BodyWeight": {
+      "additionalProperties": false,
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "kg": {
+          "exclusiveMaximum": 700,
+          "exclusiveMinimum": 0,
+          "title": "Kg",
+          "type": "number"
+        },
+        "method": {
+          "default": "measured",
+          "enum": [
+            "measured",
+            "self_reported"
+          ],
+          "title": "Method",
+          "type": "string"
+        }
+      },
+      "required": [
+        "measured_at",
+        "kg"
+      ],
+      "title": "BodyWeight",
+      "type": "object"
+    },
+    "CarePlan": {
+      "additionalProperties": false,
+      "description": "A plan of activities for the patient, for example an exercise programme.",
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9._-]{1,64}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "on_hold",
+            "completed",
+            "revoked"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "goal_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Goal Ids",
+          "type": "array"
+        },
+        "written_by_patient": {
+          "default": false,
+          "title": "Written By Patient",
+          "type": "boolean"
+        },
+        "activities": {
+          "items": {
+            "$ref": "#/$defs/PlannedActivity"
+          },
+          "minItems": 1,
+          "title": "Activities",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status",
+        "activities"
+      ],
+      "title": "CarePlan",
+      "type": "object"
+    },
+    "DailySteps": {
+      "additionalProperties": false,
+      "description": "Step count of one calendar day, as the patient's phone or wearable reported it.\n\nLeave out days without data: 0 is exported as a real count of zero steps.",
+      "properties": {
+        "day": {
+          "format": "date",
+          "title": "Day",
+          "type": "string"
+        },
+        "steps": {
+          "maximum": 200000,
+          "minimum": 0,
+          "title": "Steps",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "day",
+        "steps"
+      ],
+      "title": "DailySteps",
+      "type": "object"
+    },
+    "DiaryEntry": {
+      "additionalProperties": false,
+      "description": "Free text the patient wrote in the DiGA. It leaves the DiGA verbatim.",
+      "properties": {
+        "written_at": {
+          "format": "date-time",
+          "title": "Written At",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 5000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "written_at",
+        "text"
+      ],
+      "title": "DiaryEntry",
+      "type": "object"
+    },
+    "DigaInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "ve_id": {
+          "description": "DiGA-VE-ID (Verordnungseinheit) from the BfArM directory",
+          "title": "Ve Id",
+          "type": "string"
+        },
+        "pzn": {
+          "pattern": "^\\d{8}$",
+          "title": "Pzn",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9A-Za-z][0-9A-Za-z.+_-]{0,39}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Software version of the app that produced the data. Letters, digits and . + _ - only; write a build number as 2.4.1+57",
+          "title": "Version"
+        },
+        "manufacturer": {
+          "$ref": "#/$defs/Manufacturer"
+        }
+      },
+      "required": [
+        "name",
+        "ve_id",
+        "pzn",
+        "manufacturer"
+      ],
+      "title": "DigaInfo",
+      "type": "object"
+    },
+    "Goal": {
+      "additionalProperties": false,
+      "description": "A goal the patient pursues in the DiGA, in free text.",
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9._-]{1,64}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "on_hold",
+            "completed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "start": {
+          "format": "date",
+          "title": "Start",
+          "type": "string"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "set_by_patient": {
+          "default": false,
+          "title": "Set By Patient",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "status",
+        "start"
+      ],
+      "title": "Goal",
+      "type": "object"
+    },
+    "HeartRate": {
+      "additionalProperties": false,
+      "description": "Beats per minute.",
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "bpm": {
+          "maximum": 300,
+          "minimum": 20,
+          "title": "Bpm",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "measured_at",
+        "bpm"
+      ],
+      "title": "HeartRate",
+      "type": "object"
+    },
+    "Manufacturer": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "website": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Website"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "Manufacturer",
+      "type": "object"
+    },
+    "OxygenSaturation": {
+      "additionalProperties": false,
+      "description": "Peripheral oxygen saturation in percent, from a pulse oximeter (the profile fixes that method).",
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "percent": {
+          "description": "Pulse-oximeter readings only: the export states that method for every value",
+          "maximum": 100,
+          "minimum": 50,
+          "title": "Percent",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "measured_at",
+        "percent"
+      ],
+      "title": "OxygenSaturation",
+      "type": "object"
+    },
+    "PatientInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Stable pseudonymous patient key inside the DiGA",
+          "format": "uuid",
+          "title": "Id",
+          "type": "string"
+        },
+        "birth_date": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Birth Date"
+        },
+        "gender": {
+          "anyOf": [
+            {
+              "enum": [
+                "male",
+                "female",
+                "unknown"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Gender"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "PatientInfo",
+      "type": "object"
+    },
+    "PlannedActivity": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "not_started",
+            "scheduled",
+            "in_progress",
+            "on_hold",
+            "completed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        }
+      },
+      "required": [
+        "description",
+        "status"
+      ],
+      "title": "PlannedActivity",
+      "type": "object"
+    },
+    "PromScore": {
+      "additionalProperties": false,
+      "description": "Total score of one completed instrument. Item answers and wording stay in the DiGA.",
+      "properties": {
+        "instrument": {
+          "enum": [
+            "phq9",
+            "gad7",
+            "pain_nrs",
+            "odi"
+          ],
+          "title": "Instrument",
+          "type": "string"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "score": {
+          "title": "Score",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "instrument",
+        "completed_at",
+        "score"
+      ],
+      "title": "PromScore",
+      "type": "object"
+    },
+    "RespiratoryRate": {
+      "additionalProperties": false,
+      "description": "Breaths per minute.",
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "per_minute": {
+          "maximum": 80,
+          "minimum": 4,
+          "title": "Per Minute",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "measured_at",
+        "per_minute"
+      ],
+      "title": "RespiratoryRate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "diga": {
+      "$ref": "#/$defs/DigaInfo"
+    },
+    "patient": {
+      "$ref": "#/$defs/PatientInfo"
+    },
+    "period_start": {
+      "format": "date",
+      "title": "Period Start",
+      "type": "string"
+    },
+    "period_end": {
+      "format": "date",
+      "title": "Period End",
+      "type": "string"
+    },
+    "body_weights": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/BodyWeight"
+      },
+      "title": "Body Weights",
+      "type": "array"
+    },
+    "body_heights": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/BodyHeight"
+      },
+      "title": "Body Heights",
+      "type": "array"
+    },
+    "blood_pressures": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/BloodPressure"
+      },
+      "title": "Blood Pressures",
+      "type": "array"
+    },
+    "heart_rates": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/HeartRate"
+      },
+      "title": "Heart Rates",
+      "type": "array"
+    },
+    "body_temperatures": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/BodyTemperature"
+      },
+      "title": "Body Temperatures",
+      "type": "array"
+    },
+    "oxygen_saturations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/OxygenSaturation"
+      },
+      "title": "Oxygen Saturations",
+      "type": "array"
+    },
+    "respiratory_rates": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/RespiratoryRate"
+      },
+      "title": "Respiratory Rates",
+      "type": "array"
+    },
+    "body_mass_indices": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/BodyMassIndex"
+      },
+      "title": "Body Mass Indices",
+      "type": "array"
+    },
+    "daily_steps": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DailySteps"
+      },
+      "title": "Daily Steps",
+      "type": "array"
+    },
+    "prom_scores": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PromScore"
+      },
+      "title": "Prom Scores",
+      "type": "array"
+    },
+    "diary_entries": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DiaryEntry"
+      },
+      "title": "Diary Entries",
+      "type": "array"
+    },
+    "goals": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Goal"
+      },
+      "title": "Goals",
+      "type": "array"
+    },
+    "care_plans": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/CarePlan"
+      },
+      "title": "Care Plans",
+      "type": "array"
+    }
+  },
+  "required": [
+    "diga",
+    "patient",
+    "period_start",
+    "period_end"
+  ],
+  "title": "DigaExport",
+  "type": "object"
+}
