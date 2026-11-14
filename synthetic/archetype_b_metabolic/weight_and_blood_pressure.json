@@ -2,6 +2,7 @@
   "diga": {
     "name": "Synthetic Weight Coach",
     "ve_id": "99990001",
+    "version": "2.4.1",
     "pzn": "19999999",
     "manufacturer": {"name": "Synthetic DiGA GmbH", "website": "https://example.org"}
   },

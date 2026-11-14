@@ -52,6 +52,43 @@ def test_device_carries_ve_id_and_pzn(data):
     assert device["type"]["coding"][0]["code"] == "19999999"
 
 
+def test_device_carries_the_software_version(data):
+    (device,) = _by_type(build_bundle(data, now=NOW), "Device")
+    # type is required; no coding, because the packages name no code for it.
+    assert device["version"] == [{"type": {"text": "Softwareversion"}, "value": "2.4.1"}]
+    (definition,) = _by_type(build_bundle(data, now=NOW), "DeviceDefinition")
+    assert "version" not in definition  # max=0 in DeviceDefinition_DIGA
+
+
+def test_version_is_optional_and_does_not_change_ids(data):
+    without = data.model_copy(update={"diga": data.diga.model_copy(update={"version": None})})
+    with_v, no_v = build_bundle(data, now=NOW), build_bundle(without, now=NOW)
+    (device,) = _by_type(no_v, "Device")
+    assert "version" not in device
+    assert check_bundle(no_v) == []
+    # An app update must not turn the same DiGA into a new device or document.
+    assert [e["fullUrl"] for e in with_v["entry"]] == [e["fullUrl"] for e in no_v["entry"]]
+    updated = data.model_copy(update={"diga": data.diga.model_copy(update={"version": "2.5.0"})})
+    new_v = build_bundle(updated, now=NOW)
+    assert [e["fullUrl"] for e in with_v["entry"]] == [e["fullUrl"] for e in new_v["entry"]]
+    assert _by_type(new_v, "Device")[0]["version"][0]["value"] == "2.5.0"
+
+
+@pytest.mark.parametrize("version", ["1", "2.4.1", "2.4.1-beta.3", "2024.11+build7", "v3"])
+def test_usual_version_labels_are_accepted(data, version):
+    raw = data.model_dump(mode="json")
+    raw["diga"]["version"] = version
+    assert DigaExport.model_validate(raw).diga.version == version
+
+
+@pytest.mark.parametrize("version", ["", " 2.4.1", "2.4.1 ", "2.4 beta", "2.4.1 (57)", ".1", "1" * 41, "2.4\n1", "2.4.1\n", 2.4])
+def test_malformed_version_is_rejected(data, version):
+    raw = data.model_dump(mode="json")
+    raw["diga"]["version"] = version
+    with pytest.raises(ValidationError):
+        DigaExport.model_validate(raw)
+
+
 def test_empty_export_omits_results_section(data):
     bundle = build_bundle(data.model_copy(update={"body_weights": []}), now=NOW)
     assert "section" not in bundle["entry"][0]["resource"]  # no empty arrays in FHIR JSON

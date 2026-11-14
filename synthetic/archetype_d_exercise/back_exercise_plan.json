@@ -2,6 +2,7 @@
   "diga": {
     "name": "Synthetic Back Trainer",
     "ve_id": "99990004",
+    "version": "1.2.5",
     "pzn": "19999996",
     "manufacturer": {"name": "Synthetic DiGA GmbH", "website": "https://example.org"}
   },

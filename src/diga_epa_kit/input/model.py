@@ -23,6 +23,12 @@ class DigaInfo(_Strict):
     name: str
     ve_id: str = Field(description="DiGA-VE-ID (Verordnungseinheit) from the BfArM directory")
     pzn: str = Field(pattern=r"^\d{8}$")
+    version: str | None = Field(
+        default=None,
+        pattern=r"^[0-9A-Za-z][0-9A-Za-z.+_-]{0,39}$",
+        description="Software version of the app that produced the data. Letters, digits and . + _ - only; "
+        "write a build number as 2.4.1+57",
+    )
     manufacturer: Manufacturer
 
 

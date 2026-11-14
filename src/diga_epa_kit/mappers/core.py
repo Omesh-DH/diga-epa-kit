@@ -37,6 +37,10 @@ def manufacturer(pack: VersionPack, uuid: str, diga: DigaInfo, now: datetime) ->
     return res
 
 
+# German, like the section titles the profile fixes.
+_SOFTWARE_VERSION = "Softwareversion"
+
+
 def device_definition(pack: VersionPack, uuid: str, manufacturer_uuid: str, now: datetime) -> Json:
     return {
         "resourceType": "DeviceDefinition",
@@ -59,7 +63,7 @@ def device_definition(pack: VersionPack, uuid: str, manufacturer_uuid: str, now:
 
 def device(pack: VersionPack, uuid: str, definition_uuid: str, diga: DigaInfo, now: datetime) -> Json:
     """The DiGA itself; it is the Composition author and identifies via DiGA-VE-ID + PZN."""
-    return {
+    res: Json = {
         "resourceType": "Device",
         "id": uuid,
         "meta": meta(pack, "device_diga", now),
@@ -68,3 +72,8 @@ def device(pack: VersionPack, uuid: str, definition_uuid: str, diga: DigaInfo, n
         "deviceName": [{"name": diga.name, "type": "user-friendly-name"}],
         "type": {"coding": [{"system": PZN, "code": diga.pzn}]},
     }
+    if diga.version:
+        # version.type is required by the profile; it binds no value set and the packages
+        # name no code for "software version", so the kind is given as text (docs/mapping.md).
+        res["version"] = [{"type": {"text": _SOFTWARE_VERSION}, "value": diga.version}]
+    return res

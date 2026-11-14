@@ -190,7 +190,15 @@
               "code": "19999999"
             }
           ]
-        }
+        },
+        "version": [
+          {
+            "type": {
+              "text": "Softwareversion"
+            },
+            "value": "2.4.1"
+          }
+        ]
       }
     },
     {

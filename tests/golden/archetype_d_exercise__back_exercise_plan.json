@@ -187,7 +187,15 @@
               "code": "19999996"
             }
           ]
-        }
+        },
+        "version": [
+          {
+            "type": {
+              "text": "Softwareversion"
+            },
+            "value": "1.2.5"
+          }
+        ]
       }
     },
     {

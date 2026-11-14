@@ -179,3 +179,23 @@ Evidence for sub-question 2.
   `reference`, so its output is unaffected.
 - **Handling**: as above; documented in `docs/mapping.md`. A question for
   support.mio@kbv.de.
+
+## G12 Device.version.type is required but no code is defined for it
+
+- **Where**: `KBV_PR_MIO_DIGA_Device_DIGA`, `Device.version.type` and
+  `Device.version.type.coding`.
+- **Evidence**: once a version is given, `version.type` is required (min 1)
+  and `type.coding` is must-support with system, version, code and display
+  each required. Neither Device_DIGA nor `KBV_PR_Base_Device` binds a value
+  set, FHIR R4 core has no binding, and no pinned package names a code for
+  "software version". The only package file with a filled `Device.version`,
+  kbv.basis `examples/device.json`, puts the v2-0203 code `RI` ("Resource
+  identifier") there, which does not describe a version. Not checked: how
+  the official mio42 example bundles fill the element.
+- **Consequence**: a manufacturer cannot fill the must-support coding
+  without inventing a code. Receivers cannot tell a software version from
+  any other version by code.
+- **Handling**: the kit states the kind as text (`type.text` =
+  "Softwareversion") and sets no coding (docs/mapping.md). A question for
+  support.mio@kbv.de. Also: the Device id does not depend on the version,
+  so the same Device id can carry different versions in different exports.

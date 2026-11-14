@@ -193,7 +193,15 @@
               "code": "19999998"
             }
           ]
-        }
+        },
+        "version": [
+          {
+            "type": {
+              "text": "Softwareversion"
+            },
+            "value": "1.8.0"
+          }
+        ]
       }
     },
     {

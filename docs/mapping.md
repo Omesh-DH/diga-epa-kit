@@ -153,3 +153,29 @@ The gate does not confirm the unit. Its message (2026-11-12): "Unable to
 validate code '{#}/(24.h)' in system 'http://unitsofmeasure.org' because
 the validator is running without terminology services" (a warning). The
 code is the example unit shown on loinc.org/41950-7 (read 2026-11-12).
+
+## DiGA software version
+
+`diga.version` (optional) becomes `Device.version` on the Device_DIGA
+resource: `value` = the label as the manufacturer writes it, `type.text` =
+"Softwareversion". The profile makes `version` must-support and `type`
+required once a version is given; `type.coding` is optional and, if used,
+needs system, version, code and display. The kit sets no coding: neither
+KBV profile binds a value set to `type`, FHIR R4 core has none either, and
+the pinned packages name no code for "software version" (the only package example, kbv.basis `examples/device.json`, puts
+the resource-identifier code there, which does not describe a version).
+`DeviceDefinition.version` is prohibited in DeviceDefinition_DIGA, so the
+version appears on the Device only. The version is not part of any resource
+id: an app update does not turn the same DiGA into a new device. The input
+holds one version per export; if the app was updated inside the period, the
+manufacturer chooses which one to state. The profile would allow several
+versions but cannot say which one produced which data.
+
+- "Softwareversion" is the kit's own wording, not taken from a package.
+- The field is optional. Leaving it out leaves a must-support element empty,
+  so a manufacturer should always fill it.
+- Accepted labels use letters, digits and `. + _ -`; a build number goes in
+  as `2.4.1+57`, not `2.4.1 (57)`.
+- Two exports of one DiGA with different app versions carry a Device with
+  the same id and different content. A reader that de-duplicates resources
+  by id across documents must expect that (gap G12).

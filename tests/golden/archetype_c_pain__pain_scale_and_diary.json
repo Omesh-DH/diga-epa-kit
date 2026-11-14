@@ -199,7 +199,15 @@
               "code": "19999997"
             }
           ]
-        }
+        },
+        "version": [
+          {
+            "type": {
+              "text": "Softwareversion"
+            },
+            "value": "3.0.2"
+          }
+        ]
       }
     },
     {
