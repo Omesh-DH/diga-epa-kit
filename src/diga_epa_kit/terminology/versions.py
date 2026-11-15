@@ -61,6 +61,7 @@ MIO_DIGA_1_1_0 = VersionPack(
         "body_temperature": "KBV_PR_MIO_DIGA_Observation_Body_Temperature",
         "oxygen_saturation": "KBV_PR_MIO_DIGA_Observation_Peripheral_Oxygen_Saturation",
         "respiratory_rate": "KBV_PR_MIO_DIGA_Observation_Respiratory_Rate",
+        "glucose": "KBV_PR_MIO_DIGA_Observation_Glucose_Concentration",
         "diary_entry": "KBV_PR_MIO_DIGA_Observation_Diary_Entry",
         "observation_free": "KBV_PR_MIO_DIGA_Observation_Free",
         "goal": "KBV_PR_MIO_DIGA_Goal",

@@ -1,0 +1,1019 @@
+{
+  "resourceType": "Bundle",
+  "id": "d659fdbf-578b-59eb-971a-984db720e199",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2026-11-01T09:00:00+00:00",
+    "profile": [
+      "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Bundle|1.1.0"
+    ]
+  },
+  "identifier": {
+    "type": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+          "version": "2.9",
+          "code": "RI",
+          "display": "Resource identifier"
+        }
+      ]
+    },
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:d659fdbf-578b-59eb-971a-984db720e199"
+  },
+  "type": "document",
+  "timestamp": "2026-11-01T09:00:00+00:00",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:1ab700f3-0cea-514f-963f-6445f87481bf",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "1ab700f3-0cea-514f-963f-6445f87481bf",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Composition|1.1.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_DIGA_Betrachtungszeitraum",
+            "valuePeriod": {
+              "start": "2026-10-05",
+              "end": "2026-10-11"
+            }
+          }
+        ],
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "53576-5",
+              "display": "Personal health monitoring report Document"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "date": "2026-11-01T09:00:00+00:00",
+        "author": [
+          {
+            "reference": "urn:uuid:a052a699-0739-5561-a9e4-f8d34490bf16"
+          }
+        ],
+        "title": "DiGA-Export",
+        "section": [
+          {
+            "title": "Befunde und Ergebnisse",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+                  "code": "423100009",
+                  "display": "Results section (record artifact)"
+                }
+              ]
+            },
+            "section": [
+              {
+                "title": "Vitalzeichen und Körpermaße",
+                "code": {
+                  "coding": [
+                    {
+                      "system": "http://snomed.info/sct",
+                      "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+                      "code": "1184593002",
+                      "display": "Vital sign document section (record artifact)"
+                    }
+                  ]
+                },
+                "entry": [
+                  {
+                    "reference": "urn:uuid:d41306cb-78cc-5766-87bc-ad151964d67e"
+                  },
+                  {
+                    "reference": "urn:uuid:6e29f7c3-07db-5912-9ca0-6bcb9e88b3ad"
+                  },
+                  {
+                    "reference": "urn:uuid:02a153ee-e844-5704-8d44-512c6f64feae"
+                  },
+                  {
+                    "reference": "urn:uuid:10877f38-0456-5c1b-ab8b-1a6161f0da7a"
+                  },
+                  {
+                    "reference": "urn:uuid:e696f39e-ce9c-5801-9259-767e06b97fdd"
+                  },
+                  {
+                    "reference": "urn:uuid:a19b6486-ad46-5a7d-8284-b5e7a51fe904"
+                  },
+                  {
+                    "reference": "urn:uuid:13b23540-61e8-5e3f-86ac-cb5284a367d6"
+                  },
+                  {
+                    "reference": "urn:uuid:299d74d4-e08d-5a6b-b533-7799d7a587da"
+                  },
+                  {
+                    "reference": "urn:uuid:c8b675c4-8eb8-50b8-bac0-38803ce2b686"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "7ac9ee33-cde7-5157-a469-3c9960d9f176",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Patient|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1964-02-27"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a052a699-0739-5561-a9e4-f8d34490bf16",
+      "resource": {
+        "resourceType": "Device",
+        "id": "a052a699-0739-5561-a9e4-f8d34490bf16",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Device_DIGA|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "text": "DiGA-VE-ID"
+            },
+            "value": "99990001"
+          }
+        ],
+        "definition": {
+          "reference": "urn:uuid:01210f2f-e90f-5611-9d49-fa04da2017e9"
+        },
+        "deviceName": [
+          {
+            "name": "Synthetic Weight Coach",
+            "type": "user-friendly-name"
+          }
+        ],
+        "type": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/ifa/pzn",
+              "code": "19999999"
+            }
+          ]
+        },
+        "version": [
+          {
+            "type": {
+              "text": "Softwareversion"
+            },
+            "value": "2.4.1"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:01210f2f-e90f-5611-9d49-fa04da2017e9",
+      "resource": {
+        "resourceType": "DeviceDefinition",
+        "id": "01210f2f-e90f-5611-9d49-fa04da2017e9",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_DeviceDefinition_DIGA|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:01210f2f-e90f-5611-9d49-fa04da2017e9"
+          }
+        ],
+        "manufacturerReference": {
+          "reference": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07"
+        },
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "706689003",
+              "display": "Application program software (physical object)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "44d4418c-cb5e-5a35-ab1e-fe12361a3e07",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Organization_Manufacturer|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07"
+          }
+        ],
+        "name": "Synthetic DiGA GmbH",
+        "telecom": [
+          {
+            "system": "url",
+            "value": "https://example.org"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:d41306cb-78cc-5766-87bc-ad151964d67e",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "d41306cb-78cc-5766-87bc-ad151964d67e",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:d41306cb-78cc-5766-87bc-ad151964d67e"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "2339-0",
+              "display": "Glucose [Mass/volume] in Blood"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434912009",
+              "display": "Blood glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-05T07:05:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 128,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "271062006",
+              "display": "Fasting blood glucose measurement (procedure)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:6e29f7c3-07db-5912-9ca0-6bcb9e88b3ad",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "6e29f7c3-07db-5912-9ca0-6bcb9e88b3ad",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:6e29f7c3-07db-5912-9ca0-6bcb9e88b3ad"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "2339-0",
+              "display": "Glucose [Mass/volume] in Blood"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434912009",
+              "display": "Blood glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-05T14:10:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 176,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "302788006",
+              "display": "Post-prandial blood glucose measurement (procedure)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:02a153ee-e844-5704-8d44-512c6f64feae",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "02a153ee-e844-5704-8d44-512c6f64feae",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:02a153ee-e844-5704-8d44-512c6f64feae"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "2339-0",
+              "display": "Glucose [Mass/volume] in Blood"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434912009",
+              "display": "Blood glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-06T12:20:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 142,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "271063001",
+              "display": "Lunch time blood sugar measurement (procedure)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:10877f38-0456-5c1b-ab8b-1a6161f0da7a",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "10877f38-0456-5c1b-ab8b-1a6161f0da7a",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:10877f38-0456-5c1b-ab8b-1a6161f0da7a"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "2339-0",
+              "display": "Glucose [Mass/volume] in Blood"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434912009",
+              "display": "Blood glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-07T18:40:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 151,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "271064007",
+              "display": "Supper time blood sugar measurement (procedure)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:e696f39e-ce9c-5801-9259-767e06b97fdd",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "e696f39e-ce9c-5801-9259-767e06b97fdd",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:e696f39e-ce9c-5801-9259-767e06b97fdd"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "2339-0",
+              "display": "Glucose [Mass/volume] in Blood"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434912009",
+              "display": "Blood glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-08T22:15:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 133,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "271065008",
+              "display": "Bedtime blood sugar measurement (procedure)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a19b6486-ad46-5a7d-8284-b5e7a51fe904",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "a19b6486-ad46-5a7d-8284-b5e7a51fe904",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:a19b6486-ad46-5a7d-8284-b5e7a51fe904"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "2339-0",
+              "display": "Glucose [Mass/volume] in Blood"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434912009",
+              "display": "Blood glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-09T16:30:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 119,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "271061004",
+              "display": "Random blood glucose measurement (procedure)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:13b23540-61e8-5e3f-86ac-cb5284a367d6",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "13b23540-61e8-5e3f-86ac-cb5284a367d6",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:13b23540-61e8-5e3f-86ac-cb5284a367d6"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "15074-8",
+              "display": "Glucose [Moles/volume] in Blood"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434912009",
+              "display": "Blood glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-10T07:10:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 6.9,
+          "unit": "mmol/L",
+          "system": "http://unitsofmeasure.org",
+          "code": "mmol/L"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:299d74d4-e08d-5a6b-b533-7799d7a587da",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "299d74d4-e08d-5a6b-b533-7799d7a587da",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:299d74d4-e08d-5a6b-b533-7799d7a587da"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "14745-4",
+              "display": "Glucose [Moles/volume] in Body fluid"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434910001",
+              "display": "Interstitial fluid glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-10T07:10:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 7.4,
+          "unit": "mmol/L",
+          "system": "http://unitsofmeasure.org",
+          "code": "mmol/L"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "359776002",
+              "display": "Glucose measurement by monitoring device (procedure)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:c8b675c4-8eb8-50b8-bac0-38803ce2b686",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "c8b675c4-8eb8-50b8-bac0-38803ce2b686",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:c8b675c4-8eb8-50b8-bac0-38803ce2b686"
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "2344-0",
+              "display": "Glucose [Mass/volume] in Body fluid"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "434910001",
+              "display": "Interstitial fluid glucose concentration (observable entity)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+        },
+        "effectiveDateTime": "2026-10-11T15:00:00+02:00",
+        "performer": [
+          {
+            "reference": "urn:uuid:7ac9ee33-cde7-5157-a469-3c9960d9f176"
+          }
+        ],
+        "valueQuantity": {
+          "value": 141,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        },
+        "method": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "359776002",
+              "display": "Glucose measurement by monitoring device (procedure)"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

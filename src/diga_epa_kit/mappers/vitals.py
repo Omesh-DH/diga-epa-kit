@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 
-from ..input.model import BloodPressure, BodyHeight, BodyWeight
+from ..input.model import BloodPressure, BodyHeight, BodyWeight, Glucose
 from ..terminology.versions import LOINC, OBS_CATEGORY, SNOMED, UCUM, VersionPack
 from .common import Json, meta, ri_identifier, urn
 
@@ -204,5 +204,75 @@ def simple_vital(
             "coding": [
                 {"system": SNOMED, "version": pack.snomed_version, "code": spec.method[0], "display": spec.method[1]}
             ]
+        }
+    return res
+
+
+# kbv.basis KBV_VS_Base_Glucose_Concentration_LOINC (required): the code depends on the
+# specimen and on whether the unit is a mass or a molar concentration. Which LOINC code goes
+# with which SNOMED code follows kbv.basis KBV_CM_Base_Terminology_Complete_German: it maps
+# the "Body fluid" codes and the interstitial-fluid concept to one German concept (tissue
+# glucose) and the "Blood" codes and the blood concept to the other (docs/gaps.md G15).
+_GLUCOSE_LOINC = {
+    ("blood", "mg/dL"): ("2339-0", "Glucose [Mass/volume] in Blood"),
+    ("blood", "mmol/L"): ("15074-8", "Glucose [Moles/volume] in Blood"),
+    ("interstitial_fluid", "mg/dL"): ("2344-0", "Glucose [Mass/volume] in Body fluid"),
+    ("interstitial_fluid", "mmol/L"): ("14745-4", "Glucose [Moles/volume] in Body fluid"),
+}
+# kbv.basis KBV_VS_Base_Glucose_Concentration_SNOMED_CT (required).
+_GLUCOSE_SNOMED = {
+    "blood": ("434912009", "Blood glucose concentration (observable entity)"),
+    "interstitial_fluid": ("434910001", "Interstitial fluid glucose concentration (observable entity)"),
+}
+# kbv.basis KBV_VS_Base_Glucose_Concentration_Method_SNOMED_CT (extensible). The input names
+# follow the German meaning the same concept map gives each code: the lunch, supper and
+# bedtime concepts mean "before".
+_GLUCOSE_METHOD = {
+    "fasting": ("271062006", "Fasting blood glucose measurement (procedure)"),
+    "before_lunch": ("271063001", "Lunch time blood sugar measurement (procedure)"),
+    "before_supper": ("271064007", "Supper time blood sugar measurement (procedure)"),
+    "before_bed": ("271065008", "Bedtime blood sugar measurement (procedure)"),
+    "after_meal": ("302788006", "Post-prandial blood glucose measurement (procedure)"),
+    "random": ("271061004", "Random blood glucose measurement (procedure)"),
+}
+# Same value set. The concept map reads this code as continuous glucose monitoring (CGM),
+# which is how interstitial fluid is measured, so it is stated for every sensor reading.
+_GLUCOSE_CGM = ("359776002", "Glucose measurement by monitoring device (procedure)")
+
+
+def glucose(pack: VersionPack, uuid: str, patient_uuid: str, obs: Glucose, now: datetime) -> Json:
+    loinc = _GLUCOSE_LOINC[(obs.specimen, obs.unit)]
+    snomed = _GLUCOSE_SNOMED[obs.specimen]
+    res: Json = {
+        "resourceType": "Observation",
+        "id": uuid,
+        "meta": meta(pack, "glucose", now),
+        "identifier": [ri_identifier(pack, uuid)],
+        "status": "final",
+        "category": [{"coding": [{"system": OBS_CATEGORY, "code": "vital-signs"}]}],
+        "code": {
+            "coding": [
+                {"system": LOINC, "version": pack.loinc_version, "code": loinc[0], "display": loinc[1]},
+                {"system": SNOMED, "version": pack.snomed_version, "code": snomed[0], "display": snomed[1]},
+            ]
+        },
+        "subject": {"reference": urn(patient_uuid)},
+        "effectiveDateTime": obs.measured_at.isoformat(),
+        # Home measurements: the patient is the performer, whether device-synced or typed in.
+        "performer": [{"reference": urn(patient_uuid)}],
+        # Code from KBV_VS_Base_Glucose_Concentration_Unit; the unit text is the same string,
+        # as the kbv.basis example does for mg/dL.
+        "valueQuantity": {"value": round(obs.value, 1), "unit": obs.unit, "system": UCUM, "code": obs.unit},
+    }
+    method: tuple[str, str] | None = None
+    if obs.specimen == "interstitial_fluid":
+        method = _GLUCOSE_CGM
+    elif obs.context:
+        method = _GLUCOSE_METHOD[obs.context]
+    if method:
+        # The MIO profile fixes the SNOMED version of this coding by pattern, and the validator
+        # rejects the version the value set itself states (docs/gaps.md G15).
+        res["method"] = {
+            "coding": [{"system": SNOMED, "version": pack.snomed_version, "code": method[0], "display": method[1]}]
         }
     return res

@@ -283,6 +283,75 @@
       "title": "DigaInfo",
       "type": "object"
     },
+    "Glucose": {
+      "additionalProperties": false,
+      "description": "One glucose reading, exported in the unit the app holds (never converted).\n\n``specimen`` says what was measured: ``blood`` (a finger-prick meter) or\n``interstitial_fluid`` (a sensor worn on the skin). Every sensor reading is exported\nwith continuous glucose monitoring as its method. ``context`` applies to blood\nreadings only and says when the reading was taken.",
+      "properties": {
+        "measured_at": {
+          "format": "date-time",
+          "title": "Measured At",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            }
+          ],
+          "title": "Value"
+        },
+        "unit": {
+          "description": "Unit of the value. Any number from 10 to 56 is plausible in both units, so a wrong unit in that range cannot be detected",
+          "enum": [
+            "mg/dL",
+            "mmol/L"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "specimen": {
+          "description": "blood: finger-prick meter. interstitial_fluid: glucose sensor worn on the skin; exported with continuous glucose monitoring (CGM) as the method",
+          "enum": [
+            "blood",
+            "interstitial_fluid"
+          ],
+          "title": "Specimen",
+          "type": "string"
+        },
+        "context": {
+          "anyOf": [
+            {
+              "enum": [
+                "fasting",
+                "before_lunch",
+                "before_supper",
+                "before_bed",
+                "after_meal",
+                "random"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Blood readings only. fasting; before_lunch, before_supper and before_bed: taken before that meal or before going to bed; after_meal; random: at no particular time",
+          "title": "Context"
+        }
+      },
+      "required": [
+        "measured_at",
+        "value",
+        "unit",
+        "specimen"
+      ],
+      "title": "Glucose",
+      "type": "object"
+    },
     "Goal": {
       "additionalProperties": false,
       "description": "A goal the patient pursues in the DiGA, in free text.",
@@ -643,6 +712,14 @@
         "$ref": "#/$defs/RespiratoryRate"
       },
       "title": "Respiratory Rates",
+      "type": "array"
+    },
+    "glucose_readings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Glucose"
+      },
+      "title": "Glucose Readings",
       "type": "array"
     },
     "body_mass_indices": {

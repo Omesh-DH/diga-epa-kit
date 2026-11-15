@@ -41,8 +41,10 @@ jobs:
             spec/packages
             ~/.fhir/packages
           key: fhir-${{ hashFiles('spec/packages.lock.json', 'scripts/validate.py') }}
-      - run: pip install -e .
+      - run: pip install -e ".[dev]"
       - run: python scripts/fetch_spec.py
+      - name: Tests that read the pinned packages (skipped in the test job, which has none)
+        run: pytest -q -rs
       - name: Gate (golden bundles, zero errors)
         run: python scripts/validate.py --report out/validation-report.json
       - uses: actions/upload-artifact@v4

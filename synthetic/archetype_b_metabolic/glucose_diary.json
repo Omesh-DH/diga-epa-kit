@@ -1,0 +1,27 @@
+{
+  "diga": {
+    "name": "Synthetic Weight Coach",
+    "ve_id": "99990001",
+    "version": "2.4.1",
+    "pzn": "19999999",
+    "manufacturer": {"name": "Synthetic DiGA GmbH", "website": "https://example.org"}
+  },
+  "patient": {
+    "id": "4f8b2d19-6e3a-4c75-b0d1-9a2e7c5f3b68",
+    "birth_date": "1964-02-27",
+    "gender": "female"
+  },
+  "period_start": "2026-10-05",
+  "period_end": "2026-10-11",
+  "glucose_readings": [
+    {"measured_at": "2026-10-05T07:05:00+02:00", "value": 128, "unit": "mg/dL", "specimen": "blood", "context": "fasting"},
+    {"measured_at": "2026-10-05T14:10:00+02:00", "value": 176, "unit": "mg/dL", "specimen": "blood", "context": "after_meal"},
+    {"measured_at": "2026-10-06T12:20:00+02:00", "value": 142, "unit": "mg/dL", "specimen": "blood", "context": "before_lunch"},
+    {"measured_at": "2026-10-07T18:40:00+02:00", "value": 151, "unit": "mg/dL", "specimen": "blood", "context": "before_supper"},
+    {"measured_at": "2026-10-08T22:15:00+02:00", "value": 133, "unit": "mg/dL", "specimen": "blood", "context": "before_bed"},
+    {"measured_at": "2026-10-09T16:30:00+02:00", "value": 119, "unit": "mg/dL", "specimen": "blood", "context": "random"},
+    {"measured_at": "2026-10-10T07:10:00+02:00", "value": 6.9, "unit": "mmol/L", "specimen": "blood"},
+    {"measured_at": "2026-10-10T07:10:00+02:00", "value": 7.4, "unit": "mmol/L", "specimen": "interstitial_fluid"},
+    {"measured_at": "2026-10-11T15:00:00+02:00", "value": 141, "unit": "mg/dL", "specimen": "interstitial_fluid"}
+  ]
+}

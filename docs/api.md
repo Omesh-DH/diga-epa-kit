@@ -49,6 +49,7 @@ resource:
 | `period_start`, `period_end` | Composition (Betrachtungszeitraum) |
 | `body_weights`, `body_heights`, `blood_pressures` | Observation_Body_Weight, _Body_Height, _Blood_Pressure |
 | `heart_rates`, `body_temperatures`, `oxygen_saturations`, `respiratory_rates` | Observation_Heart_Rate, _Body_Temperature, _Peripheral_Oxygen_Saturation, _Respiratory_Rate |
+| `glucose_readings` | Observation_Glucose_Concentration |
 | `body_mass_indices`, `daily_steps` | Observation_Free |
 | `prom_scores` | Observation_Score_or_Assessment_by_Scale (scores only, no questionnaire wording) |
 | `diary_entries` | Observation_Diary_Entry |

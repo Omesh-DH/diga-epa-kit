@@ -32,7 +32,7 @@ def test_golden_bundles_have_no_validator_errors(tmp_path):
 
 
 def test_negative_control_is_rejected(tmp_path):
-    """Two known violations must surface, or the gate is checking nothing."""
+    """Known violations must surface, or the gate is checking nothing."""
     bundle = json.loads((ROOT / "tests" / "golden" / "archetype_a_mental__phq9_three_months.json").read_text("utf-8"))
     score = next(e["resource"] for e in bundle["entry"] if e["resource"]["resourceType"] == "Observation")
     score["referenceRange"][0]["text"] = "prohibited by profile"
@@ -41,10 +41,19 @@ def test_negative_control_is_rejected(tmp_path):
     bad = tmp_path / "negative.json"
     bad.write_text(json.dumps(bundle), encoding="utf-8")
 
-    proc, errors = _validate([bad], tmp_path)
+    # The glucose method coding with the SNOMED version its value set states instead of the
+    # one the profile pattern fixes (docs/gaps.md G15).
+    glucose = json.loads((ROOT / "tests" / "golden" / "archetype_b_metabolic__glucose_diary.json").read_text("utf-8"))
+    reading = next(e["resource"] for e in glucose["entry"] if "method" in e["resource"])
+    reading["method"]["coding"][0]["version"] = "http://snomed.info/sct/900000000000207008/version/20220131"
+    bad_version = tmp_path / "negative_method_version.json"
+    bad_version.write_text(json.dumps(glucose), encoding="utf-8")
+
+    proc, errors = _validate([bad, bad_version], tmp_path)
     assert proc.returncode == 1, proc.stderr[-2000:]
     assert any("referenceRange.text: max allowed = 0" in e for e in errors)
     assert any("Device.identifier: minimum required = 1" in e for e in errors)
+    assert any("'Observation.method.coding:codeSnomed': a matching slice is required" in e for e in errors)
 
 
 def test_library_validate_accepts_a_dict():

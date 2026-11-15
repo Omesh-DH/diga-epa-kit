@@ -9,7 +9,7 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | Blood pressure | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Blood_Pressure | done |
 | Body height | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Body_Height | done |
 | Heart rate, SpO₂, temperature, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Respiratory_Rate | done |
-| Glucose | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Glucose_Concentration | – (needs specimen, unit and method choices) |
+| Glucose | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Glucose_Concentration | done (no trend, no target range, no readings without a number) |
 | Other results | befundeUndErgebnisse | Observation_Free | BMI and daily step count done |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
 | PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total, GAD-7 total, 0–10 pain rating and ODI score done; Functional_Assessment blocked (decision 0008) |
@@ -231,9 +231,7 @@ rate) or pattern (oxygen saturation).
   pulse-oximeter readings, which the input model states (gap G14).
 - Temperature is rounded to one decimal with Python's `round` (binary
   floats, so 36.65 becomes 36.6); the three rates are whole numbers.
-- Glucose is not mapped: its profile needs a LOINC code chosen by specimen
-  and unit, a measurement method and optionally an interpretation, which
-  the input cannot express yet.
+- Glucose needs more than one value and has its own section ("Glucose").
 
 ## Size and speed
 
@@ -254,3 +252,68 @@ validator, three of the build):
 The kit is not the bottleneck; the validator is, at roughly 0.1 s per
 resource. Not tested: whether an ePA accepts a document of this size, and
 memory use on a small CI runner (the validator peaked at 3 GB here).
+
+## Glucose
+
+`glucose_readings` maps to `KBV_PR_MIO_DIGA_Observation_Glucose_Concentration`,
+in the Vitalzeichen subsection, performer = the patient. Each reading states
+its value, its unit, what was measured and, for blood readings, optionally
+when:
+
+| Input | Becomes | Source in kbv.basis |
+| --- | --- | --- |
+| `specimen` + `unit` | LOINC code. Blood: 2339-0 (mg/dL) or 15074-8 (mmol/L). Interstitial fluid: 2344-0 (mg/dL) or 14745-4 (mmol/L) | KBV_VS_Base_Glucose_Concentration_LOINC (required) |
+| `specimen` | SNOMED code. Blood: 434912009. Interstitial fluid: 434910001 | KBV_VS_Base_Glucose_Concentration_SNOMED_CT (required) |
+| `unit` | `valueQuantity.unit` and `.code`: `mg/dL` or `mmol/L` | KBV_VS_Base_Glucose_Concentration_Unit (required). The unit text is the UCUM code, as the package example does for mg/dL |
+| `context` (blood only, optional) | `method`: fasting 271062006, before_lunch 271063001, before_supper 271064007, before_bed 271065008, after_meal 302788006, random 271061004 | KBV_VS_Base_Glucose_Concentration_Method_SNOMED_CT (extensible) |
+| `specimen` = interstitial fluid | `method` 359776002 on every such reading | same value set |
+
+- **Code pairing.** Which LOINC code goes with which SNOMED code follows the
+  kbv.basis concept map `KBV_CM_Base_Terminology_Complete_German`. It maps
+  the "Body fluid" LOINC codes and the interstitial-fluid concept to one
+  German concept (tissue glucose) and the "Blood" codes and the blood
+  concept to the other. No profile rule enforces the pairing (gap G15).
+- **Context names.** The same concept map gives the method codes their
+  German meaning, and the input names follow it: the SNOMED "lunch time",
+  "supper time" and "bedtime" concepts mean *before* lunch, supper and
+  going to bed. All six are blood measurements, so `context` is rejected
+  for sensor readings.
+- **Sensor readings.** The concept map reads 359776002 as continuous glucose
+  monitoring (CGM). Interstitial fluid is measured that way, so the kit
+  states this method for every sensor reading and never for a blood
+  reading. The caller cannot choose it.
+- **Units.** The unit is never converted: a reading is exported in the unit
+  the app holds, and the LOINC code follows it. The limits (10–1000 mg/dL,
+  0.5–56 mmol/L) are plausibility limits, not clinical ones, and they
+  overlap: any number from 10 to 56 is accepted in either unit. A wrong
+  unit is caught only outside that window. Inside it, 12 mmol/L (high)
+  labelled mg/dL is exported as 12 mg/dL (dangerously low), and 45 mg/dL
+  (low) labelled mmol/L as 45 mmol/L (dangerously high). A whole data set
+  with the wrong unit nearly always has a value outside the window and is
+  rejected; a single mislabelled reading is not. No limit can close the
+  window, so the manufacturer must get the unit right.
+- **Readings without a number.** At the extremes meters and sensors show
+  "LO", "HI" or an error instead of a value. Such readings cannot be
+  exported: the profile requires a value and prohibits `dataAbsentReason`,
+  and the input takes numbers only. Leaving them out hides the most severe
+  events. The glucose profiles do not prohibit `valueQuantity.comparator`,
+  which could carry "below 20 mg/dL"; the kit does not offer that yet.
+- **Rounding.** One decimal with Python's `round` (binary floats, so 5.55
+  becomes 5.5). A whole number given as an integer stays an integer.
+- **Same minute.** A meter and a sensor reading at the same time are two
+  readings; the specimen is part of the resource id.
+- **Not exported.** The trend (`interpretation`), a target range
+  (`referenceRange`), `bodySite`, `device`, `note`, `method.text` and the
+  `teilVon` extension: the input has no fields for them.
+- **Volume.** Sensor data adds up. One value every 5 minutes for 90 days is
+  25,920 readings: measured on 2026-11-15, the kit builds that bundle in
+  about 2.3 s and it is 43.6 MB. The validator was not run on it; at the
+  rate of the one-year test (about 0.1 s per resource) it would need
+  roughly 42 minutes. An app with sensor data should export shorter
+  periods or thinned values.
+- **What checks this.** The offline gate cannot check the value-set
+  bindings (warnings only). It does enforce the fixed SNOMED version of
+  the method coding (gap G15), and the validator's negative control covers
+  that. Unit tests compare every code the mapper can emit, the pairing and
+  the context meanings with the pinned package files; they are skipped
+  where the packages are not fetched.

@@ -52,6 +52,12 @@ SEEN = [
         "Follow-on error",
         True,
     ),
+    (
+        "Slice 'Observation.method.coding:codeSnomed': a matching slice is required, but not found "
+        "(from https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Observation_Glucose_Concentration|1.1.0)",
+        "Required slice",
+        True,
+    ),
     ("None of the codings provided are in the value set 'IdentifierType'", "not in the bound value set", True),
     ("The value set 'doc-typecodes|4.0.1' validation (local) took too long to process (>60sec)", "timeout", False),
     (

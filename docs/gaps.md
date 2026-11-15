@@ -234,3 +234,53 @@ Evidence for sub-question 2.
   manufacturer may never have recorded.
 - **Handling**: follow the patterns. The input field accepts pulse-oximeter
   readings only and says so. A question for support.mio@kbv.de.
+
+## G15 Glucose: the method version contradicts its value set; the code pairing is defined only in a concept map
+
+- **Where**: `KBV_PR_MIO_DIGA_Observation_Glucose_Concentration`,
+  `Observation.method.coding:codeSnomed` and `Observation.code.coding`;
+  kbv.basis `KBV_VS_Base_Glucose_Concentration_Method_SNOMED_CT` and
+  `KBV_CM_Base_Terminology_Complete_German`.
+- **Evidence, method version**:
+  - The MIO profile fixes the SNOMED version of the method coding by
+    pattern to `.../version/20220331`. It is the only pattern in the 44 MIO
+    DiGA profiles that fixes a SNOMED version without a code; the kbv.basis
+    base profile fixes no version there.
+  - The value set that coding is bound to (extensible) lists its seven
+    concepts under `.../version/20220131`, and so does the concept-map
+    group for these codes. Of the 26 SNOMED includes in the kbv.basis 1.3.0
+    value sets, 23 state 20220331; this is one of the three that do not.
+  - The same seven codes with the same displays are in the 20220331
+    expansion of `KBV_VS_Base_Procedure_SNOMED_CT`, so they exist in both
+    versions.
+  - Checked with the validator (6.5.28, offline) on 2026-11-15: a method
+    coding with version 20220131 is an error, "Slice
+    'Observation.method.coding:codeSnomed': a matching slice is required,
+    but not found". With 20220331 the bundle passes.
+- **Evidence, code pairing**:
+  - The LOINC value set separates "Blood" from "Body fluid", the SNOMED
+    value set "Blood" from "Interstitial fluid". Both codings are required.
+  - Which goes with which is stated only indirectly: the concept map
+    translates the "Body fluid" LOINC codes and the interstitial-fluid
+    concept to the same German concept ("Gewebezuckerkonzentration") and
+    the "Blood" codes and the blood concept to the other
+    ("Blutzuckerkonzentration"). No invariant enforces the pairing, and
+    LOINC "Body fluid" is broader than interstitial fluid.
+  - The concept map also narrows the method codes. The "lunch time",
+    "supper time" and "bedtime" concepts are translated as *before* lunch,
+    supper and going to bed, and "Glucose measurement by monitoring device"
+    as continuous glucose monitoring (CGM). The English displays do not say
+    that.
+- **Consequence**: a coding that follows the value set's own version fails
+  the profile. A manufacturer who reads only the profile and the English
+  displays can pair the codes differently, or tag an after-lunch value
+  with the "lunch time" code, which a German receiver reads as "before
+  lunch".
+- **Handling**: the kit uses the version the pattern fixes, pairs the codes
+  as the concept map does, names its input choices after the German
+  meaning, and states CGM for every interstitial reading and for no blood
+  reading. Unit tests check all of this against the pinned package files,
+  and the validator's negative control covers the version. A question for
+  support.mio@kbv.de.
+- **Correction (2026-11-15)**: the first version of this entry said the
+  pairing was undefined. The fhir-reviewer found the concept map.

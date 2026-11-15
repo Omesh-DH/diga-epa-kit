@@ -105,6 +105,42 @@ class RespiratoryRate(_Measured):
     per_minute: StrictInt = Field(ge=4, le=80)
 
 
+class Glucose(_Measured):
+    """One glucose reading, exported in the unit the app holds (never converted).
+
+    ``specimen`` says what was measured: ``blood`` (a finger-prick meter) or
+    ``interstitial_fluid`` (a sensor worn on the skin). Every sensor reading is exported
+    with continuous glucose monitoring as its method. ``context`` applies to blood
+    readings only and says when the reading was taken.
+    """
+
+    value: StrictFloat | StrictInt
+    unit: Literal["mg/dL", "mmol/L"] = Field(
+        description="Unit of the value. Any number from 10 to 56 is plausible in both units, "
+        "so a wrong unit in that range cannot be detected"
+    )
+    specimen: Literal["blood", "interstitial_fluid"] = Field(
+        description="blood: finger-prick meter. interstitial_fluid: glucose sensor worn on the skin; "
+        "exported with continuous glucose monitoring (CGM) as the method"
+    )
+    context: Literal["fasting", "before_lunch", "before_supper", "before_bed", "after_meal", "random"] | None = Field(
+        default=None,
+        description="Blood readings only. fasting; before_lunch, before_supper and before_bed: taken "
+        "before that meal or before going to bed; after_meal; random: at no particular time",
+    )
+
+    @model_validator(mode="after")
+    def _plausible(self) -> Glucose:
+        # Plausibility limits per unit. They overlap from 10 to 56, so a wrong unit is only
+        # caught outside that window (docs/mapping.md). NaN fails the comparison too.
+        low, high = (10, 1000) if self.unit == "mg/dL" else (0.5, 56)
+        if not low <= self.value <= high:
+            raise ValueError(f"glucose {self.value} {self.unit} outside {low}..{high}")
+        if self.specimen == "interstitial_fluid" and self.context is not None:
+            raise ValueError("context applies to blood readings only")
+        return self
+
+
 class BloodPressure(_Strict):
     """One reading in mmHg. The bounds are plausibility limits, not clinical ones."""
 
@@ -272,6 +308,7 @@ class DigaExport(_Strict):
     body_temperatures: list[BodyTemperature] = []
     oxygen_saturations: list[OxygenSaturation] = []
     respiratory_rates: list[RespiratoryRate] = []
+    glucose_readings: list[Glucose] = []
     body_mass_indices: list[BodyMassIndex] = []
     daily_steps: list[DailySteps] = []
     prom_scores: list[PromScore] = []
@@ -298,6 +335,10 @@ class DigaExport(_Strict):
             stamps += [(name, r.measured_at) for r in readings]
             if len({r.measured_at for r in readings}) != len(readings):
                 raise ValueError(f"duplicate {name}.measured_at")
+        stamps += [("glucose_readings", g.measured_at) for g in self.glucose_readings]
+        # A meter and a sensor can report in the same minute, so the specimen is part of the key.
+        if len({(g.specimen, g.measured_at) for g in self.glucose_readings}) != len(self.glucose_readings):
+            raise ValueError("duplicate glucose_readings (specimen, measured_at)")
         stamps += [("body_mass_indices", b.measured_at) for b in self.body_mass_indices]
         stamps += [("prom_scores", p.completed_at) for p in self.prom_scores]
         stamps += [("diary_entries", d.written_at) for d in self.diary_entries]

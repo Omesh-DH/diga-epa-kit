@@ -38,6 +38,17 @@ _RULES: list[tuple[re.Pattern[str], Explanation]] = [
         ),
     ),
     (
+        re.compile(r"a matching slice is required, but not found"),
+        Explanation(
+            "Required slice missing or not matched",
+            "The profile requires an entry that matches a named slice, and a slice fixes values such as "
+            "system, version or code. Either the entry is missing or one of its fixed values differs: "
+            "compare it with the slice's pattern in the profile's differential. A coding with another "
+            "code-system version than the pattern does not match.",
+            True,
+        ),
+    ),
+    (
         re.compile(r"Unable to find a profile match for"),
         Explanation(
             "Follow-on error: a referenced resource fails its profile",

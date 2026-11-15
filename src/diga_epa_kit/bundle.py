@@ -77,6 +77,11 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
             body.append(vitals.simple_vital(pack, kind, vital_id, patient_id, measured_at, value, now))
             simple_ids.append(vital_id)
 
+    for reading in data.glucose_readings:
+        glucose_id = _id("glucose", data.patient.id, reading.specimen, reading.measured_at.isoformat())
+        body.append(vitals.glucose(pack, glucose_id, patient_id, reading, now))
+        simple_ids.append(glucose_id)
+
     score_ids: list[str] = []
     for p in data.prom_scores:
         inst = INSTRUMENTS[p.instrument]
