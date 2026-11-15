@@ -58,6 +58,12 @@ SEEN = [
         "Required slice",
         True,
     ),
+    (
+        "The value provided ('LO') was not found in the value set 'QuantityComparator' "
+        "(http://hl7.org/fhir/ValueSet/quantity-comparator|4.0.1), and a code is required from this value set",
+        "required value set",
+        True,
+    ),
     ("None of the codings provided are in the value set 'IdentifierType'", "not in the bound value set", True),
     ("The value set 'doc-typecodes|4.0.1' validation (local) took too long to process (>60sec)", "timeout", False),
     (

@@ -49,11 +49,22 @@ def test_negative_control_is_rejected(tmp_path):
     bad_version = tmp_path / "negative_method_version.json"
     bad_version.write_text(json.dumps(glucose), encoding="utf-8")
 
-    proc, errors = _validate([bad, bad_version], tmp_path)
+    # A comparator code FHIR does not define. If the gate did not check the code, its accepting
+    # "<" and ">" on out-of-range glucose readings would mean nothing (docs/gaps.md G16).
+    sensor = json.loads(
+        (ROOT / "tests" / "golden" / "archetype_b_metabolic__glucose_sensor_out_of_range.json").read_text("utf-8")
+    )
+    marked = next(e["resource"] for e in sensor["entry"] if "comparator" in e["resource"].get("valueQuantity", {}))
+    marked["valueQuantity"]["comparator"] = "LO"
+    bad_comparator = tmp_path / "negative_comparator.json"
+    bad_comparator.write_text(json.dumps(sensor), encoding="utf-8")
+
+    proc, errors = _validate([bad, bad_version, bad_comparator], tmp_path)
     assert proc.returncode == 1, proc.stderr[-2000:]
     assert any("referenceRange.text: max allowed = 0" in e for e in errors)
     assert any("Device.identifier: minimum required = 1" in e for e in errors)
     assert any("'Observation.method.coding:codeSnomed': a matching slice is required" in e for e in errors)
+    assert any("was not found in the value set 'QuantityComparator'" in e for e in errors)
 
 
 def test_library_validate_accepts_a_dict():

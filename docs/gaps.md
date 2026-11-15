@@ -284,3 +284,46 @@ Evidence for sub-question 2.
   support.mio@kbv.de.
 - **Correction (2026-11-15)**: the first version of this entry said the
   pairing was undefined. The fhir-reviewer found the concept map.
+
+## G16 Glucose: a reading outside the device's measuring range has no defined representation
+
+- **Where**: `KBV_PR_MIO_DIGA_Observation_Glucose_Concentration`,
+  `Observation.value[x]`, `Observation.dataAbsentReason` and
+  `Observation.interpretation`; `valueQuantity.comparator` across the MIO
+  DiGA observation profiles.
+- **Evidence**:
+  - Outside their measuring range, meters and sensors show "LO" or "HI"
+    instead of a number. The MIO profile requires `value[x]` (min 1) and
+    prohibits `dataAbsentReason` (max 0); kbv.basis requires
+    `valueQuantity.value` (min 1). `interpretation` is bound (required) to
+    seven trend concepts (rising, falling and so on); none of them says
+    "below" or "above the measuring range". No element description says
+    how to carry such a reading.
+  - The one element left is `valueQuantity.comparator`. The glucose
+    profiles do not constrain it. The MIO DiGA profiles prohibit it (max 0)
+    in nine other observation profiles: body weight, heart rate,
+    respiratory rate, head circumference, blood pressure, functional
+    assessment, score, and the two nutrition-intake profiles. They do not
+    prohibit it for glucose, body height, body temperature, oxygen
+    saturation or the free observation. kbv.basis and de.basisprofil.r4
+    constrain it nowhere.
+  - Checked with the validator (6.5.28, offline) on 2026-11-15. A glucose
+    value with comparator `<` or `>` passes. Another comparator code is an
+    error: "The value provided ('LO') was not found in the value set
+    'QuantityComparator' [...], and a code is required from this value
+    set". A comparator on a heart rate is an error:
+    "Observation.value[x]:valueQuantity.comparator: max allowed = 0, but
+    found 1".
+  - In FHIR R4 core (hl7.fhir.r4.core 4.0.1, read from the validator's
+    package cache, not from a pinned package) `Quantity.comparator` is a
+    modifier element with the codes `<`, `<=`, `>=`, `>`.
+- **Consequence**: the most severe glucose events are the ones the profile
+  gives no explicit place. Whether the comparator is meant to be allowed
+  for glucose, or was left unconstrained by oversight, cannot be told from
+  the packages. A receiver that ignores the modifier reads "below 40
+  mg/dL" as "40 mg/dL".
+- **Handling**: the kit exports such a reading as `<` or `>` the device's
+  measuring limit, which the manufacturer supplies (`out_of_range`), and
+  checks that the limit is plausible for its direction. A reading with no
+  value at all (sensor error) is not exported. A question for
+  support.mio@kbv.de.

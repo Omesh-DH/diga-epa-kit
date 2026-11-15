@@ -240,6 +240,19 @@ _GLUCOSE_METHOD = {
 _GLUCOSE_CGM = ("359776002", "Glucose measurement by monitoring device (procedure)")
 
 
+def _glucose_quantity(obs: Glucose) -> Json:
+    quantity: Json = {"value": round(obs.value, 1)}
+    if obs.out_of_range:
+        # The device showed LO or HI: the value is its measuring limit and the comparator says
+        # on which side of it the reading lay. The profile requires a value and prohibits
+        # dataAbsentReason, so this is the only way to carry such a reading (docs/gaps.md G16).
+        quantity["comparator"] = "<" if obs.out_of_range == "below" else ">"
+    # Code from KBV_VS_Base_Glucose_Concentration_Unit; the unit text is the same string, as the
+    # kbv.basis example does for mg/dL.
+    quantity.update(unit=obs.unit, system=UCUM, code=obs.unit)
+    return quantity
+
+
 def glucose(pack: VersionPack, uuid: str, patient_uuid: str, obs: Glucose, now: datetime) -> Json:
     loinc = _GLUCOSE_LOINC[(obs.specimen, obs.unit)]
     snomed = _GLUCOSE_SNOMED[obs.specimen]
@@ -260,9 +273,7 @@ def glucose(pack: VersionPack, uuid: str, patient_uuid: str, obs: Glucose, now: 
         "effectiveDateTime": obs.measured_at.isoformat(),
         # Home measurements: the patient is the performer, whether device-synced or typed in.
         "performer": [{"reference": urn(patient_uuid)}],
-        # Code from KBV_VS_Base_Glucose_Concentration_Unit; the unit text is the same string,
-        # as the kbv.basis example does for mg/dL.
-        "valueQuantity": {"value": round(obs.value, 1), "unit": obs.unit, "system": UCUM, "code": obs.unit},
+        "valueQuantity": _glucose_quantity(obs),
     }
     method: tuple[str, str] | None = None
     if obs.specimen == "interstitial_fluid":

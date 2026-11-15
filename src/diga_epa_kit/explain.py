@@ -59,6 +59,16 @@ _RULES: list[tuple[re.Pattern[str], Explanation]] = [
         ),
     ),
     (
+        re.compile(r"a code is required from this value set|The System URI could not be determined for the code"),
+        Explanation(
+            "Code not in a required value set",
+            "The element must carry a code from the named value set (a required binding) and the given "
+            "code is not one of them. Use a code the value set lists. For an element FHIR itself defines, "
+            "such as a quantity comparator or a status, the allowed codes are in the FHIR specification.",
+            True,
+        ),
+    ),
+    (
         re.compile(r"None of the codings provided are in the value set"),
         Explanation(
             "Code is not in the bound value set",

@@ -285,7 +285,7 @@
     },
     "Glucose": {
       "additionalProperties": false,
-      "description": "One glucose reading, exported in the unit the app holds (never converted).\n\n``specimen`` says what was measured: ``blood`` (a finger-prick meter) or\n``interstitial_fluid`` (a sensor worn on the skin). Every sensor reading is exported\nwith continuous glucose monitoring as its method. ``context`` applies to blood\nreadings only and says when the reading was taken.",
+      "description": "One glucose reading, exported in the unit the app holds (never converted).\n\n``specimen`` says what was measured: ``blood`` (a finger-prick meter) or\n``interstitial_fluid`` (a sensor worn on the skin). Every sensor reading is exported\nwith continuous glucose monitoring as its method. ``context`` applies to blood\nreadings only and says when the reading was taken. ``out_of_range`` marks a reading\nthe device showed as LO or HI; ``value`` is then the device's measuring limit.",
       "properties": {
         "measured_at": {
           "format": "date-time",
@@ -341,6 +341,23 @@
           "default": null,
           "description": "Blood readings only. fasting; before_lunch, before_supper and before_bed: taken before that meal or before going to bed; after_meal; random: at no particular time",
           "title": "Context"
+        },
+        "out_of_range": {
+          "anyOf": [
+            {
+              "enum": [
+                "below",
+                "above"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set when the device showed LO or HI instead of a number. value is then the device's lower (below) or upper (above) measuring limit, and the reading is exported as below or above it",
+          "title": "Out Of Range"
         }
       },
       "required": [

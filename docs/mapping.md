@@ -9,7 +9,7 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | Blood pressure | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Blood_Pressure | done |
 | Body height | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Body_Height | done |
 | Heart rate, SpO₂, temperature, resp. rate | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Heart_Rate, _Peripheral_Oxygen_Saturation, _Body_Temperature, _Respiratory_Rate | done |
-| Glucose | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Glucose_Concentration | done (no trend, no target range, no readings without a number) |
+| Glucose | befundeUndErgebnisse → vitalzeichenUndKoerpermasse | Observation_Glucose_Concentration | done (no trend, no target range) |
 | Other results | befundeUndErgebnisse | Observation_Free | BMI and daily step count done |
 | PROM answers / questionnaires | frageboegen | Questionnaire, QuestionnaireResponse | not exported (decision 0007) |
 | PROM scores (PHQ-9, pain scale, GAD-7 …) | beurteilungen | Observation_Score_or_Assessment_by_Scale, Observation_Functional_Assessment | PHQ-9 total, GAD-7 total, 0–10 pain rating and ODI score done; Functional_Assessment blocked (decision 0008) |
@@ -267,6 +267,7 @@ when:
 | `unit` | `valueQuantity.unit` and `.code`: `mg/dL` or `mmol/L` | KBV_VS_Base_Glucose_Concentration_Unit (required). The unit text is the UCUM code, as the package example does for mg/dL |
 | `context` (blood only, optional) | `method`: fasting 271062006, before_lunch 271063001, before_supper 271064007, before_bed 271065008, after_meal 302788006, random 271061004 | KBV_VS_Base_Glucose_Concentration_Method_SNOMED_CT (extensible) |
 | `specimen` = interstitial fluid | `method` 359776002 on every such reading | same value set |
+| `out_of_range` (optional) | `valueQuantity.comparator`: below is `<`, above is `>`; `value` is then the device's measuring limit | FHIR R4 `Quantity.comparator`; the glucose profiles do not constrain it (gap G16) |
 
 - **Code pairing.** Which LOINC code goes with which SNOMED code follows the
   kbv.basis concept map `KBV_CM_Base_Terminology_Complete_German`. It maps
@@ -292,12 +293,20 @@ when:
   with the wrong unit nearly always has a value outside the window and is
   rejected; a single mislabelled reading is not. No limit can close the
   window, so the manufacturer must get the unit right.
-- **Readings without a number.** At the extremes meters and sensors show
-  "LO", "HI" or an error instead of a value. Such readings cannot be
-  exported: the profile requires a value and prohibits `dataAbsentReason`,
-  and the input takes numbers only. Leaving them out hides the most severe
-  events. The glucose profiles do not prohibit `valueQuantity.comparator`,
-  which could carry "below 20 mg/dL"; the kit does not offer that yet.
+- **LO and HI.** Outside their measuring range meters and sensors show
+  "LO" or "HI" instead of a number. The profile requires a value and
+  prohibits `dataAbsentReason`, so such a reading is exported as below or
+  above the device's measuring limit: `out_of_range` = `below` or `above`
+  with `value` = that limit becomes `valueQuantity.comparator` `<` or `>`.
+  The manufacturer supplies the limit; the kit knows no device.
+  - A lower limit must be at most 100 mg/dL (5.6 mmol/L) and an upper limit
+    at least 200 mg/dL (11.1 mmol/L). These are the kit's own plausibility
+    rules. They reject a swapped direction ("above 40") and a limit given
+    in the other unit, so the wrong-unit window does not apply to LO and HI.
+  - In FHIR R4 the comparator is a modifier element: a receiver that
+    ignores it reads "below 40 mg/dL" as "40 mg/dL" (gap G16).
+  - A reading with no value at all, such as a sensor error, still cannot be
+    exported.
 - **Rounding.** One decimal with Python's `round` (binary floats, so 5.55
   becomes 5.5). A whole number given as an integer stays an integer.
 - **Same minute.** A meter and a sensor reading at the same time are two
@@ -313,7 +322,8 @@ when:
   periods or thinned values.
 - **What checks this.** The offline gate cannot check the value-set
   bindings (warnings only). It does enforce the fixed SNOMED version of
-  the method coding (gap G15), and the validator's negative control covers
-  that. Unit tests compare every code the mapper can emit, the pairing and
-  the context meanings with the pinned package files; they are skipped
-  where the packages are not fetched.
+  the method coding (gap G15) and the comparator code: `<` and `>` pass,
+  any other code is an error (gap G16). The validator's negative control
+  covers both. Unit tests compare every code the mapper can emit, the
+  pairing and the context meanings with the pinned package files; they are
+  skipped where the packages are not fetched.
