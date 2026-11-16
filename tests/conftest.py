@@ -41,3 +41,11 @@ def package_resource(package: str, url: str) -> dict:
     index = _package_index(package)
     assert url in index, f"{url} not found in {package}"
     return json.loads(index[url].read_text(encoding="utf-8"))
+
+
+def package_profiles(package: str) -> list[dict]:
+    """Every StructureDefinition of a pinned package; skipped like package_resource without it."""
+    if not (ROOT / "spec" / "packages" / package / "package").is_dir():
+        pytest.skip(f"pinned package {package} not fetched (scripts/fetch_spec.py)")
+    resources = (json.loads(path.read_text(encoding="utf-8")) for path in _package_index(package).values())
+    return [res for res in resources if res.get("resourceType") == "StructureDefinition"]

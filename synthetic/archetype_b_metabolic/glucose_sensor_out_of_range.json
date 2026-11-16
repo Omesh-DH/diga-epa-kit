@@ -16,10 +16,10 @@
   "glucose_readings": [
     {"measured_at": "2026-10-12T07:30:00+02:00", "value": 148, "unit": "mg/dL", "specimen": "interstitial_fluid"},
     {"measured_at": "2026-10-12T12:45:00+02:00", "value": 236, "unit": "mg/dL", "specimen": "interstitial_fluid"},
-    {"measured_at": "2026-10-12T14:10:00+02:00", "value": 400, "unit": "mg/dL", "specimen": "interstitial_fluid", "out_of_range": "above"},
+    {"measured_at": "2026-10-12T14:10:00+02:00", "value": 400, "unit": "mg/dL", "specimen": "interstitial_fluid", "outside_measuring_range": "above"},
     {"measured_at": "2026-10-12T14:15:00+02:00", "value": 428, "unit": "mg/dL", "specimen": "blood", "context": "random"},
     {"measured_at": "2026-10-12T18:00:00+02:00", "value": 212, "unit": "mg/dL", "specimen": "interstitial_fluid"},
-    {"measured_at": "2026-10-13T03:20:00+02:00", "value": 40, "unit": "mg/dL", "specimen": "interstitial_fluid", "out_of_range": "below"},
+    {"measured_at": "2026-10-13T03:20:00+02:00", "value": 40, "unit": "mg/dL", "specimen": "interstitial_fluid", "outside_measuring_range": "below"},
     {"measured_at": "2026-10-13T03:24:00+02:00", "value": 46, "unit": "mg/dL", "specimen": "blood"},
     {"measured_at": "2026-10-13T04:00:00+02:00", "value": 78, "unit": "mg/dL", "specimen": "interstitial_fluid"},
     {"measured_at": "2026-10-13T07:30:00+02:00", "value": 121, "unit": "mg/dL", "specimen": "interstitial_fluid"}

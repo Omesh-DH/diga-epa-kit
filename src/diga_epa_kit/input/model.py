@@ -111,7 +111,7 @@ class Glucose(_Measured):
     ``specimen`` says what was measured: ``blood`` (a finger-prick meter) or
     ``interstitial_fluid`` (a sensor worn on the skin). Every sensor reading is exported
     with continuous glucose monitoring as its method. ``context`` applies to blood
-    readings only and says when the reading was taken. ``out_of_range`` marks a reading
+    readings only and says when the reading was taken. ``outside_measuring_range`` marks a reading
     the device showed as LO or HI; ``value`` is then the device's measuring limit.
     """
 
@@ -129,10 +129,13 @@ class Glucose(_Measured):
         description="Blood readings only. fasting; before_lunch, before_supper and before_bed: taken "
         "before that meal or before going to bed; after_meal; random: at no particular time",
     )
-    out_of_range: Literal["below", "above"] | None = Field(
+    outside_measuring_range: Literal["below", "above"] | None = Field(
         default=None,
-        description="Set when the device showed LO or HI instead of a number. value is then the device's "
-        "lower (below) or upper (above) measuring limit, and the reading is exported as below or above it",
+        description="Set when the device showed LO or HI instead of a number: the reading lay outside what "
+        "the device can measure. This is not the patient's target range. value is then the device's "
+        "measuring limit, the lowest (below) or highest (above) number it still shows, with at most one "
+        "decimal. A lower limit must be at most 100 mg/dL or 5.6 mmol/L, an upper limit at least 200 mg/dL "
+        "or 11.1 mmol/L. Exported as below or above the limit, which a receiver must not read as the value",
     )
 
     @model_validator(mode="after")
@@ -147,14 +150,17 @@ class Glucose(_Measured):
         # A lower measuring limit lies at or below normal fasting glucose, an upper one well
         # above it. This catches a swapped direction and a limit given in the other unit.
         lower_at_most, upper_at_least = (100, 200) if self.unit == "mg/dL" else (5.6, 11.1)
-        if self.out_of_range == "below" and self.value > lower_at_most:
+        if self.outside_measuring_range == "below" and self.value > lower_at_most:
             raise ValueError(
                 f"a lower measuring limit of {self.value} {self.unit} is implausible (at most {lower_at_most})"
             )
-        if self.out_of_range == "above" and self.value < upper_at_least:
+        if self.outside_measuring_range == "above" and self.value < upper_at_least:
             raise ValueError(
                 f"an upper measuring limit of {self.value} {self.unit} is implausible (at least {upper_at_least})"
             )
+        if self.outside_measuring_range and round(self.value, 1) != self.value:
+            # Rounding "<2.24" to "<2.2" would claim more than the device said.
+            raise ValueError("a measuring limit takes at most one decimal")
         return self
 
 

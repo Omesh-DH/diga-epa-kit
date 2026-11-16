@@ -59,12 +59,20 @@ def test_negative_control_is_rejected(tmp_path):
     bad_comparator = tmp_path / "negative_comparator.json"
     bad_comparator.write_text(json.dumps(sensor), encoding="utf-8")
 
-    proc, errors = _validate([bad, bad_version, bad_comparator], tmp_path)
+    # A comparator where the profile prohibits it: the contrast case of docs/gaps.md G16.
+    vitals = json.loads((ROOT / "tests" / "golden" / "archetype_b_metabolic__home_vital_signs.json").read_text("utf-8"))
+    heart_rate = next(e["resource"] for e in vitals["entry"] if "Heart_Rate" in e["resource"]["meta"]["profile"][0])
+    heart_rate["valueQuantity"]["comparator"] = "<"
+    bad_heart_rate = tmp_path / "negative_heart_rate_comparator.json"
+    bad_heart_rate.write_text(json.dumps(vitals), encoding="utf-8")
+
+    proc, errors = _validate([bad, bad_version, bad_comparator, bad_heart_rate], tmp_path)
     assert proc.returncode == 1, proc.stderr[-2000:]
     assert any("referenceRange.text: max allowed = 0" in e for e in errors)
     assert any("Device.identifier: minimum required = 1" in e for e in errors)
     assert any("'Observation.method.coding:codeSnomed': a matching slice is required" in e for e in errors)
     assert any("was not found in the value set 'QuantityComparator'" in e for e in errors)
+    assert any("valueQuantity.comparator: max allowed = 0" in e for e in errors)
 
 
 def test_library_validate_accepts_a_dict():

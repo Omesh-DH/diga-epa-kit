@@ -267,7 +267,7 @@ when:
 | `unit` | `valueQuantity.unit` and `.code`: `mg/dL` or `mmol/L` | KBV_VS_Base_Glucose_Concentration_Unit (required). The unit text is the UCUM code, as the package example does for mg/dL |
 | `context` (blood only, optional) | `method`: fasting 271062006, before_lunch 271063001, before_supper 271064007, before_bed 271065008, after_meal 302788006, random 271061004 | KBV_VS_Base_Glucose_Concentration_Method_SNOMED_CT (extensible) |
 | `specimen` = interstitial fluid | `method` 359776002 on every such reading | same value set |
-| `out_of_range` (optional) | `valueQuantity.comparator`: below is `<`, above is `>`; `value` is then the device's measuring limit | FHIR R4 `Quantity.comparator`; the glucose profiles do not constrain it (gap G16) |
+| `outside_measuring_range` (optional) | `valueQuantity.comparator`: below is `<`, above is `>`; `value` is then the device's measuring limit. The same statement in words in `note.text` | FHIR R4 `Quantity.comparator`; the glucose profiles do not constrain it (gap G16) |
 
 - **Code pairing.** Which LOINC code goes with which SNOMED code follows the
   kbv.basis concept map `KBV_CM_Base_Terminology_Complete_German`. It maps
@@ -296,17 +296,27 @@ when:
 - **LO and HI.** Outside their measuring range meters and sensors show
   "LO" or "HI" instead of a number. The profile requires a value and
   prohibits `dataAbsentReason`, so such a reading is exported as below or
-  above the device's measuring limit: `out_of_range` = `below` or `above`
-  with `value` = that limit becomes `valueQuantity.comparator` `<` or `>`.
-  The manufacturer supplies the limit; the kit knows no device.
+  above the device's measuring limit: `outside_measuring_range` = `below`
+  or `above` with `value` = that limit becomes `valueQuantity.comparator`
+  `<` or `>`. The manufacturer supplies the limit; the kit knows no device.
+  - The field is about the device, not the patient's target range. A value
+    that is merely too low or too high for the patient is a plain value.
+    No rule can tell the two apart: 62 mg/dL "below" would be accepted.
+  - The limit is the lowest or highest number the device still shows, so
+    `<` and `>` are right and `<=` and `>=` are not. It takes at most one
+    decimal; the kit does not round a limit.
   - A lower limit must be at most 100 mg/dL (5.6 mmol/L) and an upper limit
     at least 200 mg/dL (11.1 mmol/L). These are the kit's own plausibility
     rules. They reject a swapped direction ("above 40") and a limit given
-    in the other unit, so the wrong-unit window does not apply to LO and HI.
+    in the other unit. Both mistakes together can pass: a true "below 40
+    mg/dL" entered as "above 40 mmol/L" is accepted.
   - In FHIR R4 the comparator is a modifier element: a receiver that
-    ignores it reads "below 40 mg/dL" as "40 mg/dL" (gap G16).
-  - A reading with no value at all, such as a sensor error, still cannot be
-    exported.
+    ignores it reads "below 40 mg/dL" as "40 mg/dL" (gap G16). The kit
+    therefore repeats the statement in words in `note.text`, for example
+    "Außerhalb des Messbereichs des Geräts: unter 40 mg/dL." The wording is
+    the kit's own.
+  - Still not exportable: a reading with no value at all, such as a sensor
+    error, and a LO or HI whose limit the manufacturer does not know.
 - **Rounding.** One decimal with Python's `round` (binary floats, so 5.55
   becomes 5.5). A whole number given as an integer stays an integer.
 - **Same minute.** A meter and a sensor reading at the same time are two
@@ -323,7 +333,9 @@ when:
 - **What checks this.** The offline gate cannot check the value-set
   bindings (warnings only). It does enforce the fixed SNOMED version of
   the method coding (gap G15) and the comparator code: `<` and `>` pass,
-  any other code is an error (gap G16). The validator's negative control
-  covers both. Unit tests compare every code the mapper can emit, the
+  and a code outside FHIR's four (tested with `LO`) is an error (gap G16).
+  The validator's negative control covers both, and a comparator on a
+  heart rate, where the profile prohibits it. Unit tests compare every
+  code the mapper can emit, the
   pairing and the context meanings with the pinned package files; they are
   skipped where the packages are not fetched.

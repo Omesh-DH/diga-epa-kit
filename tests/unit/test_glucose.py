@@ -148,9 +148,10 @@ def test_profile_prohibitions_are_respected(bundle):
         assert not prohibited & set(r)
         assert "text" not in r["code"]
         assert "text" not in r.get("method", {})
-        assert "comparator" not in r["valueQuantity"]
         # Not exported: the input has neither a trend nor a target range.
         assert "interpretation" not in r and "referenceRange" not in r
+        # No reading in this example lay outside its device's range (test_glucose_out_of_range.py).
+        assert "comparator" not in r["valueQuantity"] and "note" not in r
 
 
 def test_readings_sit_in_the_vitals_subsection(bundle):

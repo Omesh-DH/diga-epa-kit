@@ -242,11 +242,11 @@ _GLUCOSE_CGM = ("359776002", "Glucose measurement by monitoring device (procedur
 
 def _glucose_quantity(obs: Glucose) -> Json:
     quantity: Json = {"value": round(obs.value, 1)}
-    if obs.out_of_range:
+    if obs.outside_measuring_range:
         # The device showed LO or HI: the value is its measuring limit and the comparator says
         # on which side of it the reading lay. The profile requires a value and prohibits
-        # dataAbsentReason, so this is the only way to carry such a reading (docs/gaps.md G16).
-        quantity["comparator"] = "<" if obs.out_of_range == "below" else ">"
+        # dataAbsentReason, so this is the only structured element left for it (docs/gaps.md G16).
+        quantity["comparator"] = "<" if obs.outside_measuring_range == "below" else ">"
     # Code from KBV_VS_Base_Glucose_Concentration_Unit; the unit text is the same string, as the
     # kbv.basis example does for mg/dL.
     quantity.update(unit=obs.unit, system=UCUM, code=obs.unit)
@@ -275,6 +275,12 @@ def glucose(pack: VersionPack, uuid: str, patient_uuid: str, obs: Glucose, now: 
         "performer": [{"reference": urn(patient_uuid)}],
         "valueQuantity": _glucose_quantity(obs),
     }
+    if obs.outside_measuring_range:
+        # The comparator is a modifier that a receiver may ignore, so the note repeats it in
+        # words. The wording is the kit's own (docs/gaps.md G16).
+        side = "unter" if obs.outside_measuring_range == "below" else "über"
+        limit = str(round(obs.value, 1)).replace(".", ",")
+        res["note"] = [{"text": f"Außerhalb des Messbereichs des Geräts: {side} {limit} {obs.unit}."}]
     method: tuple[str, str] | None = None
     if obs.specimen == "interstitial_fluid":
         method = _GLUCOSE_CGM

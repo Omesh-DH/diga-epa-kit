@@ -64,6 +64,12 @@ SEEN = [
         "required value set",
         True,
     ),
+    (
+        "The System URI could not be determined for the code 'LO' in the ValueSet "
+        "'http://hl7.org/fhir/ValueSet/quantity-comparator|4.0.1'",
+        "Code not in a required",
+        True,
+    ),
     ("None of the codings provided are in the value set 'IdentifierType'", "not in the bound value set", True),
     ("The value set 'doc-typecodes|4.0.1' validation (local) took too long to process (>60sec)", "timeout", False),
     (

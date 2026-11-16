@@ -285,7 +285,7 @@
     },
     "Glucose": {
       "additionalProperties": false,
-      "description": "One glucose reading, exported in the unit the app holds (never converted).\n\n``specimen`` says what was measured: ``blood`` (a finger-prick meter) or\n``interstitial_fluid`` (a sensor worn on the skin). Every sensor reading is exported\nwith continuous glucose monitoring as its method. ``context`` applies to blood\nreadings only and says when the reading was taken. ``out_of_range`` marks a reading\nthe device showed as LO or HI; ``value`` is then the device's measuring limit.",
+      "description": "One glucose reading, exported in the unit the app holds (never converted).\n\n``specimen`` says what was measured: ``blood`` (a finger-prick meter) or\n``interstitial_fluid`` (a sensor worn on the skin). Every sensor reading is exported\nwith continuous glucose monitoring as its method. ``context`` applies to blood\nreadings only and says when the reading was taken. ``outside_measuring_range`` marks a reading\nthe device showed as LO or HI; ``value`` is then the device's measuring limit.",
       "properties": {
         "measured_at": {
           "format": "date-time",
@@ -342,7 +342,7 @@
           "description": "Blood readings only. fasting; before_lunch, before_supper and before_bed: taken before that meal or before going to bed; after_meal; random: at no particular time",
           "title": "Context"
         },
-        "out_of_range": {
+        "outside_measuring_range": {
           "anyOf": [
             {
               "enum": [
@@ -356,8 +356,8 @@
             }
           ],
           "default": null,
-          "description": "Set when the device showed LO or HI instead of a number. value is then the device's lower (below) or upper (above) measuring limit, and the reading is exported as below or above it",
-          "title": "Out Of Range"
+          "description": "Set when the device showed LO or HI instead of a number: the reading lay outside what the device can measure. This is not the patient's target range. value is then the device's measuring limit, the lowest (below) or highest (above) number it still shows, with at most one decimal. A lower limit must be at most 100 mg/dL or 5.6 mmol/L, an upper limit at least 200 mg/dL or 11.1 mmol/L. Exported as below or above the limit, which a receiver must not read as the value",
+          "title": "Outside Measuring Range"
         }
       },
       "required": [

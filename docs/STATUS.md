@@ -1,13 +1,13 @@
 # Status
 
-Last updated: 2026-11-15.
+Last updated: 2026-11-16.
 
 ## Gate
 
 HL7 FHIR validator 6.5.28, `-tx n/a`, packages from `spec/packages/`
 (kbv.mio.diga 1.1.0, kbv.basis 1.3.0, de.basisprofil.r4 1.3.2):
 **0 errors, 834 warnings** on 10 golden bundles (research/metrics.csv). The
-negative control is rejected as expected (`pytest -m validator`). 329 unit
+negative control is rejected as expected (`pytest -m validator`). 338 unit
 and golden tests pass.
 
 ## Coverage against the agreed plan
@@ -52,7 +52,8 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 - `Device.version`: the kit states one version per export, as text without a coded type (gaps G12). The profile allows several versions but cannot date them. The field is optional; no golden bundle covers the case without a version.
 - The wording guard's item-code pattern covers PHQ-9 only; GAD-7 item codes (only the panel code is blocked; loinc.org does not show the members without a login), ODI item codes and German ODI fragments are not listed. The German GAD-7 fragments cover four of seven items, were written from memory and need a check against the published German version.
 - BMI has no `derivedFrom` to the weight and height it was calculated from: the input does not name the readings.
-- Glucose: the trend, a target range and readings with no value at all (sensor error) are not exported. "LO" and "HI" are exported as below or above the device limit, which relies on receivers honouring the comparator (gaps G16). For plain values a wrong unit between 10 and 56 cannot be detected (docs/mapping.md, "Glucose"; gaps G15).
+- Glucose: the trend, a target range and readings with no value at all (sensor error) are not exported. "LO" and "HI" are exported as below or above the device limit, with the same statement in a note because a receiver may ignore the comparator (gaps G16); a caller who confuses the device range with the patient's target range is not stopped. For plain values a wrong unit between 10 and 56 cannot be detected (docs/mapping.md, "Glucose"; gaps G15).
+- `research/metrics.csv`: rows appended by hand carry the time of the commit, not of the validator run they report. Say so in the methods note.
 - Tests that read the pinned packages are skipped where the packages are not fetched; the CI validate job now runs them, but CI has never run.
 - Daily steps: the counting phone or wearable is not exported, and the UCUM code `{#}/(24.h)` is not checked by the offline gate.
 - Provenance: `agent.type` has a required binding still to map.

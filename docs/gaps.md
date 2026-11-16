@@ -288,28 +288,34 @@ Evidence for sub-question 2.
 ## G16 Glucose: a reading outside the device's measuring range has no defined representation
 
 - **Where**: `KBV_PR_MIO_DIGA_Observation_Glucose_Concentration`,
-  `Observation.value[x]`, `Observation.dataAbsentReason` and
-  `Observation.interpretation`; `valueQuantity.comparator` across the MIO
-  DiGA observation profiles.
-- **Evidence**:
+  `Observation.value[x]`, `Observation.dataAbsentReason`,
+  `Observation.interpretation` and `Observation.note`;
+  `valueQuantity.comparator` across the MIO DiGA observation profiles.
+- **Evidence, no explicit place**:
   - Outside their measuring range, meters and sensors show "LO" or "HI"
     instead of a number. The MIO profile requires `value[x]` (min 1) and
     prohibits `dataAbsentReason` (max 0); kbv.basis requires
-    `valueQuantity.value` (min 1). `interpretation` is bound (required) to
-    seven trend concepts (rising, falling and so on); none of them says
-    "below" or "above the measuring range". No element description says
-    how to carry such a reading.
-  - The one element left is `valueQuantity.comparator`. The glucose
-    profiles do not constrain it. The MIO DiGA profiles prohibit it (max 0)
-    in nine other observation profiles: body weight, heart rate,
-    respiratory rate, head circumference, blood pressure, functional
-    assessment, score, and the two nutrition-intake profiles. They do not
-    prohibit it for glucose, body height, body temperature, oxygen
-    saturation or the free observation. kbv.basis and de.basisprofil.r4
-    constrain it nowhere.
-  - Checked with the validator (6.5.28, offline) on 2026-11-15. A glucose
-    value with comparator `<` or `>` passes. Another comparator code is an
-    error: "The value provided ('LO') was not found in the value set
+    `valueQuantity.value` (min 1). No element description says how to carry
+    such a reading.
+  - The other structured routes are closed. `interpretation.coding` is
+    bound (required, max 1) to seven trend concepts (rising, falling and
+    so on). `extension` is closed to `teilVon`, `value[x]` is closed to
+    Quantity, `component` is max 0 and `referenceRange.text` is max 0.
+  - The only structured element left is `valueQuantity.comparator`; free
+    text remains possible in `note.text` and `method.text`. The glucose
+    profiles do not mention the comparator: it is neither prohibited nor
+    marked must-support, while `note` and `note.text` are must-support.
+- **Evidence, the comparator rule differs between profiles**:
+  - The MIO DiGA profiles prohibit `valueQuantity.comparator` (max 0) in
+    nine other observation profiles: body weight, heart rate, respiratory
+    rate, head circumference, blood pressure, functional assessment, score,
+    and the two nutrition-intake profiles. They do not prohibit it for
+    glucose, body height, body temperature, oxygen saturation or the free
+    observation. kbv.basis and de.basisprofil.r4 constrain it nowhere.
+  - Checked with the validator (6.5.28, offline), first on 2026-11-15 and
+    since then in the negative control. A glucose value with comparator `<`
+    or `>` passes. A code outside FHIR's four is an error (tested with
+    `LO`): "The value provided ('LO') was not found in the value set
     'QuantityComparator' [...], and a code is required from this value
     set". A comparator on a heart rate is an error:
     "Observation.value[x]:valueQuantity.comparator: max allowed = 0, but
@@ -323,7 +329,13 @@ Evidence for sub-question 2.
   the packages. A receiver that ignores the modifier reads "below 40
   mg/dL" as "40 mg/dL".
 - **Handling**: the kit exports such a reading as `<` or `>` the device's
-  measuring limit, which the manufacturer supplies (`out_of_range`), and
-  checks that the limit is plausible for its direction. A reading with no
-  value at all (sensor error) is not exported. A question for
-  support.mio@kbv.de.
+  measuring limit, which the manufacturer supplies
+  (`outside_measuring_range`), checks that the limit is plausible for its
+  direction, and repeats the statement in words in `note.text` as a second
+  signal for a receiver that ignores the comparator. The note's wording is
+  the kit's own. A reading with no value at all (sensor error), or one
+  whose limit the manufacturer does not know, is not exported. A question
+  for support.mio@kbv.de.
+- **After review (2026-11-16)**: the first version called the comparator
+  "the one element left" and said any other comparator code is an error.
+  Both were too broad and are corrected above.

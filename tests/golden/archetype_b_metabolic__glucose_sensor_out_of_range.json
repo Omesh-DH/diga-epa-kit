@@ -522,6 +522,11 @@
           "system": "http://unitsofmeasure.org",
           "code": "mg/dL"
         },
+        "note": [
+          {
+            "text": "Außerhalb des Messbereichs des Geräts: über 400 mg/dL."
+          }
+        ],
         "method": {
           "coding": [
             {
@@ -769,6 +774,11 @@
           "system": "http://unitsofmeasure.org",
           "code": "mg/dL"
         },
+        "note": [
+          {
+            "text": "Außerhalb des Messbereichs des Geräts: unter 40 mg/dL."
+          }
+        ],
         "method": {
           "coding": [
             {
