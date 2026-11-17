@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>diga-epa-kit · try it</title>
+  <meta name="description" content="Turn DiGA data into KBV MIO DiGA 1.1.0 FHIR bundles in your browser. Nothing is uploaded.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>diga-epa-kit <span class="tag">try it</span></h1>
+      <p class="lede">Turn typical DiGA data into a <strong>KBV MIO DiGA 1.1.0</strong> FHIR document bundle for the ePA.
+        The kit runs in this browser tab: <strong>your data never leaves your computer.</strong></p>
+      <p class="warn" role="note">Use synthetic or test data only. This is not a certified medical device and has not
+        been tested against a real ePA.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="loading" class="status" role="status" aria-live="polite">
+      <span class="spinner" aria-hidden="true"></span>
+      <span id="loading-text">Loading Python in your browser (about 15 MB, cached after the first visit)…</span>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Tools">
+      <button role="tab" id="tab-build" aria-selected="true" aria-controls="panel-build">Build a bundle</button>
+      <button role="tab" id="tab-import" aria-selected="false" aria-controls="panel-import" tabindex="-1">Import an ePA medication list</button>
+    </nav>
+
+    <section id="panel-build" role="tabpanel" aria-labelledby="tab-build">
+      <div class="grid">
+        <div class="pane">
+          <h2>1 · Your input</h2>
+          <p class="hint">Plain JSON in the kit's input format, no FHIR knowledge needed. Start from an example or load a file.
+            <a href="https://github.com/Omesh-DH/diga-epa-kit/blob/main/docs/api.md#input-fields" target="_blank" rel="noopener">Which field becomes which resource</a>.</p>
+          <div class="row">
+            <label for="example">Example</label>
+            <select id="example"></select>
+          </div>
+          <textarea id="build-input" spellcheck="false" aria-label="Input JSON"></textarea>
+          <div class="row buttons">
+            <button id="build-run" class="primary" disabled>Build bundle</button>
+            <label class="button secondary">Load a file<input id="build-file" type="file" accept=".json,application/json" hidden></label>
+          </div>
+        </div>
+
+        <div class="pane">
+          <h2>2 · Result</h2>
+          <div id="build-result" class="result empty">Build a bundle to see the result here.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-import" role="tabpanel" aria-labelledby="tab-import" hidden>
+      <div class="grid">
+        <div class="pane">
+          <h2>1 · ePA medication list</h2>
+          <p class="hint">A FHIR searchset Bundle as gematik's medication service returns it (de.gematik.epa.medication 1.3.5).
+            Only medication statements and the medications they refer to are read: the patient, prescriber and pharmacy are ignored.</p>
+          <textarea id="import-input" spellcheck="false" aria-label="ePA medication list JSON"></textarea>
+          <div class="row buttons">
+            <button id="import-run" class="primary" disabled>Read the list</button>
+            <label class="button secondary">Load a file<input id="import-file" type="file" accept=".json,application/json" hidden></label>
+          </div>
+        </div>
+
+        <div class="pane">
+          <h2>2 · Medications the kit would export</h2>
+          <div id="import-result" class="result empty">Read a list to see the result here.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="next">
+      <h2>What this page does not do</h2>
+      <p>It runs the kit's own checks, not the official HL7 FHIR validator, which needs Java and the KBV packages.
+        To validate a bundle against the profiles, install the kit and run
+        <code>diga-epa-kit validate bundle.json --jar validator_cli.jar --ig …</code> (see the
+        <a href="https://github.com/Omesh-DH/diga-epa-kit/blob/main/docs/quickstart.md" target="_blank" rel="noopener">quickstart</a>).
+        Known problems in the specification itself are listed in
+        <a href="https://github.com/Omesh-DH/diga-epa-kit/blob/main/docs/gaps.md" target="_blank" rel="noopener">docs/gaps.md</a>.</p>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <p><a href="https://github.com/Omesh-DH/diga-epa-kit" target="_blank" rel="noopener">Source on GitHub</a> ·
+      Apache-2.0 · <span id="version">kit version …</span></p>
+    <p>Python runs via Pyodide, loaded from cdn.jsdelivr.net; your input is not sent anywhere.
+      LOINC codes © Regenstrief Institute; SNOMED CT codes as fixed by the KBV profiles, use subject to a SNOMED CT licence.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.29.5/full/pyodide.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

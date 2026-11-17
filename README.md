@@ -18,6 +18,18 @@ DeviceDefinition_DIGA and Organization_Manufacturer. See
 `docs/spec-inventory.md` for coverage and `docs/gaps.md` for spec-level
 findings.
 
+## Try it in your browser
+
+`site/` is a page that runs the kit itself in the browser (Python via Pyodide), so
+input data never leaves the visitor's computer. Pick a synthetic example or paste
+your own input, build a bundle, see what the local checks say and download it; or
+read an ePA medication list. It does not run the official HL7 validator.
+
+- Online: https://omesh-dh.github.io/diga-epa-kit/ (published by
+  `.github/workflows/pages.yml` once the repository is public)
+- Locally: `python scripts/build_site.py`, then
+  `python -m http.server 8765 --directory site` and open http://localhost:8765
+
 ## Use
 
 ```bash

@@ -7,7 +7,7 @@ Last updated: 2026-11-16.
 HL7 FHIR validator 6.5.28, `-tx n/a`, packages from `spec/packages/`
 (kbv.mio.diga 1.1.0, kbv.basis 1.3.0, de.basisprofil.r4 1.3.2):
 **0 errors, 858 warnings** on 11 golden bundles (research/metrics.csv). The
-negative control is rejected as expected (`pytest -m validator`). 395 unit
+negative control is rejected as expected (`pytest -m validator`). 400 unit
 and golden tests pass.
 
 ## Coverage against the agreed plan
@@ -22,7 +22,7 @@ Plan: "DiGA → ePA FHIR Export Kit: Claude Code Prompt Architecture"
 | 2 Input model and archetypes | Partial | A: PHQ-9 and GAD-7 total scores, mood diary. B: body weight, body height, blood pressure, heart rate, body temperature, oxygen saturation, respiratory rate, glucose, BMI, daily steps, goals. C: 0–10 pain rating, ODI functional score, diary. D: goals, exercise CarePlan, adherence diary. DiGA software version on all archetypes | D: exercise sessions (Procedure_Activity, blocked by decision 0008). Field-to-profile table per archetype (docs/api.md has one for all fields) |
 | 3 Mappers | Partial | Device_DIGA, DeviceDefinition_DIGA, Organization_Manufacturer, Patient, Score_or_Assessment_by_Scale, Body_Weight, Body_Height, Blood_Pressure, Heart_Rate, Body_Temperature, Peripheral_Oxygen_Saturation, Respiratory_Rate, Glucose_Concentration, Observation_Free (BMI, daily steps), Diary_Entry, Goal, CarePlan, Medication, MedicationStatement_Medication_Information | Functional_Assessment, MedicationAdministration_Medication_Intake, Provenance, DocumentReference, Head_Circumference; hand-written golden files; property tests |
 | 4 Composition and Bundle | Partial | Composition with 5 sections, Bundle, invariant checks, all 4 archetypes validate, one-year size and speed test (`scripts/bench_one_year.py`, research/benchmarks.csv) | Remaining sections |
-| 5 CLI and docs | Mostly done | `build` (alias `convert`), `check`, `schema`, `validate`, `explain-error`; README, docs/quickstart.md, docs/api.md, docs/input-schema.json | Quickstart timed by someone new to the kit; `explain-error` knows only the 12 message shapes seen so far |
+| 5 CLI and docs | Mostly done | `build` (alias `convert`), `check`, `schema`, `validate`, `explain-error`; try-it page in `site/` (runs the kit in the browser via Pyodide 0.29.5, published by a GitHub Pages workflow once the repository is public; tested in the built-in browser, not yet online); README, docs/quickstart.md, docs/api.md, docs/input-schema.json | Quickstart timed by someone new to the kit; `explain-error` knows only the 12 message shapes seen so far |
 | 6 ePA → DiGA import stub | Done as a stub | Reader for gematik's medication list (`de.gematik.epa.medication` 1.3.5, pinned as a reference package), `import-medication` command, re-export as Medication and MedicationStatement, tests incl. gematik's package example, ADR 0009 | Fetching from the ePA is out of scope. Not read: medication plan (eMP), prescription and dispense details, structured dosage. Never tested against a real ePA |
 | 7 Evaluation | Started | `research/metrics.csv` (validator runs), `research/timelog.csv` (hours blank) | Counts, hand-built baseline for archetype A, methods note |
 | Cost study (section 7) | Not started | – | Work breakdown, cost model, interview guide, market sizing |
