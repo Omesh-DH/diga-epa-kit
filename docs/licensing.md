@@ -11,7 +11,7 @@ before the open-source release.
 | KBV MIO DiGA package (`kbv.mio.diga`), kbv.basis | No explicit licence found | Unclear for redistribution | Never commit `spec/packages/`; fetch at setup. Ask support.mio@kbv.de and cite the answer | Gitignored, fetched by `scripts/fetch_spec.py`. Email to KBV: TODO (user) |
 | de.basisprofil.r4 | HL7 Deutschland terms | Not committed | Same as above | Gitignored |
 | SNOMED CT | Licence required; free in Germany via BfArM affiliate licence | Action needed | No SNOMED tables; only codes the profiles fix or bind, with the notice. README states users outside Germany need their own licence | Codes listed below. Affiliate licence: TODO (user). Notice text: TODO |
-| LOINC | Free with notice; some scale content has third-party copyright | OK with notice | LOINC notice in NOTICE; check `EXTERNAL_COPYRIGHT_NOTICE` per panel | Notice in THIRD_PARTY.md; official text in NOTICE: TODO. PHQ-9 and GAD-7 panel check: TODO |
+| LOINC | Free with notice; some scale content has third-party copyright | OK with notice | LOINC notice in NOTICE; check `EXTERNAL_COPYRIGHT_NOTICE` per panel | Notice in NOTICE and THIRD_PARTY.md. PHQ-9 and GAD-7 panel check: TODO |
 | UCUM | Free with conditions | OK with notice | Plain UCUM codes; notice | Codes `kg`, `cm`, `mm[Hg]`, `/min`, `Cel`, `%`, `kg/m2`, `{#}/(24.h)`, `mg/dL`, `mmol/L`, `{score}`. Notice: TODO |
 | PHQ-9, GAD-7 | Released by Pfizer without restriction or fee | OK | Cite the authors | PHQ-9 and GAD-7 total scores only (LOINC 44261-6, 70274-6) |
 | 0–10 numeric pain rating | Generic scale, no instrument licence | OK | Score and LOINC code only, no anchor texts | In use (LOINC 72514-3) |

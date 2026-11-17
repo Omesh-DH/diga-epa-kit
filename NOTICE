@@ -1,8 +1,16 @@
 diga-epa-kit
 Copyright 2026 The diga-epa-kit contributors
 
-This product includes software developed as part of a thesis on the
-interoperability cost of DiGA (Digitale Gesundheitsanwendungen).
+Licensed under the Apache License, Version 2.0 (see LICENSE).
 
-See THIRD_PARTY.md for specifications, terminologies and tools that this
-project uses but does not redistribute.
+This product contains content from LOINC (http://loinc.org). LOINC is
+copyright © Regenstrief Institute, Inc. and the LOINC Committee and is
+available at no cost under the license at http://loinc.org/license.
+
+This product contains SNOMED CT concept identifiers and descriptions that the
+KBV MIO DiGA profiles require. SNOMED CT is owned by SNOMED International.
+Use of SNOMED CT requires a licence: in Germany through the national release
+centre at BfArM; users in other countries must check their own terms.
+
+This product does not redistribute the KBV, HL7 Deutschland or gematik FHIR
+packages or the HL7 FHIR validator. See THIRD_PARTY.md.
