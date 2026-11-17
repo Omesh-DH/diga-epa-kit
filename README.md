@@ -30,6 +30,22 @@ read an ePA medication list. It does not run the official HL7 validator.
 - Locally: `python scripts/build_site.py`, then
   `python -m http.server 8765 --directory site` and open http://localhost:8765
 
+### Usage counting
+
+To learn whether the page works for people, it can count anonymous events:
+page opened, kit loaded or failed to load, and whether each build or import
+worked or failed, with the top-level field names and error types of the
+failures (for example `build-rejected:patient:missing`). It never sends the
+input, values, names or the bundle, sets no cookies, and stops when the
+visitor switches it off or the browser sends Do Not Track or Global Privacy
+Control. Every failure also offers a "Report this problem on GitHub" link
+that opens a pre-filled issue without the input.
+
+Counting is off until the repository variable `GOATCOUNTER_URL` holds a
+GoatCounter count address (`https://CODE.goatcounter.com/count`); the Pages
+workflow passes it to `scripts/build_site.py`. The counts then appear in the
+GoatCounter dashboard.
+
 ## Use
 
 ```bash

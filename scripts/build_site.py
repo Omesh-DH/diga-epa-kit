@@ -8,11 +8,17 @@ Writes two generated files next to the page (default: site/):
 - examples.json: the synthetic inputs, offered on the page as examples.
 
 Needs only the standard library, so CI can run it without installing the kit.
+
+Anonymous usage counting is off unless DIGA_SITE_COUNTER holds a GoatCounter
+count address (https://CODE.goatcounter.com/count); the Pages workflow takes
+it from the repository variable GOATCOUNTER_URL. http://localhost:PORT/count
+is accepted for testing the page.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -34,6 +40,17 @@ ARCHETYPES = {
 def _label(path: Path) -> str:
     group = ARCHETYPES.get(path.parent.name, path.parent.name)
     return f"{group}: {path.stem.replace('_', ' ')}"
+
+
+_COUNTER = re.compile(r"^(https://[a-z0-9][a-z0-9-]*\.goatcounter\.com|http://localhost:\d{2,5})/count$")
+
+
+def _counter() -> str | None:
+    url = os.environ.get("DIGA_SITE_COUNTER", "").strip()
+    if url and not _COUNTER.fullmatch(url):
+        print(f"ignoring DIGA_SITE_COUNTER {url!r}: not a GoatCounter count address", file=sys.stderr)
+        return None
+    return url or None
 
 
 def _git_rev() -> str:
@@ -69,12 +86,15 @@ def main() -> int:
             "kit_version": version,
             "git_rev": _git_rev(),
             "built": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "counter": _counter(),
         },
         "build": build,
         "import": [{"label": "Synthetic ePA medication list", "data": json.loads(eml.read_text(encoding="utf-8"))}],
     }
     (out / "examples.json").write_text(json.dumps(examples, ensure_ascii=False), encoding="utf-8")
-    print(f"site ready in {out}: {len(build)} examples, kit {version} ({examples['meta']['git_rev']})")
+    counting = "on" if examples["meta"]["counter"] else "off"
+    rev = examples["meta"]["git_rev"]
+    print(f"site ready in {out}: {len(build)} examples, kit {version} ({rev}), counting {counting}")
     return 0
 
 

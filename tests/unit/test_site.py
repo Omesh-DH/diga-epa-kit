@@ -59,3 +59,33 @@ def test_bad_json_and_bad_input_are_explained():
 def test_import_explains_what_it_cannot_read():
     assert json.loads(trykit.import_medication_list("[]"))["stage"] == "input"
     assert json.loads(trykit.import_medication_list("{"))["stage"] == "json"
+
+
+def test_counted_kinds_name_only_known_fields_and_error_types():
+    data = json.loads((ROOT / "synthetic" / "archetype_a_mental" / "phq9_three_months.json").read_text("utf-8"))
+    data["Max Mustermann"] = "typed by a visitor"  # an unknown key must never be reported by name
+    data["prom_scores"][0]["score"] = 99
+    del data["patient"]
+    result = json.loads(trykit.build(json.dumps(data)))
+    assert result["kinds"] == ["(other):extra_forbidden", "patient:missing", "prom_scores:value_error"]
+    assert "Mustermann" not in json.dumps(result["kinds"])
+    assert json.loads(trykit.build("{"))["kinds"] == ["(json):invalid"]
+    assert json.loads(trykit.import_medication_list("[]"))["kinds"] == ["(whole input):not_a_bundle"]
+
+
+@pytest.mark.parametrize(
+    "value,expected",
+    [
+        ("", None),
+        ("https://diga-kit.goatcounter.com/count", "https://diga-kit.goatcounter.com/count"),
+        ("http://localhost:8765/count", "http://localhost:8765/count"),
+        ("https://evil.example.com/count", None),
+        ("https://diga-kit.goatcounter.com/count?x=1", None),
+    ],
+)
+def test_counting_is_off_unless_a_goatcounter_address_is_given(tmp_path, monkeypatch, value, expected):
+    monkeypatch.setenv("DIGA_SITE_COUNTER", value)
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "build_site.py"), str(tmp_path)], check=True, capture_output=True
+    )
+    assert json.loads((tmp_path / "examples.json").read_text(encoding="utf-8"))["meta"]["counter"] == expected

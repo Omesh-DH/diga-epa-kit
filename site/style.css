@@ -104,3 +104,5 @@ pre.code { margin: 8px 0 0; max-height: 480px; overflow: auto; padding: 10px; ba
 .next p { margin: 0; max-width: 90ch; }
 .foot { color: var(--muted); font-size: 0.85rem; padding-bottom: 32px; }
 .foot p { margin: 4px 0; }
+
+.linklike { background: none; border: none; padding: 0; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; }

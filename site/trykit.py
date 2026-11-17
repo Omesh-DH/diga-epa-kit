@@ -16,6 +16,9 @@ from diga_epa_kit.epa_import import read_medication_list
 
 Json = dict[str, Any]
 _PROFILE_PREFIX = "KBV_PR_MIO_DIGA_"
+# Only these names may appear in a counted event: they come from the input model, never
+# from what a visitor typed (an unknown key would otherwise be reported by name).
+_KNOWN_FIELDS = frozenset(DigaExport.model_fields)
 
 
 def _parse(text: str) -> tuple[Any, Json | None]:
@@ -23,11 +26,21 @@ def _parse(text: str) -> tuple[Any, Json | None]:
         return json.loads(text), None
     except json.JSONDecodeError as exc:
         where = f"line {exc.lineno}, column {exc.colno}"
-        return None, {"stage": "json", "errors": [{"where": where, "message": exc.msg}]}
+        return None, {"stage": "json", "errors": [{"where": where, "message": exc.msg}], "kinds": ["(json):invalid"]}
 
 
 def _input_errors(exc: ValidationError) -> list[Json]:
     return [{"where": ".".join(str(p) for p in e["loc"]) or "(whole input)", "message": e["msg"]} for e in exc.errors()]
+
+
+def _kinds(exc: ValidationError) -> list[str]:
+    """Top-level field and pydantic error type of each problem, for anonymous counting."""
+    kinds = set()
+    for e in exc.errors():
+        loc = e["loc"]
+        field = str(loc[0]) if loc and loc[0] in _KNOWN_FIELDS else ("(whole input)" if not loc else "(other)")
+        kinds.add(f"{field}:{e['type']}")
+    return sorted(kinds)
 
 
 def _summary(bundle: Json) -> Json:
@@ -51,7 +64,7 @@ def build(text: str) -> str:
     try:
         data = DigaExport.model_validate(raw)
     except ValidationError as exc:
-        return json.dumps({"stage": "input", "errors": _input_errors(exc)}, ensure_ascii=False)
+        return json.dumps({"stage": "input", "errors": _input_errors(exc), "kinds": _kinds(exc)}, ensure_ascii=False)
     bundle = build_bundle(data)
     result = {"stage": "done", "problems": check_bundle(bundle), "summary": _summary(bundle), "bundle": bundle}
     return json.dumps(result, ensure_ascii=False)
@@ -65,7 +78,8 @@ def import_medication_list(text: str) -> str:
     try:
         result = read_medication_list(raw)
     except ValueError as exc:
-        return json.dumps({"stage": "input", "errors": [{"where": "(whole input)", "message": str(exc)}]})
+        error = {"where": "(whole input)", "message": str(exc)}
+        return json.dumps({"stage": "input", "errors": [error], "kinds": ["(whole input):not_a_bundle"]})
     medications = [m.model_dump(mode="json", exclude_none=True) for m in result.medications]
     return json.dumps(
         {

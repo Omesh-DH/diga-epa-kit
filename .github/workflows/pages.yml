@@ -29,6 +29,10 @@ jobs:
         with:
           python-version: "3.12"
       - name: Pack the kit and the examples for the page
+        # Empty unless the repository variable GOATCOUNTER_URL is set; then the page counts
+        # anonymously whether it worked (see README, "Usage counting").
+        env:
+          DIGA_SITE_COUNTER: ${{ vars.GOATCOUNTER_URL }}
         run: python scripts/build_site.py
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
