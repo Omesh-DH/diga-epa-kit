@@ -476,6 +476,127 @@
       "title": "Manufacturer",
       "type": "object"
     },
+    "Medication": {
+      "additionalProperties": false,
+      "description": "A medication the patient takes or was prescribed, for example read from the ePA medication list.\n\nOnly what the export needs: no prescriber, no pharmacy, no insurance number.",
+      "properties": {
+        "id": {
+          "pattern": "^[A-Za-z0-9._-]{1,64}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "description": "Drug name as the source states it",
+          "maxLength": 300,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "pzn": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{8}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Pharmazentralnummer, 8 digits",
+          "title": "Pzn"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "completed",
+            "intended",
+            "stopped",
+            "on_hold",
+            "unknown",
+            "not_taken"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "dosage_text": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dosage Text"
+        },
+        "since": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Since"
+        },
+        "until": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Until"
+        },
+        "asserted_on": {
+          "anyOf": [
+            {
+              "format": "date",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When the source recorded the entry",
+          "title": "Asserted On"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Free text exported as the statement's note, for example where the entry came from. No names of people",
+          "title": "Note"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "title": "Medication",
+      "type": "object"
+    },
     "OxygenSaturation": {
       "additionalProperties": false,
       "description": "Peripheral oxygen saturation in percent, from a pulse oximeter (the profile fixes that method).",
@@ -785,6 +906,14 @@
         "$ref": "#/$defs/CarePlan"
       },
       "title": "Care Plans",
+      "type": "array"
+    },
+    "medications": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Medication"
+      },
+      "title": "Medications",
       "type": "array"
     }
   },

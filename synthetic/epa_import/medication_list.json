@@ -1,0 +1,287 @@
+{
+  "resourceType": "Bundle",
+  "type": "searchset",
+  "total": 5,
+  "entry": [
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/Patient/7c0f2a1e-0000-4000-8000-000000000001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "7c0f2a1e-0000-4000-8000-000000000001",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa/StructureDefinition/epa-patient|1.3.0"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A000000000"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Synthetisch",
+            "given": [
+              "Person"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1964-02-27"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/Practitioner/7c0f2a1e-0000-4000-8000-000000000002",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "7c0f2a1e-0000-4000-8000-000000000002",
+        "identifier": [
+          {
+            "system": "https://gematik.de/fhir/sid/telematik-id",
+            "value": "1-1.00.00000000"
+          }
+        ],
+        "name": [
+          {
+            "text": "Dr. Synthetische Verordnerin",
+            "family": "Verordnerin",
+            "given": [
+              "Synthetische"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/Organization/7c0f2a1e-0000-4000-8000-000000000003",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "7c0f2a1e-0000-4000-8000-000000000003",
+        "identifier": [
+          {
+            "system": "https://gematik.de/fhir/sid/telematik-id",
+            "value": "3-0.00.00000000"
+          }
+        ],
+        "name": "Synthetische Apotheke"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/Medication/7c0f2a1e-0000-4000-8000-00000000000a",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "7c0f2a1e-0000-4000-8000-00000000000a",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication|1.3.0"
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/ifa/pzn",
+              "code": "09999011"
+            }
+          ],
+          "text": "Synthetisches Präparat A 50 mg Filmtabletten"
+        },
+        "status": "active"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/Medication/7c0f2a1e-0000-4000-8000-00000000000b",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "7c0f2a1e-0000-4000-8000-00000000000b",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication|1.3.0"
+          ]
+        },
+        "code": {
+          "text": "Synthetisches Vitaminpräparat B"
+        },
+        "status": "active"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/Medication/7c0f2a1e-0000-4000-8000-00000000000c",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "7c0f2a1e-0000-4000-8000-00000000000c",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication|1.3.0"
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/ifa/pzn",
+              "code": "09999028"
+            }
+          ]
+        },
+        "status": "active"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/MedicationStatement/7c0f2a1e-0000-4000-8000-000000000011",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "7c0f2a1e-0000-4000-8000-000000000011",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-statement|1.3.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/context-extension",
+            "valueCode": "PRESCRIPTION"
+          },
+          {
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-MedicationStatement.renderedDosageInstruction",
+            "valueMarkdown": "1-0-1-0 Stück"
+          }
+        ],
+        "status": "unknown",
+        "medicationReference": {
+          "reference": "Medication/7c0f2a1e-0000-4000-8000-00000000000a"
+        },
+        "subject": {
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A000000000"
+          }
+        },
+        "effectivePeriod": {
+          "start": "2026-09-14"
+        },
+        "dateAsserted": "2026-09-14"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/MedicationStatement/7c0f2a1e-0000-4000-8000-000000000012",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "7c0f2a1e-0000-4000-8000-000000000012",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-statement|1.3.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/context-extension",
+            "valueCode": "MANUAL"
+          }
+        ],
+        "status": "unknown",
+        "medicationReference": {
+          "reference": "https://example.org/epa/medication/api/v1/fhir/Medication/7c0f2a1e-0000-4000-8000-00000000000b"
+        },
+        "subject": {
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A000000000"
+          }
+        },
+        "effectivePeriod": {
+          "start": "2026-08-01T00:00:00+02:00",
+          "end": "2026-10-10"
+        },
+        "dateAsserted": "2026-08-01"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/MedicationStatement/7c0f2a1e-0000-4000-8000-000000000013",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "7c0f2a1e-0000-4000-8000-000000000013",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-statement|1.3.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/context-extension",
+            "valueCode": "PRESCRIPTION"
+          }
+        ],
+        "status": "entered-in-error",
+        "medicationReference": {
+          "reference": "Medication/7c0f2a1e-0000-4000-8000-00000000000a"
+        },
+        "subject": {
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A000000000"
+          }
+        }
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/MedicationStatement/7c0f2a1e-0000-4000-8000-000000000014",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "7c0f2a1e-0000-4000-8000-000000000014",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-statement|1.3.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/context-extension",
+            "valueCode": "PRESCRIPTION"
+          }
+        ],
+        "status": "unknown",
+        "medicationReference": {
+          "reference": "Medication/7c0f2a1e-0000-4000-8000-00000000000c"
+        },
+        "subject": {
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A000000000"
+          }
+        },
+        "effectivePeriod": {
+          "start": "2026-09-20"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://example.org/epa/medication/api/v1/fhir/MedicationStatement/7c0f2a1e-0000-4000-8000-000000000015",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "7c0f2a1e-0000-4000-8000-000000000015",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-medication/StructureDefinition/epa-medication-statement|1.3.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/context-extension",
+            "valueCode": "PRESCRIPTION"
+          }
+        ],
+        "status": "unknown",
+        "medicationReference": {
+          "reference": "Medication/7c0f2a1e-0000-4000-8000-0000000000ff"
+        },
+        "subject": {
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A000000000"
+          }
+        }
+      }
+    }
+  ]
+}

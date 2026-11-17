@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 
 from .input.model import DigaExport
 from .mappers import composition as comp_m
-from .mappers import core, goals, prom, reports, results, vitals
+from .mappers import core, goals, medication, prom, reports, results, vitals
 from .mappers.common import Json, ri_identifier, urn
 from .terminology.instruments import INSTRUMENTS
 from .terminology.versions import DEFAULT_VERSION, get_pack
@@ -97,6 +97,14 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         body.append(goals.care_plan(pack, plan_id, patient_id, [goal_ids[g] for g in plan.goal_ids], plan, now))
         plan_ids.append(plan_id)
 
+    statement_ids: list[str] = []
+    for med in data.medications:
+        drug_id = _id("medication", data.patient.id, med.id)
+        statement_id = _id("medication-statement", data.patient.id, med.id)
+        body.append(medication.medication(pack, drug_id, med, now))
+        body.append(medication.medication_statement(pack, statement_id, patient_id, drug_id, med, now))
+        statement_ids.append(statement_id)
+
     diary_ids: list[str] = []
     for d in data.diary_entries:
         diary_id = _id("diary-entry", data.patient.id, d.written_at.isoformat())
@@ -112,6 +120,7 @@ def build_bundle(data: DigaExport, version: str = DEFAULT_VERSION, now: datetime
         now,
         results=[*bmi_ids, *step_ids],
         vital_signs=[*weight_ids, *height_ids, *bp_ids, *simple_ids],
+        medications=statement_ids,
         assessments=score_ids,
         goals=[*goal_ids.values(), *plan_ids],
         patient_reports=diary_ids,

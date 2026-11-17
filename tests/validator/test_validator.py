@@ -66,13 +66,26 @@ def test_negative_control_is_rejected(tmp_path):
     bad_heart_rate = tmp_path / "negative_heart_rate_comparator.json"
     bad_heart_rate.write_text(json.dumps(vitals), encoding="utf-8")
 
-    proc, errors = _validate([bad, bad_version, bad_comparator, bad_heart_rate], tmp_path)
+    # A PZN coding without its required version, and a Medication.status the profile prohibits
+    # (docs/gaps.md G18).
+    meds = json.loads(
+        (ROOT / "tests" / "golden" / "archetype_b_metabolic__medication_from_epa.json").read_text("utf-8")
+    )
+    drug = next(e["resource"] for e in meds["entry"] if e["resource"]["resourceType"] == "Medication")
+    del drug["code"]["coding"][0]["version"]
+    drug["status"] = "active"
+    bad_medication = tmp_path / "negative_medication.json"
+    bad_medication.write_text(json.dumps(meds), encoding="utf-8")
+
+    proc, errors = _validate([bad, bad_version, bad_comparator, bad_heart_rate, bad_medication], tmp_path)
     assert proc.returncode == 1, proc.stderr[-2000:]
     assert any("referenceRange.text: max allowed = 0" in e for e in errors)
     assert any("Device.identifier: minimum required = 1" in e for e in errors)
     assert any("'Observation.method.coding:codeSnomed': a matching slice is required" in e for e in errors)
     assert any("was not found in the value set 'QuantityComparator'" in e for e in errors)
     assert any("valueQuantity.comparator: max allowed = 0" in e for e in errors)
+    assert any("Medication.status: max allowed = 0" in e for e in errors)
+    assert any("pznCode" in e and "version" in e for e in errors)
 
 
 def test_library_validate_accepts_a_dict():

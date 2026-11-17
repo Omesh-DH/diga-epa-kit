@@ -1,4 +1,4 @@
-"""Command line of diga-epa-kit: build, check, validate, explain-error, schema."""
+"""Command line of diga-epa-kit: build, check, validate, explain-error, schema, import-medication."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from pathlib import Path
 from pydantic import ValidationError
 
 from .bundle import build_bundle
+from .epa_import import read_medication_list
 from .explain import explain
 from .input.model import DigaExport
 from .terminology.versions import DEFAULT_VERSION, PACKS
@@ -102,6 +103,26 @@ def _explain(args: argparse.Namespace) -> int:
     return 0
 
 
+def _import_medication(args: argparse.Namespace) -> int:
+    try:
+        result = read_medication_list(json.loads(Path(args.bundle).read_text(encoding="utf-8")))
+    except (OSError, ValueError) as exc:
+        print(f"cannot read {args.bundle}: {exc}", file=sys.stderr)
+        return 2
+    fragment = {"medications": [m.model_dump(mode="json", exclude_none=True) for m in result.medications]}
+    out = json.dumps(fragment, ensure_ascii=False, indent=2)
+    if args.output:
+        Path(args.output).write_text(out + "\n", encoding="utf-8")
+    else:
+        print(out)
+    for f in result.skipped:
+        print(f"skipped {f.reference}: {f.reason}", file=sys.stderr)
+    for f in result.notes:
+        print(f"note {f.reference}: {f.reason}", file=sys.stderr)
+    print(f"{len(result.medications)} imported, {len(result.skipped)} skipped", file=sys.stderr)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="diga-epa-kit", description=__doc__)
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -133,6 +154,13 @@ def main(argv: list[str] | None = None) -> int:
     e.add_argument("message", nargs="?")
     e.add_argument("--report", help="explain every error in a validator report file instead")
     e.set_defaults(func=_explain)
+
+    i = sub.add_parser(
+        "import-medication", help="read an ePA medication list (FHIR Bundle) into the kit's input format"
+    )
+    i.add_argument("bundle")
+    i.add_argument("-o", "--output")
+    i.set_defaults(func=_import_medication)
 
     args = parser.parse_args(argv)
     return int(args.func(args))

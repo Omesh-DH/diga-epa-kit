@@ -25,6 +25,9 @@ json.dump(bundle, open("bundle.json", "w", encoding="utf-8"), ensure_ascii=False
 
 Also available: `diga_epa_kit.explain.explain(message)` returns a title, a
 text and whether the finding concerns the bundle at all.
+`diga_epa_kit.epa_import.read_medication_list(bundle)` reads an ePA
+medication list into `Medication` input objects and reports what it
+skipped (`.medications`, `.skipped`, `.notes`); see docs/decisions/0009.
 
 ## Command line
 
@@ -35,6 +38,7 @@ text and whether the finding concerns the bundle at all.
 | `diga-epa-kit schema [-o FILE]` | JSON Schema of the input | 0 |
 | `diga-epa-kit validate BUNDLE... --jar JAR --ig PKG... [--explain]` | HL7 FHIR validator | 0 ok, 1 errors, 3 validator unavailable, 4 inconclusive (timeout) |
 | `diga-epa-kit explain-error MESSAGE` or `--report FILE` | Plain-language explanation | 0, 2 without input |
+| `diga-epa-kit import-medication LIST [-o FILE]` | ePA medication list (FHIR Bundle) to a `medications` input fragment; skipped entries go to stderr | 0, 2 not a Bundle |
 
 ## Input fields
 
@@ -50,6 +54,7 @@ resource:
 | `body_weights`, `body_heights`, `blood_pressures` | Observation_Body_Weight, _Body_Height, _Blood_Pressure |
 | `heart_rates`, `body_temperatures`, `oxygen_saturations`, `respiratory_rates` | Observation_Heart_Rate, _Body_Temperature, _Peripheral_Oxygen_Saturation, _Respiratory_Rate |
 | `glucose_readings` | Observation_Glucose_Concentration |
+| `medications` | Medication, MedicationStatement_Medication_Information |
 | `body_mass_indices`, `daily_steps` | Observation_Free |
 | `prom_scores` | Observation_Score_or_Assessment_by_Scale (scores only, no questionnaire wording) |
 | `diary_entries` | Observation_Diary_Entry |

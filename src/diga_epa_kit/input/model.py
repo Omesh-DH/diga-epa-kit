@@ -213,6 +213,42 @@ def _plain_text(value: str, what: str) -> None:
         raise ValueError(f"{what} has no visible character")
 
 
+class Medication(_Strict):
+    """A medication the patient takes or was prescribed, for example read from the ePA medication list.
+
+    Only what the export needs: no prescriber, no pharmacy, no insurance number.
+    """
+
+    # A stable key, for example the id of the entry in the ePA medication list. It is not exported.
+    id: str = Field(pattern=r"^[A-Za-z0-9._-]{1,64}$")
+    name: str = Field(min_length=1, max_length=300, description="Drug name as the source states it")
+    pzn: str | None = Field(default=None, pattern=r"^\d{8}$", description="Pharmazentralnummer, 8 digits")
+    # No default: a missing status must not turn into a statement about the patient.
+    status: Literal["active", "completed", "intended", "stopped", "on_hold", "unknown", "not_taken"]
+    dosage_text: str | None = Field(default=None, min_length=1, max_length=1000)
+    since: date | None = None
+    until: date | None = None
+    asserted_on: date | None = Field(default=None, description="When the source recorded the entry")
+    note: str | None = Field(
+        default=None,
+        min_length=1,
+        max_length=500,
+        description="Free text exported as the statement's note, for example where the entry came from. "
+        "No names of people",
+    )
+
+    @model_validator(mode="after")
+    def _check(self) -> Medication:
+        _plain_text(self.name, "name")
+        if self.dosage_text is not None:
+            _plain_text(self.dosage_text, "dosage_text")
+        if self.note is not None:
+            _plain_text(self.note, "note")
+        if self.since is not None and self.until is not None and self.until < self.since:
+            raise ValueError("until is before since")
+        return self
+
+
 class Goal(_Strict):
     """A goal the patient pursues in the DiGA, in free text."""
 
@@ -338,6 +374,7 @@ class DigaExport(_Strict):
     diary_entries: list[DiaryEntry] = []
     goals: list[Goal] = []
     care_plans: list[CarePlan] = []
+    medications: list[Medication] = []
 
     @model_validator(mode="after")
     def _period_and_uniqueness(self) -> DigaExport:
@@ -398,6 +435,9 @@ class DigaExport(_Strict):
             raise ValueError("duplicate diary_entries.written_at")
 
         # Goals and plans may start before the period: they describe what was current in it.
+        medication_ids = [m.id for m in self.medications]
+        if len(set(medication_ids)) != len(medication_ids):
+            raise ValueError("duplicate medications.id")
         goal_ids = [g.id for g in self.goals]
         if len(set(goal_ids)) != len(goal_ids):
             raise ValueError("duplicate goals.id")
@@ -408,6 +448,8 @@ class DigaExport(_Strict):
         if unknown:
             raise ValueError(f"care_plans refer to unknown goals: {unknown}")
         late = [f"goal {g.id}" for g in self.goals if g.start > self.period_end]
+        # Like a goal, a medication may be older than the period: it is what was current in it.
+        late += [f"medication {m.id}" for m in self.medications if m.since and m.since > self.period_end]
         # A height is usually entered once at the start of use, so it may predate the
         # period: it is the height that was current in it.
         late += [

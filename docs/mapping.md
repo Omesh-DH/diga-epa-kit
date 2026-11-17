@@ -20,7 +20,8 @@ straight from `KBV_PR_MIO_DIGA_Composition|1.1.0`.
 | Environmental factors | umweltfaktoren | Observation_Environmental_Factor | – |
 | Goals, therapy plan | ziele | Goal, CarePlan | done (free text) |
 | Problems, allergies | probleme | Condition_Problem, AllergyIntolerance | – |
-| Medication, intake log | medikation | MedicationStatement_Medication_Information, MedicationAdministration_Medication_Intake | – |
+| Medication | medikation | Medication, MedicationStatement_Medication_Information | done (name, PZN, status, dates, dosage text) |
+| Intake log | medikation | MedicationAdministration_Medication_Intake | – |
 | Appointments | termineBegegnungen | Appointment, Encounter | – |
 | Attachments (PDF reports) | anhaenge | DocumentReference | – |
 | Care contacts | kontakte | PractitionerRole, Practitioner, RelatedPerson, Organization | – |
@@ -339,3 +340,51 @@ when:
   code the mapper can emit, the
   pairing and the context meanings with the pinned package files; they are
   skipped where the packages are not fetched.
+
+## Medication, and the import from the ePA
+
+`medications` maps to two resources per entry: a
+`KBV_PR_MIO_DIGA_Medication` (the drug) and a
+`KBV_PR_MIO_DIGA_MedicationStatement_Medication_Information` (that the
+patient has it). Only the statement is an entry of the section "Medikation";
+it refers to the drug.
+
+| Input | Becomes |
+| --- | --- |
+| `name` | `Medication.code.text`, and the display of the PZN coding |
+| `pzn` (optional) | `Medication.code.coding` with system `http://fhir.de/CodeSystem/ifa/pzn` and version 1.3.2 |
+| `status` | `MedicationStatement.status` (`on_hold` and `not_taken` are written with a hyphen) |
+| `since`, `until` | `effectivePeriod.start`, `.end` |
+| `asserted_on` | `dateAsserted` |
+| `dosage_text` | `dosage.text` |
+| `note` (optional) | `note.text` |
+| the patient | `subject` and `informationSource` |
+
+- **Information source.** Required, and the profile allows only a patient,
+  practitioner or related person. The kit names the patient (user decision,
+  gap G17).
+- **PZN version.** Required on the coding; the packages do not say which.
+  The kit writes 1.3.2, the version the code system definition states in
+  de.basisprofil.r4 (user decision, gap G18). The display is the drug name,
+  because PZN names come from a list the kit does not have.
+- **Not exported.** Drug form, ingredients, strength, the structured dosage,
+  the reason, and `Medication.status`, which the profile prohibits. A
+  medication may be older than the export period, like a goal.
+- **Ids.** The input `id` only keeps the resource ids stable. It is not
+  exported.
+- **Period.** A medication may start before the export period but not after
+  its end. One that ended long before the period is still exported; the
+  kit does not judge whether it was still relevant.
+
+**Import.** `diga_epa_kit.epa_import.read_medication_list(bundle)` reads
+gematik's electronic medication list (a FHIR searchset Bundle,
+de.gematik.epa.medication 1.3.5) into the same `medications` input, and
+`diga-epa-kit import-medication LIST.json` does it from the command line.
+The design, what is skipped and why, and the limits are in
+docs/decisions/0009. The reader never reads the patient, prescriber,
+pharmacy or prescription resources of the list. Free text it does read, the
+drug name and the dosage, is passed on unfiltered. Each imported entry gets
+a note in gematik's own German labels, for example "Aus der
+ePA-Medikationsliste übernommen. Herkunft: Verschreibung. Status dort:
+offen.", because the export names the patient as source (G17) and the
+status "unknown" means "open" in the list (G19).

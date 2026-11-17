@@ -339,3 +339,75 @@ Evidence for sub-question 2.
 - **After review (2026-11-16)**: the first version called the comparator
   "the one element left" and said any other comparator code is an error.
   Both were too broad and are corrected above.
+
+## G17 Medication read from the ePA has no valid information source
+
+- **Where**: `KBV_PR_MIO_DIGA_MedicationStatement_Medication_Information`,
+  `MedicationStatement.informationSource`.
+- **Evidence**: the element is required (min 1) and its reference targets
+  are the MIO DiGA Patient, Practitioner, PractitionerRole and
+  RelatedPerson profiles. No device, organisation or service can be named.
+  In gematik's medication list (de.gematik.epa.medication 1.3.5) an entry
+  has the context PRESCRIPTION (a prescription and its dispense) or MANUAL
+  (an entry added later) and reaches the DiGA through the ePA medication
+  service. gematik's Provenance examples name the "ePA Medication Service"
+  as the author of prescription entries and an organisation ("Die
+  Apotheke", "Die Hausarztpraxis") for added entries; none names a person.
+- **Consequence**: a DiGA that re-exports medication it read from the ePA
+  must name a person as the source. Naming the prescriber means exporting a
+  doctor's identity and fails for pharmacy-only and manual entries. Naming
+  the patient is not literally true. Because `derivedFrom` is prohibited
+  (max 0), a prescription entry then reads as the patient's own report,
+  "asserted" on the date the service recorded it. This is the same shape of
+  problem as G8 (a goal the DiGA itself set has no valid author).
+- **Handling**: the kit names the patient (user decision 2026-11-16,
+  decision 0009), because the data comes from the patient's own record.
+  Every imported entry carries a note that it was taken from the ePA
+  medication list and with which origin (decision 0009, point 9). A
+  question for support.mio@kbv.de.
+
+## G18 A PZN coding needs a version, and nothing says which
+
+- **Where**: `KBV_PR_MIO_DIGA_Medication`,
+  `Medication.code.coding:pznCode.version` and `.display` (both min 1).
+- **Evidence**:
+  - The pinned packages give no version for the PZN itself, only two
+    different values for the code system resource: the CodeSystem resource
+    `http://fhir.de/CodeSystem/ifa/pzn` in de.basisprofil.r4 states version
+    1.3.2 (the version of that package, content not present), while the two
+    medication examples in kbv.basis write version 0.2.
+  - gematik's medication list carries a PZN with neither version nor
+    display. The drug name is in `code.text` when there is one; gematik's
+    examples also contain PZN-only entries without any name.
+  - With 1.3.2 the offline validator (6.5.28) only warns that the code
+    cannot be checked and lists 1.3.2 as the valid version.
+- **Consequence**: a manufacturer has to make up a version to export the
+  drug identifier the eML carries, and two manufacturers can write
+  different ones. The display has no free source either: PZN names come
+  from a licensed list. A PZN-only entry therefore cannot be exported at
+  all; the kit skips it with a reason.
+- **Handling**: the kit writes 1.3.2 (user decision 2026-11-16) and uses
+  the drug name it was given as the display. A unit test compares the
+  version with the pinned CodeSystem resource. A question for
+  support.mio@kbv.de.
+
+## G19 The status "unknown" means "open" in the eML and "unknown" in KBV's German
+
+- **Where**: `KBV_PR_MIO_DIGA_MedicationStatement_Medication_Information`,
+  `MedicationStatement.status`; gematik's
+  `epa-medication-statement-status-vs`; kbv.basis
+  `KBV_CM_Base_Terminology_Complete_German`.
+- **Evidence**: gematik's value set for eML statements allows only
+  `unknown`, `intended` and `entered-in-error` and gives `unknown` the
+  German designation "offen", an open, current entry. KBV's German concept
+  map translates the FHIR code `unknown` of
+  `medication-statement-status` as "Unbekannt". Every entry in gematik's
+  examples has the status `unknown`.
+- **Consequence**: a DiGA that re-exports eML entries with their status
+  hands German receivers "Unbekannt" for entries the ePA shows as open.
+  Mapping `unknown` to `active` instead would claim the patient takes the
+  medication, which the eML does not say.
+- **Handling**: the kit keeps the code `unknown` and adds a note with
+  gematik's label, "Status dort: offen" (decision 0009, point 9). A unit
+  test reads the labels from the pinned gematik package. A question for
+  support.mio@kbv.de.

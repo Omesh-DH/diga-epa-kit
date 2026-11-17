@@ -2,6 +2,10 @@
 
 Each package lands twice: the .tgz the validator loads with -ig, and an
 extracted folder <name>#<version>/ for reading the StructureDefinitions.
+
+``packages`` in the lock are the ones the gate loads. ``reference_packages``
+are pinned and fetched the same way but only read, for example the gematik
+ePA medication model behind the import (docs/decisions/0009).
 """
 
 from __future__ import annotations
@@ -19,7 +23,13 @@ PACKAGES = SPEC / "packages"
 
 
 def locked() -> list[dict]:
+    """The packages the validator gate loads."""
     return json.loads((SPEC / "packages.lock.json").read_text(encoding="utf-8"))["packages"]
+
+
+def reference() -> list[dict]:
+    """Pinned packages that are read but not loaded by the gate."""
+    return json.loads((SPEC / "packages.lock.json").read_text(encoding="utf-8")).get("reference_packages", [])
 
 
 def tgz_path(pkg: dict) -> Path:
@@ -27,7 +37,7 @@ def tgz_path(pkg: dict) -> Path:
 
 
 def main() -> int:
-    for pkg in locked():
+    for pkg in [*locked(), *reference()]:
         tgz = tgz_path(pkg)
         if not tgz.exists() or sha256(tgz) != pkg["sha256"]:
             download(pkg["url"], tgz)

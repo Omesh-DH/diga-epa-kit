@@ -21,8 +21,9 @@ before the open-source release.
 | gematik Referenzvalidator | Apache-2.0 | OK | Separate process; keep LICENSE/NOTICE if redistributed | Not used as the gate (decision 0001) |
 | gematik `diga` plugin | Not confirmed | Verify | Read LICENSE before use; download, don't vendor | Not used |
 | mio42 `Validierungspaket-MIO-DiGA-Toolkit` | No licence on the repo (GitHub API, 2026-11-11) | Unclear | Download at test time only; never commit | Used only as downloaded test input |
+| gematik `de.gematik.epa.medication` 1.3.5 | Apache-2.0 (package.json) | OK | Fetched as a reference package, never committed; read by the import only | Pinned in `spec/packages.lock.json` (decision 0009) |
 | HL7 FHIR validator (`validator_cli.jar`) | Apache-2.0 | OK | Downloaded into `.cache/`, never committed | In use (decision 0004) |
-| pydantic, pytest, ruff, mypy | MIT | OK | `pip-licenses` gate in CI | `scripts/check_licenses.py` (`make licenses`), also in the CI workflow, which has never run |
+| pydantic, pytest, ruff, mypy | MIT | OK | `pip-licenses` gate in CI | `scripts/check_licenses.py` (`make licenses`), also in the CI workflow (first run passed 2026-11-16) |
 
 The plan's stack also names `fhir.resources`, Typer, mkdocs and hypothesis.
 They are not dependencies at present (decision 0003). ruff and mypy are dev
@@ -45,7 +46,7 @@ otherwise).
 | 271062006, 271063001, 271064007, 271065008, 302788006, 271061004, 359776002 | `mappers/vitals.py` | kbv.basis `KBV_VS_Base_Glucose_Concentration_Method_SNOMED_CT` (extensible) |
 | 431314004, 448703006 | `mappers/vitals.py` | kbv.basis `KBV_PR_Base_Observation_Peripheral_Oxygen_Saturation` `codeSnomed` and `method` patterns |
 | 75367002, 271649006, 271650006 | `mappers/vitals.py` | kbv.basis `KBV_PR_Base_Observation_Blood_Pressure` `codeSnomed` patterns |
-| 423100009, 1184593002, 424836000 | `mappers/composition.py` | `KBV_PR_MIO_DIGA_Composition` section code patterns |
+| 423100009, 1184593002, 424836000, 721912009 | `mappers/composition.py` | `KBV_PR_MIO_DIGA_Composition` section code patterns |
 
 ## PROM wording
 

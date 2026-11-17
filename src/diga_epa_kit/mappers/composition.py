@@ -12,6 +12,7 @@ from .common import Json, meta, urn
 # Section codings are fixed by the profile; keyed by the profile's slice names.
 _SECTION_RESULTS = ("Befunde und Ergebnisse", "423100009", "Results section (record artifact)")
 _SECTION_VITALS = ("Vitalzeichen und Körpermaße", "1184593002", "Vital sign document section (record artifact)")
+_SECTION_MEDICATION = ("Medikation", "721912009", "Medication summary document (record artifact)")
 _SECTION_ASSESSMENTS = ("Beurteilungen", "424836000", "Assessment section (record artifact)")
 # KBV's own section codes (KBV_CS_MIO_DIGA_Section_Codes in kbv.mio.diga), versioned with the package.
 _KBV_SECTION_CODES = "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_DIGA_Section_Codes"
@@ -55,6 +56,7 @@ def composition(
     *,
     results: Sequence[str] = (),
     vital_signs: Sequence[str] = (),
+    medications: Sequence[str] = (),
     assessments: Sequence[str] = (),
     goals: Sequence[str] = (),
     patient_reports: Sequence[str] = (),
@@ -70,6 +72,9 @@ def composition(
         if vital_signs:
             content["section"] = [_snomed_section(pack, _SECTION_VITALS, entry=_entries(vital_signs))]
         sections.append(_snomed_section(pack, _SECTION_RESULTS, **content))
+    if medications:
+        # Only the statements are entries; each refers to its Medication.
+        sections.append(_snomed_section(pack, _SECTION_MEDICATION, entry=_entries(medications)))
     if assessments:
         sections.append(_snomed_section(pack, _SECTION_ASSESSMENTS, entry=_entries(assessments)))
     if goals:

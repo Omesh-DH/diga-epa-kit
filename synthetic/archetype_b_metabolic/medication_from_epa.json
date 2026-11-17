@@ -1,0 +1,40 @@
+{
+  "diga": {
+    "name": "Synthetic Diabetes Diary",
+    "ve_id": "99990005",
+    "version": "3.2.0",
+    "pzn": "19999995",
+    "manufacturer": {
+      "name": "Synthetic DiGA GmbH",
+      "website": "https://example.org"
+    }
+  },
+  "patient": {
+    "id": "c4d8e2f6-1a3b-4c5d-9e7f-0a2b4c6d8e10",
+    "birth_date": "1964-02-27",
+    "gender": "female"
+  },
+  "period_start": "2026-10-01",
+  "period_end": "2026-10-31",
+  "medications": [
+    {
+      "id": "7c0f2a1e-0000-4000-8000-000000000011",
+      "name": "Synthetisches Präparat A 50 mg Filmtabletten",
+      "pzn": "09999011",
+      "status": "unknown",
+      "dosage_text": "1-0-1-0 Stück",
+      "since": "2026-09-14",
+      "asserted_on": "2026-09-14",
+      "note": "Aus der ePA-Medikationsliste übernommen. Herkunft: Verschreibung. Status dort: offen."
+    },
+    {
+      "id": "7c0f2a1e-0000-4000-8000-000000000012",
+      "name": "Synthetisches Vitaminpräparat B",
+      "status": "unknown",
+      "since": "2026-08-01",
+      "until": "2026-10-10",
+      "asserted_on": "2026-08-01",
+      "note": "Aus der ePA-Medikationsliste übernommen. Herkunft: Nachtrag. Status dort: offen."
+    }
+  ]
+}

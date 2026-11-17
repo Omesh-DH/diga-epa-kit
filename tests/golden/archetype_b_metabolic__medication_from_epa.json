@@ -1,0 +1,433 @@
+{
+  "resourceType": "Bundle",
+  "id": "c447d3a2-70b7-56f9-9230-5049f6cf4739",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2026-11-01T09:00:00+00:00",
+    "profile": [
+      "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Bundle|1.1.0"
+    ]
+  },
+  "identifier": {
+    "type": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+          "version": "2.9",
+          "code": "RI",
+          "display": "Resource identifier"
+        }
+      ]
+    },
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:c447d3a2-70b7-56f9-9230-5049f6cf4739"
+  },
+  "type": "document",
+  "timestamp": "2026-11-01T09:00:00+00:00",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:a077e0e9-fd00-5be1-88e6-0ccadbf7ef7f",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "a077e0e9-fd00-5be1-88e6-0ccadbf7ef7f",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Composition|1.1.0"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_DIGA_Betrachtungszeitraum",
+            "valuePeriod": {
+              "start": "2026-10-01",
+              "end": "2026-10-31"
+            }
+          }
+        ],
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.72",
+              "code": "53576-5",
+              "display": "Personal health monitoring report Document"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "urn:uuid:134c1c1d-afbd-5dc7-9b45-2ac335bae7bf"
+        },
+        "date": "2026-11-01T09:00:00+00:00",
+        "author": [
+          {
+            "reference": "urn:uuid:4f58b946-cb41-59dd-a94f-1085c42b4366"
+          }
+        ],
+        "title": "DiGA-Export",
+        "section": [
+          {
+            "title": "Medikation",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+                  "code": "721912009",
+                  "display": "Medication summary document (record artifact)"
+                }
+              ]
+            },
+            "entry": [
+              {
+                "reference": "urn:uuid:fdaea4ae-329b-5cd9-adb2-9a70b7a76dbe"
+              },
+              {
+                "reference": "urn:uuid:f74da5a9-0b1b-5c6d-9882-2705fc450c49"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:134c1c1d-afbd-5dc7-9b45-2ac335bae7bf",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "134c1c1d-afbd-5dc7-9b45-2ac335bae7bf",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Patient|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:134c1c1d-afbd-5dc7-9b45-2ac335bae7bf"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1964-02-27"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:4f58b946-cb41-59dd-a94f-1085c42b4366",
+      "resource": {
+        "resourceType": "Device",
+        "id": "4f58b946-cb41-59dd-a94f-1085c42b4366",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Device_DIGA|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "text": "DiGA-VE-ID"
+            },
+            "value": "99990005"
+          }
+        ],
+        "definition": {
+          "reference": "urn:uuid:364e9f88-4870-5e3c-92fe-393c31e09061"
+        },
+        "deviceName": [
+          {
+            "name": "Synthetic Diabetes Diary",
+            "type": "user-friendly-name"
+          }
+        ],
+        "type": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/ifa/pzn",
+              "code": "19999995"
+            }
+          ]
+        },
+        "version": [
+          {
+            "type": {
+              "text": "Softwareversion"
+            },
+            "value": "3.2.0"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:364e9f88-4870-5e3c-92fe-393c31e09061",
+      "resource": {
+        "resourceType": "DeviceDefinition",
+        "id": "364e9f88-4870-5e3c-92fe-393c31e09061",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_DeviceDefinition_DIGA|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:364e9f88-4870-5e3c-92fe-393c31e09061"
+          }
+        ],
+        "manufacturerReference": {
+          "reference": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07"
+        },
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/900000000000207008/version/20220331",
+              "code": "706689003",
+              "display": "Application program software (physical object)"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "44d4418c-cb5e-5a35-ab1e-fe12361a3e07",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Organization_Manufacturer|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:44d4418c-cb5e-5a35-ab1e-fe12361a3e07"
+          }
+        ],
+        "name": "Synthetic DiGA GmbH",
+        "telecom": [
+          {
+            "system": "url",
+            "value": "https://example.org"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:08fe6c88-fb20-50e1-bbb5-e60a65479d06",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "08fe6c88-fb20-50e1-bbb5-e60a65479d06",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Medication|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:08fe6c88-fb20-50e1-bbb5-e60a65479d06"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://fhir.de/CodeSystem/ifa/pzn",
+              "version": "1.3.2",
+              "code": "09999011",
+              "display": "Synthetisches Präparat A 50 mg Filmtabletten"
+            }
+          ],
+          "text": "Synthetisches Präparat A 50 mg Filmtabletten"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:fdaea4ae-329b-5cd9-adb2-9a70b7a76dbe",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "fdaea4ae-329b-5cd9-adb2-9a70b7a76dbe",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_MedicationStatement_Medication_Information|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:fdaea4ae-329b-5cd9-adb2-9a70b7a76dbe"
+          }
+        ],
+        "status": "unknown",
+        "medicationReference": {
+          "reference": "urn:uuid:08fe6c88-fb20-50e1-bbb5-e60a65479d06"
+        },
+        "subject": {
+          "reference": "urn:uuid:134c1c1d-afbd-5dc7-9b45-2ac335bae7bf"
+        },
+        "effectivePeriod": {
+          "start": "2026-09-14"
+        },
+        "dateAsserted": "2026-09-14",
+        "informationSource": {
+          "reference": "urn:uuid:134c1c1d-afbd-5dc7-9b45-2ac335bae7bf"
+        },
+        "note": [
+          {
+            "text": "Aus der ePA-Medikationsliste übernommen. Herkunft: Verschreibung. Status dort: offen."
+          }
+        ],
+        "dosage": [
+          {
+            "text": "1-0-1-0 Stück"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:a0d396ce-bf2b-5844-bef0-645ea976619a",
+      "resource": {
+        "resourceType": "Medication",
+        "id": "a0d396ce-bf2b-5844-bef0-645ea976619a",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_Medication|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:a0d396ce-bf2b-5844-bef0-645ea976619a"
+          }
+        ],
+        "code": {
+          "text": "Synthetisches Vitaminpräparat B"
+        }
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:f74da5a9-0b1b-5c6d-9882-2705fc450c49",
+      "resource": {
+        "resourceType": "MedicationStatement",
+        "id": "f74da5a9-0b1b-5c6d-9882-2705fc450c49",
+        "meta": {
+          "versionId": "1",
+          "lastUpdated": "2026-11-01T09:00:00+00:00",
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_DIGA_MedicationStatement_Medication_Information|1.1.0"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "2.9",
+                  "code": "RI",
+                  "display": "Resource identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:f74da5a9-0b1b-5c6d-9882-2705fc450c49"
+          }
+        ],
+        "status": "unknown",
+        "medicationReference": {
+          "reference": "urn:uuid:a0d396ce-bf2b-5844-bef0-645ea976619a"
+        },
+        "subject": {
+          "reference": "urn:uuid:134c1c1d-afbd-5dc7-9b45-2ac335bae7bf"
+        },
+        "effectivePeriod": {
+          "start": "2026-08-01",
+          "end": "2026-10-10"
+        },
+        "dateAsserted": "2026-08-01",
+        "informationSource": {
+          "reference": "urn:uuid:134c1c1d-afbd-5dc7-9b45-2ac335bae7bf"
+        },
+        "note": [
+          {
+            "text": "Aus der ePA-Medikationsliste übernommen. Herkunft: Nachtrag. Status dort: offen."
+          }
+        ]
+      }
+    }
+  ]
+}

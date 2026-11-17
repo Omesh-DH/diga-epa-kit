@@ -29,6 +29,9 @@ class VersionPack:
     v2_0203_version: str
     # Version of KBV_CS_MIO_DIGA_Section_Codes in the package; not tied to the package version.
     section_codes_version: str
+    # Required on a PZN coding, but no profile says which version. This is the one the code
+    # system definition states in de.basisprofil.r4 (docs/gaps.md G18).
+    pzn_version: str
     profiles: dict[str, str] = field(default_factory=dict)
 
     def profile(self, key: str) -> str:
@@ -47,6 +50,7 @@ MIO_DIGA_1_1_0 = VersionPack(
     snomed_version="http://snomed.info/sct/900000000000207008/version/20220331",
     v2_0203_version="2.9",
     section_codes_version="1.1.0",
+    pzn_version="1.3.2",
     profiles={
         "bundle": "KBV_PR_MIO_DIGA_Bundle",
         "composition": "KBV_PR_MIO_DIGA_Composition",
@@ -65,6 +69,8 @@ MIO_DIGA_1_1_0 = VersionPack(
         "diary_entry": "KBV_PR_MIO_DIGA_Observation_Diary_Entry",
         "observation_free": "KBV_PR_MIO_DIGA_Observation_Free",
         "goal": "KBV_PR_MIO_DIGA_Goal",
+        "medication": "KBV_PR_MIO_DIGA_Medication",
+        "medication_statement": "KBV_PR_MIO_DIGA_MedicationStatement_Medication_Information",
         "care_plan": "KBV_PR_MIO_DIGA_CarePlan",
         "score": "KBV_PR_MIO_DIGA_Observation_Score_or_Assessment_by_Scale",
     },
